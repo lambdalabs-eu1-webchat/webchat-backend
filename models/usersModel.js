@@ -6,7 +6,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
-
+  id: {
+    type: Number,
+    unique: true,
+  }
 });
 
 

@@ -8,6 +8,7 @@ const createUsers = async () => {
       const user = new models.User({
         // use Faker.js to generate fake users
         username: faker.fake("{{name.firstName}}"),
+        id: i,
       });
       await user.save();
 

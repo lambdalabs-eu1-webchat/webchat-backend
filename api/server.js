@@ -19,6 +19,10 @@ server.use(async (req, res, next) => {
   }
 });
 
+server.get('/', (req, res) => {
+  res.status(200).json({ message: 'API works!' });
+})
+
 const userRoutes = require('./users/userRoutes');
 
 server.use(userRoutes);
