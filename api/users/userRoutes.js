@@ -13,9 +13,14 @@ Params: none,
 Body: none,
 Query string: none,
 */
-routes.get(url.users, (req, res) => {
-  const userList = User.getUsers();
-  res.status(200).json(userList);
+routes.get(url.users, async (req, res) => {
+  try {
+    const users = await req.context.models.User.find();
+    // const userList = User.getUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 /*
@@ -24,13 +29,18 @@ Params: user id (integer),
 Body: none,
 Query string: none,
 */
-routes.get(url.usersById, (req, res) => {
+routes.get(url.usersById, async (req, res) => {
   const { id } = req.params;
-  const user = User.getUserById(id);
-  if (user) {
-    res.status(200).json(user);
-  } else {
-    res.status(404).json(error.getUserById);
+  try {
+    const user = await req.context.models.User.where('id', id);
+    // const user = User.getUserById(id);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json(error.getUserById);
+    }
+  } catch (error) {
+    console.error(error);
   }
 });
 

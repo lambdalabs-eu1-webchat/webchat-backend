@@ -28,5 +28,8 @@ yarn.lock
 .yarn-integrity
 
 # dotenv environment variables file
-# .env
-# .env.test
+.env
+.env.test
+
+# vscode debugger config
+.vscode
