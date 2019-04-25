@@ -8,4 +8,8 @@ server.use(helmet());
 server.use(cors());
 server.use(express.json());
 
+const userRoutes = require('./users/userRoutes');
+
+server.use(userRoutes);
+
 module.exports = server;
