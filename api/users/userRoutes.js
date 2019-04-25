@@ -25,13 +25,13 @@ Body: none,
 Query string: none,
 */
 routes.get(url.usersById, (req, res) => {
-    const { id } = req.params;
-    const user = User.getUserById(id);
-    if(user){
-        res.status(200).json(user);
-    } else {
-        res.status(404).json(error.getUserById)
-    }
+  const { id } = req.params;
+  const user = User.getUserById(id);
+  if (user) {
+    res.status(200).json(user);
+  } else {
+    res.status(404).json(error.getUserById);
+  }
 });
 
 module.exports = routes;

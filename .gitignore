@@ -21,6 +21,9 @@ jspm_packages/
 # Optional eslint cache
 .eslintcache
 
+# Yarn lock
+yarn.lock
+
 # Yarn Integrity file
 .yarn-integrity
 
