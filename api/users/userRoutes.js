@@ -13,9 +13,14 @@ Params: none,
 Body: none,
 Query string: none,
 */
-routes.get(url.users, (req, res) => {
-  const userList = User.getUsers();
-  res.status(200).json(userList);
+routes.get(url.users, async (req, res) => {
+  try {
+    const users = await req.context.models.User.find();
+    // const userList = User.getUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 /*

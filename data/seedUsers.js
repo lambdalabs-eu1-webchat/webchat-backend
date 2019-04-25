@@ -1,4 +1,5 @@
 const faker = require('faker');
+const { models } = require('../models/index');
 
 const createUsers = async () => {
   try {
