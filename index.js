@@ -1,22 +1,26 @@
+/* eslint-disable no-console */
 const server = require('./api/server');
 const createUsers = require('./data/seedUsers');
-const { models, connectDb } = require('./models/index');
+const { models, connectDb } = require('./schemas/index');
 require('dotenv').config();
 
 const port = process.env.PORT || 7000;
 
 connectDb().then(async () => {
   try {
-    // erase DB on server refresh
-    // you can add more models in the array
-    await Promise.all([models.User.deleteMany({}),]);
+    const usersLength = await models.User.find();
+    if (process.env.NODE_ENV === 'development' && usersLength.length === 0) {
+      // erase DB on server refresh
+      // you can add more models in the array
+      await Promise.all([models.User.deleteMany({}),]);
 
-    // seed users on server refresh
-    createUsers();
+      // seed users on server refresh
+      createUsers();
+    }
 
-    server.listen(port, () => console.log(`server up on ${port}`));
+    server.listen(port, () => console.log(`=== Server running on port: ${port} ====`));
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }).catch(err => console.error(err));
 

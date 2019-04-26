@@ -1,5 +1,5 @@
 const faker = require('faker');
-const { models } = require('../models/index');
+const { models } = require('../schemas/index');
 
 const createUsers = async () => {
   try {
@@ -7,14 +7,14 @@ const createUsers = async () => {
     for (let i = 0; i < 20; i++) {
       const user = new models.User({
         // use Faker.js to generate fake users
-        username: faker.fake("{{name.firstName}}"),
-        id: i,
+        username: faker.fake('{{name.firstName}}'),
+        id: i + 1,
       });
       await user.save();
-
     }
   } catch (error) {
-    console.error(error)
+    // eslint-disable-next-line no-console
+    console.error(error);
   }
 };
 

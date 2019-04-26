@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// schema maps to a MongoDB collection and defines the shape of the documents within that collection.
+// schema maps to a MongoDB collection and defines the shape of the documents within that collection
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   id: {
     type: Number,
     unique: true,
-  }
+  },
 });
 
 
