@@ -1,12 +1,8 @@
 const express = require('express');
 const routes = express.Router();
 
-const url = require('../utils/url');
 const error = require('../utils/error');
-const { models } = require('../schemas/index');
-
-
-routes.use(express.json());
+const { models } = require('../models/index');
 
 
 /**
@@ -15,7 +11,7 @@ routes.use(express.json());
  * @body : none,
  * @queryString : none,
 */
-routes.get(url.users, async (req, res, next) => {
+routes.get('/', async (req, res, next) => {
   try {
     const users = await models.User.find();
     res.status(200).json(users);
@@ -30,7 +26,7 @@ routes.get(url.users, async (req, res, next) => {
  * @body : none,
  * @queryString : none,
 */
-routes.get(url.usersById, async (req, res, next) => {
+routes.get('/:id', async (req, res, next) => {
   const { id } = req.params;
   try {
     const user = await models.User.where({ id });
