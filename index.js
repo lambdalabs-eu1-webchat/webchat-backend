@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const server = require('./api/server');
 const createUsers = require('./data/seedUsers');
-const { models, connectDb } = require('./schemas/index');
+const { models, connectDb } = require('./models/index');
 require('dotenv').config();
 
 const port = process.env.PORT || 7000;
@@ -18,7 +18,7 @@ connectDb().then(async () => {
       createUsers();
     }
 
-    server.listen(port, () => console.log(`=== Server running on port: ${port} ====`));
+    server.listen(port, () => console.log(`=== Server running on port: ${port} in ${process.env.NODE_ENV} mode ====`));
   } catch (error) {
     console.error(error);
   }
