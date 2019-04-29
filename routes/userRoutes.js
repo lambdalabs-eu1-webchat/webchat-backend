@@ -59,12 +59,22 @@ routes.post('/', async (req, res, next) => {
  * @queryString : none,
  */
 routes.put('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const incomingUser = { ...req.body };
+  if (incomingUser.password) {
+    incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
+  }
   try {
-    const user = await models.User.findById(req.params.id).exec();
-    user.set(req.body);
+    const user = await models.User.findById({ '_id': id }).exec();
+    user.set(incomingUser);
     const result = await user.save();
     res.send(result);
   } catch (error) {
+    if (error.name === 'CastError') {
+      res.status(404).json({ message: 'User not found' });
+    } else {
+      res.status(400).json(errorMessages.updateUser);
+    }
     next(error);
   }
 });
