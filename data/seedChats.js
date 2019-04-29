@@ -1,6 +1,6 @@
-const faker = require("faker");
-const mongoose = require("mongoose");
-const { models } = require("../models/index");
+const faker = require('faker');
+const mongoose = require('mongoose');
+const { models } = require('../models/index');
 
 const seedChats = async hotelIds => {
   // for each hotel
@@ -11,16 +11,16 @@ const seedChats = async hotelIds => {
       const tickets = [];
       for (let i = 0; i < 1; i++) {
         tickets.push({
-          status: "queue",
+          status: 'queue',
           messages: [
             {
               sender: {
                 name: guest.name,
-                id: guest.guestId
+                id: guest.guestId,
               },
-              text: faker.lorem.sentence(20)
-            }
-          ]
+              text: faker.lorem.sentence(20),
+            },
+          ],
         });
       }
       models.Chat.insertMany({
@@ -28,9 +28,9 @@ const seedChats = async hotelIds => {
         hotel_id,
         guest: {
           name: guest.name,
-          id: guest.guestId
+          id: guest.guestId,
         },
-        room: guest.room
+        room: guest.room,
       });
     });
   });

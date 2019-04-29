@@ -1,6 +1,6 @@
-const { models } = require("../models/index");
-const mongoose = require("mongoose");
-const faker = require("faker");
+const { models } = require('../models/index');
+const mongoose = require('mongoose');
+const faker = require('faker');
 
 function makeHotelIds() {
   const idArray = [];
@@ -37,14 +37,14 @@ module.exports = async () => {
       _id: hotelId,
       rooms,
       name: faker.company.companyName(),
-      motto: faker.company.catchPhrase()
+      motto: faker.company.catchPhrase(),
     };
   });
   await models.Hotel.insertMany(hotels);
   return hotelIds.map((hotelId, i) => {
     return {
       hotelId,
-      roomIds: hotelroomIds[i]
+      roomIds: hotelroomIds[i],
     };
   });
 };

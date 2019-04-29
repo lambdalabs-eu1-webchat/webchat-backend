@@ -1,7 +1,7 @@
-const server = require("./api/server");
-const seed = require("./data/index");
-const { connectDb } = require("./models/index");
-require("dotenv").config();
+const server = require('./api/server');
+const seed = require('./data/index');
+const { connectDb } = require('./models/index');
+require('dotenv').config();
 
 const port = process.env.PORT || 7000;
 

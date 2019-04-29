@@ -1,7 +1,7 @@
-const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
-const { models } = require("../models/index");
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const { models } = require('../models/index');
 
 const server = express();
 
@@ -11,7 +11,7 @@ server.use(express.json());
 server.use(async (req, res, next) => {
   try {
     req.context = {
-      models
+      models,
     };
     next();
   } catch (error) {
@@ -19,11 +19,11 @@ server.use(async (req, res, next) => {
   }
 });
 
-server.get("/", (req, res) => {
-  res.status(200).json({ message: "API works!" });
+server.get('/', (req, res) => {
+  res.status(200).json({ message: 'API works!' });
 });
 
-const userRoutes = require("./users/userRoutes");
+const userRoutes = require('./users/userRoutes');
 
 server.use(userRoutes);
 

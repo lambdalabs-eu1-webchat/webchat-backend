@@ -1,48 +1,48 @@
-const mongoose = require("mongoose");
-const MODEL_NAMES = require("./MODEL_NAMES");
+const mongoose = require('mongoose');
+const MODEL_NAMES = require('./MODEL_NAMES');
 
 // schema maps to a MongoDB collection and defines the shape of the documents within that collection
 const userSchema = new mongoose.Schema({
   // _id
   hotel_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: MODEL_NAMES.HOTELS
+    ref: MODEL_NAMES.HOTELS,
   },
   user_type: {
-    type: String
+    type: String,
   },
   name: {
-    type: String
+    type: String,
   },
   email: {
     type: String,
     unique: true,
-    sparse: true // allows for null with unique
+    sparse: true, // allows for null with unique
   },
   password: {
-    type: String
+    type: String,
   },
   passcode: {
     type: String,
     unique: true,
-    sparse: true // allows for null with unique
+    sparse: true, // allows for null with unique
   },
   motto: {
-    type: String
+    type: String,
   },
   is_left: {
     type: Boolean,
-    default: false
+    default: false,
   },
   room: {
     name: {
-      type: String
+      type: String,
     },
     id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: MODEL_NAMES.HOTELS_ROOMS
-    }
-  }
+      ref: MODEL_NAMES.HOTELS_ROOMS,
+    },
+  },
 });
 
 const User = mongoose.model(MODEL_NAMES.USERS, userSchema);

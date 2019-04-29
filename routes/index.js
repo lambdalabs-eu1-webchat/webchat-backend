@@ -14,8 +14,6 @@ module.exports = server => {
   // routes
   server.use(path.users, userRoutes);
 
-
-
   // error logger - must be last
   server.use(errorLogger);
 };

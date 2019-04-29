@@ -1,6 +1,6 @@
-const faker = require("faker");
-const mongoose = require("mongoose");
-const { models } = require("../models/index");
+const faker = require('faker');
+const mongoose = require('mongoose');
+const { models } = require('../models/index');
 
 const seedUsers = async hotelIds => {
   const promises = [];
@@ -19,11 +19,11 @@ const seedUsers = async hotelIds => {
           hotel_id,
           name: faker.name.firstName(),
           email: `superAdmin${i}.superAdmin`,
-          password: "1234",
+          password: '1234',
           motto: faker.company.catchPhrase(),
-          user_type: "super admin"
-        }
-      ])
+          user_type: 'super admin',
+        },
+      ]),
     );
     // add admin
     const adminId = new mongoose.Types.ObjectId();
@@ -37,11 +37,11 @@ const seedUsers = async hotelIds => {
           hotel_id,
           name,
           email: `admin${i}.admin`,
-          password: "1234",
+          password: '1234',
           motto: faker.company.catchPhrase(),
-          user_type: "admin"
-        }
-      ])
+          user_type: 'admin',
+        },
+      ]),
     );
 
     // add receptionists
@@ -55,9 +55,9 @@ const seedUsers = async hotelIds => {
         hotel_id,
         name,
         email: faker.internet.email(),
-        password: "1234",
+        password: '1234',
         motto: faker.company.catchPhrase(),
-        user_type: "recptionist"
+        user_type: 'recptionist',
       });
       hotelIds[i].receptionists.push({ name, receptionistId });
     }
@@ -73,19 +73,19 @@ const seedUsers = async hotelIds => {
         hotel_id,
         name,
         passcode: `1234${j}${i}`,
-        user_type: "guest",
+        user_type: 'guest',
         room: {
           name: `${j}`,
-          id: hotelIds[i].roomIds[j]
-        }
+          id: hotelIds[i].roomIds[j],
+        },
       });
       hotelIds[i].guests.push({
         guestId,
         name,
         room: {
           id: hotelIds[i].roomIds[j],
-          name: `${j}`
-        }
+          name: `${j}`,
+        },
       });
     }
     promises.push(models.User.insertMany(guests));

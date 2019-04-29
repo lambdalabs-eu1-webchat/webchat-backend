@@ -1,13 +1,13 @@
-const seedHotel = require("./seedHotels");
-const seedUsers = require("./seedUsers");
-const seedChats = require("./seedChats");
-const { models } = require("../models/index");
+const seedHotel = require('./seedHotels');
+const seedUsers = require('./seedUsers');
+const seedChats = require('./seedChats');
+const { models } = require('../models/index');
 module.exports = async () => {
   // remove all hotels
   await Promise.all([
     models.Chat.deleteMany({}),
     models.User.deleteMany({}),
-    models.Hotel.deleteMany({})
+    models.Hotel.deleteMany({}),
   ]);
   let hotelIds = await seedHotel();
   hotelIds = await seedUsers(hotelIds);
