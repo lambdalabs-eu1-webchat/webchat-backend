@@ -1,6 +1,6 @@
 const express = require('express'),
   app = express(),
-  port = '',  // not sure if we should place a port since this is production
+  port = 4000,  // not sure if we should place a port [4000] since this is production
   io = require('socket.io').listen(app.listen(port))
 const cors = require('cors');
 const helmet = require('helmet');
