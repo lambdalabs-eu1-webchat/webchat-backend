@@ -44,12 +44,22 @@ routes.get('/:id', async (req, res, next) => {
  * @queryString : none,
  */
 routes.post('/', async (req, res, next) => {
-  const user = req.body;
-  const newUser = models.User(user);
+  const incomingUser = req.body;
+  const newUser = models.User(incomingUser);
+  if (incomingUser.password) {
+    incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
+  }
   try {
     const result = await newUser.save();
-    res.status(201).json(result);
+    const resultWithoutPassword = { ...result._doc };
+    delete resultWithoutPassword.password;
+    res.status(201).json(resultWithoutPassword);
   } catch(error) {
+    if (incomingUser.name) {
+      res.status(422).json({ message: 'User already in database' });
+    } else {
+      res.status(400).json(errorMessages.updateUser);
+    }
     next(error);
   }
 });
