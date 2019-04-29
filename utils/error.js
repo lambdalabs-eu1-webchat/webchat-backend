@@ -4,6 +4,7 @@ const error = {
   getHotel: 'information for this hotel could not be retrieved',
   addHotel: 'the hotel could not be added',
   updateHotel: 'the hotel could not be updated',
+  addRoom: 'the room could not be added',
 };
 
 module.exports = error;

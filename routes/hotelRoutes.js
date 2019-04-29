@@ -5,6 +5,7 @@ const error = require('../utils/error');
 const { models } = require('../models/index');
 
 // HOTEL - created when a Super Admin USER type is created
+
 // [POST] new hotel
 // params: 0;
 // body: valid hotel object (waiting for schma to define valid)
@@ -70,6 +71,21 @@ routes.put('/:id', async (req, res, next) => {
 // body: valid room object (waiting for schma to define valid)
 // queryString: 0;
 // Path: /hotel/rooms/:id
+// NOTE SHOULD BE ABLE TO PASS SINGLE ROOM OR ARRAY OF ROOMS? - would need concat and resaave over if so
+routes.post('/rooms/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const room = req.body;
+  try {
+    const newHotelRoom = await models.Hotel.where({ id }).rooms.push(room);
+    if (newHotelRoom) {
+      res.status(201).json(newHotelRoom);
+    } else {
+      res.status(400).json(error.addRoom);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 // [GET] rooms
 // params: depends on if we store in token or not;
@@ -79,9 +95,10 @@ routes.put('/:id', async (req, res, next) => {
 routes.get('/rooms/:id', async (req, res, next) => {
   const { id } = req.params;
   try {
-    const hotelInfo = await models.Hotel.where({ id });
+    const hotelRooms = await models.Hotel.where({ id }).select('rooms');
+    //const hotelRooms = await models.Hotel.where({ id }).rooms;
     if (hotelInfo) {
-      res.status(200).json(hotelInfo.rooms);
+      res.status(200).json(hotelRooms);
     } else {
       res.status(400).json(error.getHotel);
     }
@@ -90,6 +107,6 @@ routes.get('/rooms/:id', async (req, res, next) => {
   }
 });
 
-// [PUT] rooms
+// [PUT] room
 
 // [DELETE] rooms
