@@ -76,10 +76,14 @@ routes.put('/:id', async (req, res, next) => {
  * @queryString : none,
  */
 routes.delete('/:id', async (req, res, next) => {
+  const { id } = req.params;
   try {
-    const result = await models.User.deleteOne({ _id: req.params.id }).exec();
-    // const result = await models.User.deleteMany({}).exec();
-    res.send(result);
+    const { deletedCount } = await models.User.remove({ '_id': id });
+    if (deletedCount) {
+      res.status(200).json(response.deleteUser);
+    } else {
+      res.status(404).json(errorMessages.deleteUser);
+    }
   } catch (error) {
     next(error);
   }
