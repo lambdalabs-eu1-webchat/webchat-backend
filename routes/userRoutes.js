@@ -27,14 +27,13 @@ routes.get('/', async (req, res, next) => {
  * @queryString : none,
 */
 routes.get('/:id', async (req, res, next) => {
-  const { id } = req.params;
   try {
-    const user = await models.User.where({ id });
-    if (user) {
-      res.status(200).json(user);
-    } else {
-      res.status(404).json(error.getUserById);
-    }
+    const user = await models.User.findById(req.params.id).exec();
+    res.send(user);
+  } catch (error) {
+    next(error);
+  }
+});
   } catch (error) {
     next(error);
   }
