@@ -3,6 +3,7 @@ const routes = express.Router();
 
 const error = require('../utils/error');
 const { models } = require('../models/index');
+const validateObjectId = require('../middleware/validateObjectId');
 
 // ========== HOTEL - created when a Super Admin USER type is created ==========
 
@@ -26,19 +27,68 @@ routes.post('/', async (req, res, next) => {
   }
 });
 
-// [GET] hotel
-// params: depends on if we store in token or not;
-// body: 0;
-// queryString: 0;
-// Path: /hotel/:id
-routes.get('/:id', async (req, res, next) => {
+/**
+ *  @api {get} api/hotel/:id Get hotel information
+ *  @apiVersion 0.1.0
+ *  @apiName getHotel/:id
+ *  @apiGroup ProjectMembers
+ *
+ *  @apiParam {String} id hotel id
+ *
+ *  @apiSuccess {String} _id The id of the hotel
+ *  @apiSuccess {Array}  rooms An array of the rooms
+ *  @apiSuccess {String} name The hotel name
+ *  @apiSuccess {String} motto The hotel motto
+ *
+ *  @apiSuccessExample Success-Response: add user
+ *    HTTP/1.1 200 OK
+ * {
+    "_id": "5cc72a4afde4851e5c3c25ef",
+    "rooms": [
+        {
+            "_id": "5cc72a4afde4851e5c3c25f1",
+            "name": "room 0"
+        },
+        {
+            "_id": "5cc72a4afde4851e5c3c25f2",
+            "name": "room 1"
+        },
+        {
+            "_id": "5cc72a4afde4851e5c3c25f3",
+            "name": "room 2"
+        },
+        {
+            "_id": "5cc72a4afde4851e5c3c25f4",
+            "name": "room 3"
+        },
+        {
+            "_id": "5cc72a4afde4851e5c3c25f5",
+            "name": "room 4"
+        }
+    ],
+    "name": "Nicolas Group",
+    "motto": "Function-based contextually-based collaboration",
+    "__v": 0
+}
+ *  @apiErrorExample Error-Response: invalid object id
+ *    HTTP/1.1 400 BAD REQUEST
+ *    {
+ *      "message": "no hotel exists with this id"
+ *    }
+ *  @apiErrorExample Error-Response: hotel id does not exist
+ *    HTTP/1.1 400 BAD REQUEST
+ *    {
+ *      "message": "an invalid ObjectId was passed"
+ *    }
+ */
+routes.get('/:id', validateObjectId, async (req, res, next) => {
   const { id } = req.params;
   try {
-    const hotelInfo = await models.Hotel.where({ id });
+    const hotelInfo = await models.Hotel.findById(id);
     if (hotelInfo) {
       res.status(200).json(hotelInfo);
     } else {
-      res.status(400).json(error.getHotel);
+      res.status(400).json(error.noHotel);
     }
   } catch (error) {
     next(error);
@@ -150,3 +200,5 @@ routes.delete('/:id/rooms/:roomId', async (req, res, next) => {
     next(error);
   }
 });
+
+module.exports = routes;
