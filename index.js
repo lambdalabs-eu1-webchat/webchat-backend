@@ -1,6 +1,6 @@
 const server = require('./api/server');
 const seed = require('./data/index');
-const { connectDb } = require('./models/index');
+const { models, connectDb } = require('./models/index');
 require('dotenv').config();
 
 const port = process.env.PORT || 7000;
@@ -8,6 +8,7 @@ const port = process.env.PORT || 7000;
 connectDb()
   .then(async () => {
     try {
+      const usersLength = await models.User.find();
       if (process.env.NODE_ENV === 'development' && usersLength.length === 0) {
         seed();
       }
