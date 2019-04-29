@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('./usersSchema');
+// const Hotel = require('./hotelSchema');
 
 // set mongoose options
 // useCreateIndex - true to use `createIndex()` instead of deprecated `ensureIndex()`
@@ -12,7 +13,8 @@ const connectDb = () => {
 };
 
 // Add aditional resoure models in the object
-const models = { User, Hotel };
+const models = { User };
+//const models = { User, Hotel };
 
 module.exports = {
   connectDb,

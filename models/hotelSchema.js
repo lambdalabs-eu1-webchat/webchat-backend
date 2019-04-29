@@ -13,13 +13,13 @@ const mongoose = require('mongoose');
 // 	customer_id (str),
 // 	default_source (str),
 // 	source_last_4 (int),
-// 	source_card_type. (str),
+// 	source_card_type (str),
 // 	source_expiry (int),
 // 	subscription_id (str),
 // 	payment_plan (str),
 // }
   
-  const Hotel = mongoose.model('Hotel', hotelSchema);
+//   const Hotel = mongoose.model('Hotel', hotelSchema);
   
-  module.exports = Hotel;
+//   module.exports = Hotel;
   
