@@ -5,6 +5,7 @@ const error = {
   addHotel: 'the hotel could not be added',
   updateHotel: 'the hotel could not be updated',
   addRoom: 'the room could not be added',
+  updateRoom: 'the room could not be updated',
 };
 
 module.exports = error;

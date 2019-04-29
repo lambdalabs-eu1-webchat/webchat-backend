@@ -72,7 +72,7 @@ routes.put('/:id', async (req, res, next) => {
 // queryString: 0;
 // Path: /hotel/rooms/:id
 // NOTE SHOULD BE ABLE TO PASS SINGLE ROOM OR ARRAY OF ROOMS? - would need concat and resaave over if so
-routes.post('/rooms/:id', async (req, res, next) => {
+routes.post('/:id/rooms', async (req, res, next) => {
   const { id } = req.params;
   const room = req.body;
   try {
@@ -91,12 +91,12 @@ routes.post('/rooms/:id', async (req, res, next) => {
 // params: depends on if we store in token or not;
 // body: 0;
 // queryString: 0;
-// Path: /hotel/rooms/:id
-routes.get('/rooms/:id', async (req, res, next) => {
+// Path: /hotel/:id/rooms
+routes.get('/:id/rooms', async (req, res, next) => {
   const { id } = req.params;
   try {
-    const hotelRooms = await models.Hotel.where({ id }).select('rooms');
-    //const hotelRooms = await models.Hotel.where({ id }).rooms;
+    const hotelRooms = await models.Hotel.where({ id }).rooms;
+    // const hotelRooms = await models.Hotel.where({ id }).select('rooms');
     if (hotelInfo) {
       res.status(200).json(hotelRooms);
     } else {
@@ -108,5 +108,25 @@ routes.get('/rooms/:id', async (req, res, next) => {
 });
 
 // [PUT] room
+// params: depends on if we store in token or not;
+// body: 0;
+// queryString: 0;
+// Path: /hotel/rooms/:id
+routes.put('/:id/rooms/:roomsId', async (req, res, next) => {
+  const { id, roomsId } = req.params;
+  const roomUpdates = red.body;
+  try {
+    const updatedHotelRoom = await models.Hotel.where({
+      id,
+    }).rooms.findByIdAndUpdate({ id: roomsId }, roomUpdates);
+    if (updatedHotelRoom) {
+      res.status(200).json(updatedHotelRoom);
+    } else {
+      res.status(400).json(error.updateRoom);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 // [DELETE] rooms
