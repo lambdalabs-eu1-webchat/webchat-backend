@@ -9,10 +9,17 @@ connectDb()
   .then(async () => {
     try {
       const usersLength = await models.User.find();
-      if (process.env.NODE_ENV === 'development' && usersLength.length === 0) {
+      if (true) {
+        //process.env.NODE_ENV === 'development' && usersLength.length === 0
         seed();
       }
-      server.listen(port, () => console.log(`=== Server running on port: ${port} in ${process.env.NODE_ENV} mode ====`));
+      server.listen(port, () =>
+        console.log(
+          `=== Server running on port: ${port} in ${
+            process.env.NODE_ENV
+          } mode ====`,
+        ),
+      );
     } catch (error) {
       console.error(error);
     }
