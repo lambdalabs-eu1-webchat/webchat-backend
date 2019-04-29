@@ -34,6 +34,23 @@ routes.get('/:id', async (req, res, next) => {
     next(error);
   }
 });
+
+/**
+ * [POST] Creates a new user
+ * @params : none,
+ * @body : none,
+ * @queryString : none,
+ */
+routes.post('/', async (req, res, next) => {
+  const user = req.body;
+  const newUser = models.User(user);
+  try {
+    const result = await newUser.save();
+    res.status(201).json(result);
+  } catch(error) {
+    next(error);
+  }
+});
   } catch (error) {
     next(error);
   }
