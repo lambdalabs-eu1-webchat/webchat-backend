@@ -6,6 +6,8 @@ const { models } = require('../models/index');
 const validateObjectId = require('../middleware/validateObjectId');
 const validateHotelPost = require('../middleware/validateHotelPost');
 const formatHotelPost = require('../middleware/formatHotelPost');
+const validateHotelChange = require('../middleware/validateHotelChange');
+const formatHotelChange = require('../middleware/formatHotelChange');
 
 // ========== HOTEL - created when a Super Admin USER type is created ==========
 
@@ -27,7 +29,7 @@ const formatHotelPost = require('../middleware/formatHotelPost');
  *  @apiSuccess {String} motto The hotel motto
  *  @apiSuccess {String} rooms The array of rooms
  *
- *  @apiSuccessExample Success-Response: add user
+ *  @apiSuccessExample Success-Response: add hotel
  *    HTTP/1.1 200 OK
  *    {
     "_id": "5cc7448e8372e2234f04325f",
@@ -71,7 +73,7 @@ routes.post('/', validateHotelPost, formatHotelPost, async (req, res, next) => {
  *  @apiSuccess {String} name The hotel name
  *  @apiSuccess {String} motto The hotel motto
  *
- *  @apiSuccessExample Success-Response: add user
+ *  @apiSuccessExample Success-Response: get hotel information
  *    HTTP/1.1 200 OK
  * {
     "_id": "5cc72a4afde4851e5c3c25ef",
@@ -126,25 +128,89 @@ routes.get('/:id', validateObjectId, async (req, res, next) => {
   }
 });
 
-// [PUT] hotel
-// params: depends on if we store in token or not;
-// body: 0;
-// queryString: 0;
-// Path: /hotel/:id
-routes.put('/:id', async (req, res, next) => {
-  const { id } = req.params;
-  const hotelUpdates = req.body;
-  try {
-    const updatedHotel = await models.Hotel.findByIdAndUpdate(id, hotelUpdates);
-    if (updatedHotel) {
-      res.status(200).json(updatedHotel);
-    } else {
-      res.status(400).json(error.updateHotel);
+/**
+ *  @api {get} api/hotel/:id Put hotel information
+ *  @apiVersion 0.1.0
+ *  @apiName putHotel/:id
+ *  @apiGroup Hotels
+ *
+ *  @apiParam {String} id hotel id
+ *  @apiParam {json} hotel hotel information updates
+ *  @apiParamExample {json} Request-Example:
+ *    {
+ *      "name": "nicolas group ltd",
+ *      "motto": "Function-based contextually-based collaboration",
+ *    }
+ * 
+ *  @apiSuccess {String} _id The id of the hotel
+ *  @apiSuccess {Array}  rooms An array of the rooms
+ *  @apiSuccess {String} name The hotel name
+ *  @apiSuccess {String} motto The hotel motto
+ *
+ *  @apiSuccessExample Success-Response: changed hotel information
+ *    HTTP/1.1 200 OK
+ * {
+    "_id": "5cc72a4afde4851e5c3c25ef",
+    "rooms": [
+        {
+            "_id": "5cc72a4afde4851e5c3c25f1",
+            "name": "room 0"
+        },
+        {
+            "_id": "5cc72a4afde4851e5c3c25f2",
+            "name": "room 1"
+        },
+        {
+            "_id": "5cc72a4afde4851e5c3c25f3",
+            "name": "room 2"
+        },
+        {
+            "_id": "5cc72a4afde4851e5c3c25f4",
+            "name": "room 3"
+        },
+        {
+            "_id": "5cc72a4afde4851e5c3c25f5",
+            "name": "room 4"
+        }
+    ],
+    "name": "Nicolas Group Ltd",
+    "motto": "Function-based contextually-based collaboration",
+    "__v": 0
+}
+ *  @apiErrorExample Error-Response: no valid changes requested
+ *    HTTP/1.1 400 BAD REQUEST
+ *    {
+ *      "message": "message": "a hotel must be added with at least a name and motto"
+ *    }
+ *  @apiErrorExample Error-Response: changes requested that are the same as  existing hotel information
+ *    HTTP/1.1 400 BAD REQUEST
+ *    {
+ *      "message": "the hotel could not be updated or you did not provide any new information"
+ *    }
+ */
+routes.put(
+  '/:id',
+  validateHotelChange,
+  formatHotelChange,
+  async (req, res, next) => {
+    const { id } = req.params;
+    const hotelUpdates = req.body;
+    try {
+      const updateResult = await models.Hotel.updateOne(
+        { _id: id },
+        hotelUpdates,
+      );
+      const updatedHotel = await models.Hotel.findById(id);
+      if (updateResult.nModified) {
+        res.status(200).json(updatedHotel);
+      } else {
+        res.status(400).json(error.updateHotel);
+      }
+    } catch (error) {
+      next(error);
     }
-  } catch (error) {
-    next(error);
-  }
-});
+  },
+);
 
 // ========== ROOMS ========== DRAFT
 
