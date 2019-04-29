@@ -51,6 +51,23 @@ routes.post('/', async (req, res, next) => {
     next(error);
   }
 });
+
+/**
+ * [PUT] Updates a user by id
+ * @params : user id (integer),
+ * @body : req.body,
+ * @queryString : none,
+ */
+routes.put('/:id', async (req, res, next) => {
+  try {
+    const user = await models.User.findById(req.params.id).exec();
+    user.set(req.body);
+    const result = await user.save();
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+});
   } catch (error) {
     next(error);
   }
