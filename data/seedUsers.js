@@ -91,7 +91,7 @@ const seedUsers = async hotelIds => {
     promises.push(models.User.insertMany(guests));
     // set the user ids
   });
-  await promises;
+  await Promise.all(promises);
   return hotelIds;
 };
 
