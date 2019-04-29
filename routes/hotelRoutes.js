@@ -2,7 +2,6 @@ const express = require('express');
 const routes = express.Router();
 
 const error = require('../utils/error');
-const path = require('../utils/path');
 const { models } = require('../models/index');
 
 // HOTEL - created when a Super Admin USER type is created
@@ -27,12 +26,12 @@ routes.post('/', async (req, res, next) => {
 });
 
 // [GET] hotel
-// params: 0;
+// params: depends on if we store in token or not;
 // body: 0;
 // queryString: 0;
 // Path: /hotel
-routes.get('/', async (req, res, next) => {
-  const id = req.decodedToken.hotel_id;
+routes.get('/:id', async (req, res, next) => {
+  const { id } = req.params;
   try {
     const hotelInfo = await models.Hotel.where({ id });
     if (hotelInfo) {
@@ -47,12 +46,12 @@ routes.get('/', async (req, res, next) => {
 
 // ROOMS
 // [GET] room numbers
-// params: 0;
+// params: depends on if we store in token or not;
 // body: 0;
 // queryString: 0;
 // Path: /hotel/rooms/
 routes.get('/rooms', async (req, res, next) => {
-  const id = req.decodedToken.hotel_id;
+  const { id } = req.params;
   try {
     const hotelInfo = await models.Hotel.where({ id });
     if (hotelInfo) {
