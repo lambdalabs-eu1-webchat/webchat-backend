@@ -4,7 +4,7 @@ const routes = express.Router();
 const error = require('../utils/error');
 const { models } = require('../models/index');
 
-// HOTEL - created when a Super Admin USER type is created
+// ========== HOTEL - created when a Super Admin USER type is created ==========
 
 // [POST] new hotel
 // params: 0;
@@ -65,7 +65,8 @@ routes.put('/:id', async (req, res, next) => {
   }
 });
 
-// ROOMS
+// ========== ROOMS ==========
+
 // [POST] new room
 // params: depends on if we store in token or not;
 // body: valid room object (waiting for schma to define valid)
