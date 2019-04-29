@@ -5,9 +5,9 @@ const error = require('../utils/error');
 const { models } = require('../models/index');
 const validateObjectId = require('../middleware/validateObjectId');
 const validateHotelPost = require('../middleware/validateHotelPost');
-const formatHotelPost = require('../middleware/formatHotelPost');
+const formatHotel = require('../middleware/formatHotel');
 const validateHotelChange = require('../middleware/validateHotelChange');
-const formatHotelChange = require('../middleware/formatHotelChange');
+
 
 // ========== HOTEL - created when a Super Admin USER type is created ==========
 
@@ -45,7 +45,7 @@ const formatHotelChange = require('../middleware/formatHotelChange');
  *      "message": "a hotel must be added with at least a name and motto"
  *    }
  */
-routes.post('/', validateHotelPost, formatHotelPost, async (req, res, next) => {
+routes.post('/', validateHotelPost, formatHotel, async (req, res, next) => {
   const hotel = req.body;
   try {
     const newHotel = new models.Hotel(hotel);
@@ -191,7 +191,7 @@ routes.get('/:id', validateObjectId, async (req, res, next) => {
 routes.put(
   '/:id',
   validateHotelChange,
-  formatHotelChange,
+  formatHotel,
   async (req, res, next) => {
     const { id } = req.params;
     const hotelUpdates = req.body;
