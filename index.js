@@ -11,7 +11,7 @@ connectDb()
       if (process.env.NODE_ENV === 'development' && usersLength.length === 0) {
         seed();
       }
-      server.listen(port, () => console.log(`server up on ${port}`));
+      server.listen(port, () => console.log(`=== Server running on port: ${port} in ${process.env.NODE_ENV} mode ====`));
     } catch (error) {
       console.error(error);
     }
