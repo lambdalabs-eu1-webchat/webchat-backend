@@ -1,4 +1,7 @@
-const express = require('express');
+const express = require('express'),
+  app = express(),
+  port = '',  // not sure if we should place a port since this is production
+  io = require('socket.io').listen(app.listen(port))
 const cors = require('cors');
 const helmet = require('helmet');
 const { models } = require('../models/index');
