@@ -1,22 +1,18 @@
 const mongoose = require('mongoose');
-const User = require('./usersSchema');
-// const Hotel = require('./hotelSchema');
 
-// set mongoose options
-// useCreateIndex - true to use `createIndex()` instead of deprecated `ensureIndex()`
+const User = require('./usersModel');
+const Hotel = require('./hotelModels');
+const Chat = require('./chatsModels');
+
 mongoose.set('useCreateIndex', true);
-
-// enable logging collection methods + arguments to the console
-// mongoose.set('debug', true);
 const connectDb = () => {
+  console.log(process.env.DATABASE_URL);
   return mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
 };
 
-// Add aditional resoure models in the object
-const models = { User };
-//const models = { User, Hotel };
+const models = { Hotel, User, Chat };
 
 module.exports = {
   connectDb,
-  models
+  models,
 };
