@@ -70,7 +70,9 @@ routes.put('/:id', async (req, res, next) => {
     const user = await models.User.findById({ '_id': id }).exec();
     user.set(incomingUser);
     const result = await user.save();
-    res.send(result);
+    const resultWithoutPassword = { ...result._doc };
+    delete resultWithoutPassword.password;
+    res.status(200).json(resultWithoutPassword);
   } catch (error) {
     if (error.name === 'CastError') {
       res.status(404).json({ message: 'User not found' });
