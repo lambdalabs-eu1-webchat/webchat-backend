@@ -20,6 +20,9 @@ const error = {
   restrictedHotelPut: {
     message: 'hotel rooms cannot be ammended via this endpoint',
   },
+  duplicateHotel: {
+    message: 'a hotel with this name already exists',
+  }
 };
 
 module.exports = error;
