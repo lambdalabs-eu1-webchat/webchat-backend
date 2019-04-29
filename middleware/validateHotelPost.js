@@ -7,10 +7,10 @@ const validateHotelPost = async (req, res, next) => {
     .toLowerCase()
     .replace(/\b([a-z])/gi, char => char.toUpperCase());
   const hotelUniqueCheck = await models.Hotel.findOne({ name: hotelName });
-  if (!hotel.name || !hotel.motto) {
-    res.status(400).json(error.invalidHotelPost);
-  } else if (hotelUniqueCheck) {
+  if (hotelUniqueCheck) {
     res.status(400).json(error.duplicateHotel);
+  } else if (!hotel.name || !hotel.motto) {
+    res.status(400).json(error.invalidHotelPost);
   } else {
     next();
   }
