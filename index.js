@@ -9,8 +9,7 @@ connectDb()
   .then(async () => {
     try {
       const usersLength = await models.User.find();
-      if (true) {
-        //process.env.NODE_ENV === 'development' && usersLength.length === 0
+      if (process.env.NODE_ENV === 'development' && usersLength.length === 0) {
         seed();
       }
       server.listen(port, () =>

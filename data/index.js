@@ -6,13 +6,14 @@ module.exports = async () => {
   // remove all hotels
   try {
     await Promise.all([
-      // models.Chat.deleteMany({}),
+      models.Chat.deleteMany({}),
       models.User.deleteMany({}),
       models.Hotel.deleteMany({}),
     ]);
-    console.log('here');
     let hotels = await seedHotel();
     let hotelsWithUsers = await seedUsers(hotels);
+    await seedChats(hotelsWithUsers);
+    console.log('Done seeding');
   } catch (error) {
     console.log(error);
   }

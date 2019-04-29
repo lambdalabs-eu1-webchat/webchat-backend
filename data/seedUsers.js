@@ -4,7 +4,8 @@ const { models } = require('../models/index');
 
 const seedUsers = async hotels => {
   const users = []; // list of promises to wait for
-  hotels.forEach((hotel, i) => {
+  const updatedHotels = JSON.parse(JSON.stringify(hotels));
+  updatedHotels.forEach((hotel, i) => {
     hotel_id = hotel._id;
 
     //make super admin for this hotel
@@ -64,15 +65,16 @@ const seedUsers = async hotels => {
         is_left: j / rooms.length > 1,
       });
     }
-    hotels[i].superAdmin = superAdmin;
-    hotels[i].admins = admins;
-    hotels[i].receptionists = receptionists;
-    hotels[i].guests = guests;
+    updatedHotels[i].superAdmin = superAdmin;
+    updatedHotels[i].admins = admins;
+    updatedHotels[i].receptionists = receptionists;
+    updatedHotels[i].guests = guests;
     users.push(superAdmin, ...admins, ...receptionists, ...guests);
     // set the user ids
   });
+  console.log(`Users created: ${users.length} `);
   await models.User.insertMany(users);
-  return hotels;
+  return updatedHotels;
 };
 
 function remainder(numerator, denominator) {

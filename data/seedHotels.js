@@ -20,7 +20,7 @@ function makeHotelrooms() {
 async function hotelSeed() {
   const hotels = [];
   // make hotels
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 5; i++) {
     const hotel = {
       _id: new mongoose.Types.ObjectId(),
       name: faker.company.companyName(),
@@ -29,6 +29,7 @@ async function hotelSeed() {
     };
     hotels.push(hotel);
   }
+  console.log(`Hotels created: ${hotels.length} `);
   await models.Hotel.insertMany(hotels);
   return hotels;
 }
