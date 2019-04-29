@@ -12,7 +12,7 @@ function makeHotelIds() {
 
 function makeHotelroomIds() {
   const idArray = [];
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 5; i++) {
     idArray.push(new mongoose.Types.ObjectId());
   }
   return idArray;
@@ -44,7 +44,7 @@ module.exports = async () => {
   return hotelIds.map((hotelId, i) => {
     return {
       hotelId,
-      hotelroomIds: hotelroomIds[i]
+      roomIds: hotelroomIds[i]
     };
   });
 };
