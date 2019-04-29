@@ -55,12 +55,13 @@ const seedUsers = async hotels => {
         _id: new mongoose.Types.ObjectId(),
         hotel_id,
         name: faker.name.firstName(),
-        passcode: `1234${j}${i}`,
+        passcode: `${j}${i}`,
         user_type: 'guest',
         room: {
           name: rooms[roomIndex].name,
           id: rooms[roomIndex]._id,
         },
+        is_left: j / rooms.length > 1,
       });
     }
     hotels[i].superAdmin = superAdmin;
