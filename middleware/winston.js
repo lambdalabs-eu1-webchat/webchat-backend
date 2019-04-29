@@ -11,7 +11,7 @@ const logger = expressWinston.logger({
         winston.format.timestamp(),
         winston.format.json(),
       ),
-    })
+    }),
   ],
   // loggin levels according to RFC5424 https://tools.ietf.org/html/rfc5424
   levels: {
@@ -34,21 +34,20 @@ const errorLogger = expressWinston.errorLogger({
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.timestamp(),
-        winston.format.simple()
-      )
+        winston.format.simple(),
+      ),
     }),
     new winston.transports.File({
       filename: './logs/error.log',
       format: winston.format.combine(
         winston.format.timestamp(),
-        winston.format.json()
-      )
-    })
-  ]
+        winston.format.json(),
+      ),
+    }),
+  ],
 });
-
 
 module.exports = {
   logger,
-  errorLogger
+  errorLogger,
 };
