@@ -5,7 +5,7 @@ const { models } = require('../models/index');
 const seedUsers = async hotelIds => {
   const promises = [];
   await hotelIds.forEach(async (hotelId, i) => {
-    hotel_id = hotelId.hotelId;
+    const hotel_id = hotelId.hotelId;
 
     //make super admin
     let name = faker.name.firstName();
@@ -23,7 +23,7 @@ const seedUsers = async hotelIds => {
           motto: faker.company.catchPhrase(),
           user_type: 'super admin',
         },
-      ]),
+      ])
     );
     // add admin
     const adminId = new mongoose.Types.ObjectId();
@@ -41,7 +41,7 @@ const seedUsers = async hotelIds => {
           motto: faker.company.catchPhrase(),
           user_type: 'admin',
         },
-      ]),
+      ])
     );
 
     // add receptionists

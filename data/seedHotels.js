@@ -24,9 +24,9 @@ module.exports = async () => {
   // array to save to id of all rooms
   const hotelroomIds = [];
 
-  hotels = hotelIds.map(hotelId => {
+  const hotels = hotelIds.map(hotelId => {
     // get all the room ids for this hotel
-    roomIds = makeHotelroomIds();
+    const roomIds = makeHotelroomIds();
     // save them in the higher scope
     hotelroomIds.push(roomIds);
 
