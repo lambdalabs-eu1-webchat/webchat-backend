@@ -1,5 +1,6 @@
 const server = require("./api/server");
 const createUsers = require("./data/seedUsers");
+const seed = require("./data/index");
 const { models, connectDb } = require("./models/index");
 require("dotenv").config();
 
@@ -14,7 +15,7 @@ connectDb()
 
       // seed users on server refresh
       // createUsers();
-
+      seed();
       server.listen(port, () => console.log(`server up on ${port}`));
     } catch (error) {
       console.error(error);
