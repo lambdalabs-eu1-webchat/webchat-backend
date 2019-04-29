@@ -1,11 +1,30 @@
 const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const { models } = require('../models/index');
 
 const server = express();
 
-// import all middleware and pass server to index.js
-require('../middleware')(server);
+server.use(helmet());
+server.use(cors());
+server.use(express.json());
+server.use(async (req, res, next) => {
+  try {
+    req.context = {
+      models,
+    };
+    next();
+  } catch (error) {
+    console.error(error);
+  }
+});
 
-// import all routes and pass server to index.js
-require('../routes')(server);
+server.get('/', (req, res) => {
+  res.status(200).json({ message: 'API works!' });
+});
+
+const userRoutes = require('./users/userRoutes');
+
+server.use(userRoutes);
 
 module.exports = server;
