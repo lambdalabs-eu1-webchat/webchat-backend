@@ -111,14 +111,14 @@ routes.get('/:id/rooms', async (req, res, next) => {
 // params: depends on if we store in token or not;
 // body: 0;
 // queryString: 0;
-// Path: /hotel/rooms/:id
-routes.put('/:id/rooms/:roomsId', async (req, res, next) => {
-  const { id, roomsId } = req.params;
+// Path: /hotel/:id/rooms/:roomId
+routes.put('/:id/rooms/:roomId', async (req, res, next) => {
+  const { id, roomId } = req.params;
   const roomUpdates = red.body;
   try {
     const updatedHotelRoom = await models.Hotel.where({
       id,
-    }).rooms.findByIdAndUpdate({ id: roomsId }, roomUpdates);
+    }).rooms.findByIdAndUpdate({ id: roomId }, roomUpdates);
     if (updatedHotelRoom) {
       res.status(200).json(updatedHotelRoom);
     } else {
@@ -130,3 +130,22 @@ routes.put('/:id/rooms/:roomsId', async (req, res, next) => {
 });
 
 // [DELETE] rooms
+// params: depends on if we store in token or not;
+// body: 0;
+// queryString: 0;
+// Path: /hotel/rooms/:roomId
+routes.delete('/:id/rooms/:roomId', async (req, res, next) => {
+  const { id, roomId } = req.params;
+  try {
+    const deletedHotelRoom = await models.Hotel.where({ id }).rooms.remove({
+      id: roomId,
+    });
+    if (deletedHotelRoom) {
+      res.status(200).json(deletedHotelRoom);
+    } else {
+      res.status(400).json(error.removeRoom);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
