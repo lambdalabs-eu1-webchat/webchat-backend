@@ -1,7 +1,6 @@
 const server = require("./api/server");
-const createUsers = require("./data/seedUsers");
 const seed = require("./data/index");
-const { models, connectDb } = require("./models/index");
+const { connectDb } = require("./models/index");
 require("dotenv").config();
 
 const port = process.env.PORT || 7000;
@@ -9,13 +8,9 @@ const port = process.env.PORT || 7000;
 connectDb()
   .then(async () => {
     try {
-      // erase DB on server refresh
-      // you can add more models in the array
-      // await Promise.all([models.User.deleteMany({}),]);
-
-      // seed users on server refresh
-      // createUsers();
-      seed();
+      if (process.env.NODE_ENV === 'development' && usersLength.length === 0) {
+        seed();
+      }
       server.listen(port, () => console.log(`server up on ${port}`));
     } catch (error) {
       console.error(error);
