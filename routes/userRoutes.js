@@ -68,6 +68,18 @@ routes.put('/:id', async (req, res, next) => {
     next(error);
   }
 });
+
+/**
+ * [DELETE] Deletes a user by id
+ * @params : user id (integer),
+ * @body : none,
+ * @queryString : none,
+ */
+routes.delete('/:id', async (req, res, next) => {
+  try {
+    const result = await models.User.deleteOne({ _id: req.params.id }).exec();
+    // const result = await models.User.deleteMany({}).exec();
+    res.send(result);
   } catch (error) {
     next(error);
   }
