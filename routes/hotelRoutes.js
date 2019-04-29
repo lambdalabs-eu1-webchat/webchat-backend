@@ -7,7 +7,7 @@ const { models } = require('../models/index');
 // HOTEL - created when a Super Admin USER type is created
 // [POST] new hotel
 // params: 0;
-// body: valid hotel object
+// body: valid hotel object (waiting for schma to define valid)
 // queryString: 0;
 // Path: /hotel
 routes.post('/', async (req, res, next) => {
@@ -29,7 +29,7 @@ routes.post('/', async (req, res, next) => {
 // params: depends on if we store in token or not;
 // body: 0;
 // queryString: 0;
-// Path: /hotel
+// Path: /hotel/:id
 routes.get('/:id', async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -37,7 +37,27 @@ routes.get('/:id', async (req, res, next) => {
     if (hotelInfo) {
       res.status(200).json(hotelInfo);
     } else {
-      res.status(404).json(error.getHotel);
+      res.status(400).json(error.getHotel);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// [PUT] hotel
+// params: depends on if we store in token or not;
+// body: 0;
+// queryString: 0;
+// Path: /hotel/:id
+routes.put('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const hotelUpdates = req.body;
+  try {
+    const updatedHotel = await models.Hotel.findByIdAndUpdate(id, hotelUpdates);
+    if (updatedHotel) {
+      res.status(200).json(updatedHotel);
+    } else {
+      res.status(400).json(error.updateHotel);
     }
   } catch (error) {
     next(error);
@@ -45,39 +65,31 @@ routes.get('/:id', async (req, res, next) => {
 });
 
 // ROOMS
-// [GET] room numbers
+// [POST] new room
+// params: depends on if we store in token or not;
+// body: valid room object (waiting for schma to define valid)
+// queryString: 0;
+// Path: /hotel/rooms/:id
+
+// [GET] rooms
 // params: depends on if we store in token or not;
 // body: 0;
 // queryString: 0;
-// Path: /hotel/rooms/
-routes.get('/rooms', async (req, res, next) => {
+// Path: /hotel/rooms/:id
+routes.get('/rooms/:id', async (req, res, next) => {
   const { id } = req.params;
   try {
     const hotelInfo = await models.Hotel.where({ id });
     if (hotelInfo) {
       res.status(200).json(hotelInfo.rooms);
     } else {
-      res.status(404).json(error.getHotel);
+      res.status(400).json(error.getHotel);
     }
   } catch (error) {
     next(error);
   }
 });
 
-// [POST] new room
-routes.post('/rooms', async (req, res, next) => {
-  const hotel = req.body;
-  try {
-    const addedHotel = await new models.Hotel(hotel);
-    if (addedHotel) {
-      res.status(201).json(addedHotel);
-    } else {
-      res.status(404).json(error.addHotel);
-    }
-  } catch (error) {
-    next(error);
-  }
-});
+// [PUT] rooms
 
-// [DELETE] room
-// [PUT] room numbers
+// [DELETE] rooms
