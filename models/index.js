@@ -12,7 +12,7 @@ const connectDb = () => {
 };
 
 // Add aditional resoure models in the object
-const models = { User };
+const models = { User, Hotel };
 
 module.exports = {
   connectDb,
