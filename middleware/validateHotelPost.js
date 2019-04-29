@@ -6,7 +6,7 @@ const validateHotelPost = async (req, res, next) => {
   const hotelUniqueCheck = await models.Hotel.findOne({ name: hotel.name });
   if (!hotel.name || !hotel.motto) {
     res.status(400).json(error.invalidHotelPost);
-  } else if (hotelUniqueCheck.id) {
+  } else if (hotelUniqueCheck) {
     res.status(400).json(error.duplicateHotel);
   } else {
     next();

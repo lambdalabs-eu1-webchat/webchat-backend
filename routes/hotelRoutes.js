@@ -8,7 +8,6 @@ const validateHotelPost = require('../middleware/validateHotelPost');
 const formatHotel = require('../middleware/formatHotel');
 const validateHotelChange = require('../middleware/validateHotelChange');
 
-
 // ========== HOTEL - created when a Super Admin USER type is created ==========
 
 /**
@@ -27,7 +26,7 @@ const validateHotelChange = require('../middleware/validateHotelChange');
  *  @apiSuccess {String} _id The id of the hotel
  *  @apiSuccess {String} name The hotel name
  *  @apiSuccess {String} motto The hotel motto
- *  @apiSuccess {String} rooms The array of rooms
+ *  @apiSuccess {Array}  rooms An array of the rooms
  *
  *  @apiSuccessExample Success-Response: add hotel
  *    HTTP/1.1 200 OK
@@ -44,13 +43,18 @@ const validateHotelChange = require('../middleware/validateHotelChange');
  *    {
  *      "message": "a hotel must be added with at least a name and motto"
  *    }
+ *  @apiErrorExample Error-Response: duplicate hotel name
+ *    HTTP/1.1 400 BAD REQUEST
+ *    {
+ *      "message": "a hotel with this name already exists"
+ *    }
  */
 routes.post('/', validateHotelPost, formatHotel, async (req, res, next) => {
   const hotel = req.body;
   try {
     const newHotel = new models.Hotel(hotel);
     await newHotel.save();
-    if (newHotel._id) {
+    if (newHotel.id) {
       res.status(201).json(newHotel);
     } else {
       res.status(400).json(error.addHotel);
@@ -139,7 +143,6 @@ routes.get('/:id', validateObjectId, async (req, res, next) => {
  *  @apiParamExample {json} Request-Example:
  *    {
  *      "name": "nicolas group ltd",
- *      "motto": "Function-based contextually-based collaboration",
  *    }
  * 
  *  @apiSuccess {String} _id The id of the hotel
@@ -188,29 +191,24 @@ routes.get('/:id', validateObjectId, async (req, res, next) => {
  *      "message": "the hotel could not be updated or you did not provide any new information"
  *    }
  */
-routes.put(
-  '/:id',
-  validateHotelChange,
-  formatHotel,
-  async (req, res, next) => {
-    const { id } = req.params;
-    const hotelUpdates = req.body;
-    try {
-      const updateResult = await models.Hotel.updateOne(
-        { _id: id },
-        hotelUpdates,
-      );
-      const updatedHotel = await models.Hotel.findById(id);
-      if (updateResult.nModified) {
-        res.status(200).json(updatedHotel);
-      } else {
-        res.status(400).json(error.updateHotel);
-      }
-    } catch (error) {
-      next(error);
+routes.put('/:id', validateHotelChange, formatHotel, async (req, res, next) => {
+  const { id } = req.params;
+  const hotelUpdates = req.body;
+  try {
+    const updateResult = await models.Hotel.updateOne(
+      { _id: id },
+      hotelUpdates,
+    );
+    const updatedHotel = await models.Hotel.findById(id);
+    if (updateResult.nModified) {
+      res.status(200).json(updatedHotel);
+    } else {
+      res.status(400).json(error.updateHotel);
     }
-  },
-);
+  } catch (error) {
+    next(error);
+  }
+});
 
 // ========== ROOMS ========== DRAFT
 
