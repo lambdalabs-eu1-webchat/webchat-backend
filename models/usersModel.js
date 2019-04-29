@@ -8,22 +8,31 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: MODEL_NAMES.HOTELS
   },
+  user_type: {
+    type: String
+  },
   name: {
     type: String
   },
   email: {
     type: String,
-    unique: true
+    unique: true,
+    sparse: true // allows for null with unique
   },
   password: {
     type: String
   },
   passcode: {
     type: String,
-    unique: true
+    unique: true,
+    sparse: true // allows for null with unique
   },
   motto: {
     type: String
+  },
+  is_left: {
+    type: Boolean,
+    default: false
   },
   room: {
     name: {

@@ -19,9 +19,6 @@ function makeHotelroomIds() {
 }
 
 module.exports = async () => {
-  // remove all hotels
-  await Promise.all([models.Hotel.deleteMany({})]);
-
   // make the ids for the hotel
   const hotelIds = makeHotelIds();
   // array to save to id of all rooms
@@ -36,7 +33,6 @@ module.exports = async () => {
     const rooms = roomIds.map((roomId, i) => {
       return { name: `room ${i}`, _id: roomId };
     });
-    console.log(rooms);
     return {
       _id: hotelId,
       rooms,
