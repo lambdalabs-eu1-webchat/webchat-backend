@@ -1,6 +1,7 @@
-const userRoutes = require('./userRoutes');
 const { logger, errorLogger } = require('../middleware/winston');
 const path = require('../utils/path');
+const userRoutes = require('./userRoutes');
+const auth = require('./auth');
 
 module.exports = server => {
   // winston logger
@@ -12,9 +13,8 @@ module.exports = server => {
   });
 
   // routes
+  server.use(path.auth, auth);
   server.use(path.users, userRoutes);
-
-
 
   // error logger - must be last
   server.use(errorLogger);
