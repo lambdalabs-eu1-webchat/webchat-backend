@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const routes = express.Router();
 
-const errorMessages = require('../utils/error');
+const errorMessages = require('../utils/errorMessage');
 const response = require('../utils/response');
 const { models } = require('../models/index');
 
