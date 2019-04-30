@@ -6,24 +6,10 @@ const { models } = require('../models/index');
 const validateObjectId = require('../middleware/validateObjectId');
 const validateRoomObjectId = require('../middleware/validateRoomObjectId');
 const validateRoomsArr = require('../middleware/validateRoomsArr');
+const validateRoomChange = require('../middleware/validateRoomChange');
 const documentExists = require('../utils/documentExists');
 const subDocumentExists = require('../utils/subDocumentExists');
 const capitalizeLetters = require('../utils/capitalizeLetters');
-
-// GET HOTEL ROOMS
-routes.get('/:_id/rooms', validateObjectId, async (req, res, next) => {
-  const { _id } = req.params;
-  try {
-    const hotel = await models.Hotel.findById(_id);
-    if (hotel) {
-      res.status(200).json(hotel.rooms);
-    } else {
-      res.status(400).json(errorMessage.noHotel);
-    }
-  } catch (error) {
-    next(error);
-  }
-});
 
 // POST HOTEL ROOMS ARRAY
 routes.post(
@@ -74,53 +60,85 @@ routes.post(
   },
 );
 
-// DELETE ROOM
-routes.get(
+// GET HOTEL ROOMS
+routes.get('/:_id/rooms', validateObjectId, async (req, res, next) => {
+  const { _id } = req.params;
+  try {
+    const hotel = await models.Hotel.findById(_id);
+    if (hotel) {
+      res.status(200).json(hotel.rooms);
+    } else {
+      res.status(400).json(errorMessage.noHotel);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// [PUT] room
+routes.put(
   '/:_id/rooms/:_roomId',
   validateObjectId,
   validateRoomObjectId,
-  async (req, res) => {
+  validateRoomChange,
+  async (req, res, next) => {
     const { _id, _roomId } = req.params;
+    const roomUpdates = req.body;
+    try {
+      // check if the hotel exists
+      if (await documentExists({ _id }, 'Hotel')) {
+        const hotel = await models.Hotel.findById(_id);
 
-    // check if the hotel exists
-    if (await documentExists({ _id }, 'Hotel')) {
-      const hotel = await models.Hotel.findById(_id);
+        // check if the room exists
+        if (await subDocumentExists(hotel, 'rooms', _roomId)) {
+          const room = await hotel.rooms.id(_roomId);
+          room.name = roomUpdates.name;
+          await hotel.save();
 
-      // check if the room exists
-      if (await subDocumentExists(hotel, 'rooms', _roomId)) {
-        const room = await hotel.rooms.id(_roomId);
-        const deletedRoom = await room.remove();
-        await hotel.save();
-        res.status(200).json(deletedRoom);
+          // get updated documents
+          const updatedHotel = await models.Hotel.findById(_id);
+          const updatedRoom = await updatedHotel.rooms.id(_roomId);
+          res.status(200).json(updatedRoom);
+        } else {
+          res.status(400).json(errorMessage.noRoom);
+        }
       } else {
-        res.status(400).json(errorMessage.noRoom);
+        res.status(400).json(errorMessage.noHotel);
       }
-    } else {
-      res.status(400).json(errorMessage.noHotel);
+    } catch (error) {
+      next(error);
     }
   },
 );
 
-// [PUT] room
-// params: depends on if we store in token or not;
-// body: 0;
-// queryString: 0;
-// Path: /hotel/:id/rooms/:roomId
-// routes.put('/:id/rooms/:roomId', async (req, res, next) => {
-//   const { id, roomId } = req.params;
-//   const roomUpdates = red.body;
-//   try {
-//     const updatedHotelRoom = await models.Hotel.where({
-//       id,
-//     }).rooms.findByIdAndUpdate({ id: roomId }, roomUpdates);
-//     if (updatedHotelRoom) {
-//       res.status(200).json(updatedHotelRoom);
-//     } else {
-//       res.status(400).json(error.updateRoom);
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// });
+// DELETE ROOM
+routes.delete(
+  '/:_id/rooms/:_roomId',
+  validateObjectId,
+  validateRoomObjectId,
+  async (req, res, next) => {
+    const { _id, _roomId } = req.params;
+    try {
+      // check if the hotel exists
+      if (await documentExists({ _id }, 'Hotel')) {
+        const hotel = await models.Hotel.findById(_id);
+
+        // check if the room exists
+        if (await subDocumentExists(hotel, 'rooms', _roomId)) {
+          const room = await hotel.rooms.id(_roomId);
+          const deletedRoom = await room.remove();
+          await hotel.save();
+          res.status(200).json(deletedRoom);
+        } else {
+          res.status(400).json(errorMessage.noRoom);
+        }
+      } else {
+        res.status(400).json(errorMessage.noHotel);
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 module.exports = routes;

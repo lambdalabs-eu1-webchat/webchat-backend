@@ -38,6 +38,9 @@ const errorMessage = {
     message: 'Every room must have a provided name',
   },
   noRoom: { message: 'No room exists with this id.' },
+  invalidRoomPut: {
+    message: 'A room must be updated with a new name.',
+  },
 };
 
 module.exports = errorMessage;
