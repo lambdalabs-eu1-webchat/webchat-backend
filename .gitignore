@@ -34,3 +34,6 @@ yarn.lock
 # vscode debugger config
 .vscode
 /.idea
+
+#docs folder
+docs

@@ -21,8 +21,8 @@ connectDb()
         console.log(
           `=== Server running on port: ${port} in ${
             process.env.NODE_ENV
-          } mode ====`
-        )
+          } mode ====`,
+        ),
       );
     } catch (error) {
       console.error(error);
