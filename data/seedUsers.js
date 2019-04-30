@@ -18,7 +18,7 @@ const seedUsers = async hotels => {
       hotel_id,
       name: faker.name.firstName(),
       email: `superAdmin${i}@superAdmin.com`,
-      password: '1234',
+      password: bcrypt.hashSync('1234', 10),
       motto: faker.company.catchPhrase(),
       user_type: USER_TYPES.SUPER_ADMIN,
     };
