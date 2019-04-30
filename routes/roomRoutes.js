@@ -2,6 +2,7 @@ const express = require('express');
 const routes = express.Router();
 
 const errorMessage = require('../utils/errorMessage');
+const response = require('../utils/response');
 const { models } = require('../models/index');
 const validateObjectId = require('../middleware/validateObjectId');
 const validateRoomObjectId = require('../middleware/validateRoomObjectId');
@@ -12,6 +13,8 @@ const subDocumentExists = require('../utils/subDocumentExists');
 const capitalizeLetters = require('../utils/capitalizeLetters');
 
 // POST HOTEL ROOMS ARRAY
+// params: hotel _id
+// body: [{"name": "hotelName"}]
 routes.post(
   '/:_id/rooms',
   validateObjectId,
@@ -43,7 +46,7 @@ routes.post(
         // if some/all room names were duplicates, res with the current hotel rooms and a message to say some weren not added
         if (duplicateRooms.length) {
           res.status(200).json({
-            ...errorMessage.duplicateRoom,
+            ...response.duplicateRoom,
             currentRoomList: updatedHotel.rooms,
           });
 
@@ -61,6 +64,7 @@ routes.post(
 );
 
 // GET HOTEL ROOMS
+// params: hotel _id
 routes.get('/:_id/rooms', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
   try {
@@ -76,6 +80,8 @@ routes.get('/:_id/rooms', validateObjectId, async (req, res, next) => {
 });
 
 // [PUT] room
+// params: hotel _id, room _id
+// body: {{"name": "newHotelName"}]
 routes.put(
   '/:_id/rooms/:_roomId',
   validateObjectId,
@@ -112,6 +118,7 @@ routes.put(
 );
 
 // DELETE ROOM
+// params: hotel _id, room _id
 routes.delete(
   '/:_id/rooms/:_roomId',
   validateObjectId,

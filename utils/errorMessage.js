@@ -28,9 +28,6 @@ const errorMessage = {
   duplicateHotel: {
     message: 'A hotel with this name already exists.',
   },
-  duplicateRoom: {
-    message: 'Some/all rooms were not added because their names already exist',
-  },
   typeArr: {
     message: 'An array was expected but not found',
   },
