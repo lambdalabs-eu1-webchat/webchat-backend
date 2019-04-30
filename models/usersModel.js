@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const MODEL_NAMES = require("./MODEL_NAMES");
+const mongoose = require('mongoose');
+const MODEL_NAMES = require('./MODEL_NAMES');
 
 const usersSchema = new mongoose.Schema({
     // _id

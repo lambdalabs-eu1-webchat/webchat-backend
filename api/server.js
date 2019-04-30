@@ -24,16 +24,16 @@ server.use(async (req, res, next) => {
 
 app.set('views', __dirname + 'views')
   .engine('html', require('ejs').renderFile)
-  .use(app.router)
+  // .use(app.router)
   .use(express.static(__dirname + '/public'))
-  .
+  
 
 
-server.get('/', (req, res) => {
-  res.status(200).json({ message: 'API works!' });
-});
+// server.get('/', (req, res) => {
+//   res.status(200).json({ message: 'API works!' });
+// });
 
-const userRoutes = require('./users/userRoutes');
+const userRoutes = require('../routes/userRoutes');
 
 server.use(userRoutes);
 
