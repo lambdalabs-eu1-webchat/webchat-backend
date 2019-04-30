@@ -2,6 +2,7 @@ const faker = require('faker');
 const { models } = require('../models/index');
 const randomMinMax = require('../utils/helperFunctions.js').randomMinMax;
 const remainder = require('../utils/helperFunctions.js').remainder;
+const TICKET_STATUSES = require('../models/TICKET_STATUSES.js');
 
 const seedChats = async hotels => {
   // for each hotel
@@ -24,13 +25,13 @@ const seedChats = async hotels => {
       for (let i = 0; i < numberTickets; i++) {
         const status =
           guest.is_left || !(i === numberTickets - 1)
-            ? 'closed'
+            ? TICKET_STATUSES.CLOSED
             : queueOrActiveFunc();
         tickets.push({
           status,
           messages: makeMessages(guest, receptionist),
           rating:
-            status === 'closed'
+            status === TICKET_STATUSES.CLOSED
               ? randomMinMax(1, 5) //Math.floor(Math.random() * (5 - 1) + 1)
               : null,
         });
@@ -88,12 +89,12 @@ function makeMessage(name, id) {
 }
 
 function queueOrActive() {
-  let returnVal = 'queue';
+  let returnVal = TICKET_STATUSES.QUEUED;
   return function() {
-    if (returnVal === 'queue') {
-      returnVal = 'active';
+    if (returnVal === TICKET_STATUSES.QUEUED) {
+      returnVal = TICKET_STATUSES.ACTIVE;
     } else {
-      returnVal === 'queue';
+      returnVal = TICKET_STATUSES.QUEUED;
     }
     return returnVal;
   };

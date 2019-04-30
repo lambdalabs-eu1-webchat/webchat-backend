@@ -52,7 +52,7 @@ const seedUsers = async hotels => {
     }
     // make guests
     const guests = [];
-    const numberGuests = randomMinMax(25, 50); // Math.random() * (50 - 25) + 25;
+    const numberGuests = randomMinMax(25, 50);
     const rooms = hotel.rooms;
     for (let j = 0; j < numberGuests; j++) {
       const roomIndex = Math.round(remainder(j, rooms.length) * rooms.length); // loops over all rooms
