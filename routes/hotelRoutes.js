@@ -31,11 +31,11 @@ const validateHotelChange = require('../middleware/validateHotelChange');
  *  @apiSuccessExample Success-Response: add hotel
  *    HTTP/1.1 200 OK
  *    {
-    "_id": "5cc7448e8372e2234f04325f",
-    "name": "Nicholas Group",
-    "motto": "Function-based contextually-based collaboration",
-    "rooms": [],
-    "__v": 0
+ *   "_id": "5cc7448e8372e2234f04325f",
+ *   "name": "Nicholas Group",
+ *   "motto": "Function-based contextually-based collaboration",
+ *   "rooms": [],
+ *   "__v": 0
  *    }
  *
  *  @apiErrorExample Error-Response: minimum hotel requirements not met
@@ -79,34 +79,34 @@ routes.post('/', validateHotelPost, formatHotel, async (req, res, next) => {
  *
  *  @apiSuccessExample Success-Response: get hotel information
  *    HTTP/1.1 200 OK
- * {
-    "_id": "5cc72a4afde4851e5c3c25ef",
-    "rooms": [
-        {
-            "_id": "5cc72a4afde4851e5c3c25f1",
-            "name": "room 0"
-        },
-        {
-            "_id": "5cc72a4afde4851e5c3c25f2",
-            "name": "room 1"
-        },
-        {
-            "_id": "5cc72a4afde4851e5c3c25f3",
-            "name": "room 2"
-        },
-        {
-            "_id": "5cc72a4afde4851e5c3c25f4",
-            "name": "room 3"
-        },
-        {
-            "_id": "5cc72a4afde4851e5c3c25f5",
-            "name": "room 4"
-        }
-    ],
-    "name": "Nicolas Group",
-    "motto": "Function-based contextually-based collaboration",
-    "__v": 0
-}
+ *    {
+ *   "_id": "5cc72a4afde4851e5c3c25ef",
+ *   "rooms": [
+ *     {
+ *         "_id": "5cc72a4afde4851e5c3c25f1",
+ *         "name": "room 0"
+ *     },
+ *     {
+ *         "_id": "5cc72a4afde4851e5c3c25f2",
+ *         "name": "room 1"
+ *     },
+ *     {
+ *         "_id": "5cc72a4afde4851e5c3c25f3",
+ *         "name": "room 2"
+ *     },
+ *     {
+ *         "_id": "5cc72a4afde4851e5c3c25f4",
+ *         "name": "room 3"
+ *     },
+ *     {
+ *         "_id": "5cc72a4afde4851e5c3c25f5",
+ *         "name": "room 4"
+ *     }
+ *     ],
+ *   "name": "Nicolas Group",
+ *   "motto": "Function-based contextually-based collaboration",
+ *   "__v": 0
+ *    }
  *  @apiErrorExample Error-Response: invalid object id
  *    HTTP/1.1 400 BAD REQUEST
  *    {
@@ -153,33 +153,33 @@ routes.get('/:id', validateObjectId, async (req, res, next) => {
  *  @apiSuccessExample Success-Response: changed hotel information
  *    HTTP/1.1 200 OK
  * {
-    "_id": "5cc72a4afde4851e5c3c25ef",
-    "rooms": [
-        {
-            "_id": "5cc72a4afde4851e5c3c25f1",
-            "name": "room 0"
-        },
-        {
-            "_id": "5cc72a4afde4851e5c3c25f2",
-            "name": "room 1"
-        },
-        {
-            "_id": "5cc72a4afde4851e5c3c25f3",
-            "name": "room 2"
-        },
-        {
-            "_id": "5cc72a4afde4851e5c3c25f4",
-            "name": "room 3"
-        },
-        {
-            "_id": "5cc72a4afde4851e5c3c25f5",
-            "name": "room 4"
-        }
-    ],
-    "name": "Nicolas Group Ltd",
-    "motto": "Function-based contextually-based collaboration",
-    "__v": 0
-}
+ *   "_id": "5cc72a4afde4851e5c3c25ef",
+ *   "rooms": [
+ *       {
+ *           "_id": "5cc72a4afde4851e5c3c25f1",
+ *           "name": "room 0"
+ *       },
+ *       {
+ *           "_id": "5cc72a4afde4851e5c3c25f2",
+ *           "name": "room 1"
+ *       },
+ *       {
+ *           "_id": "5cc72a4afde4851e5c3c25f3",
+ *           "name": "room 2"
+ *       },
+ *       {
+ *           "_id": "5cc72a4afde4851e5c3c25f4",
+ *           "name": "room 3"
+ *       },
+ *       {
+ *           "_id": "5cc72a4afde4851e5c3c25f5",
+ *           "name": "room 4"
+ *       }
+ *   ],
+ *   "name": "Nicolas Group Ltd",
+ *   "motto": "Function-based contextually-based collaboration",
+ *   "__v": 0
+ *    }
  *  @apiErrorExample Error-Response: no valid changes requested
  *    HTTP/1.1 400 BAD REQUEST
  *    {
