@@ -32,14 +32,17 @@ const ticketSchema = new mongoose.Schema({
       sender: {
         name: {
           type: String,
+          required: true,
         },
         id: {
           type: mongoose.Schema.Types.ObjectId,
           ref: MODEL_NAMES.USERS,
+          required: true,
         },
       },
       text: {
         type: String,
+        required: true,
       },
     },
   ],
