@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const server = require('./api/server');
 const seed = require('./data/index');
 const { models, connectDb } = require('./models/index');
@@ -8,11 +9,21 @@ const port = process.env.PORT || 7000;
 connectDb()
   .then(async () => {
     try {
-      const usersLength = await models.User.find();
-      if (process.env.NODE_ENV === 'development' && usersLength.length === 0) {
+      const allUsersArray = await models.User.find();
+      // run seeds if in development ENV & there are no users seeded in the DB
+      if (
+        process.env.NODE_ENV === 'development' &&
+        allUsersArray.length === 0
+      ) {
         seed();
       }
-      server.listen(port, () => console.log(`=== Server running on port: ${port} in ${process.env.NODE_ENV} mode ====`));
+      server.listen(port, () =>
+        console.log(
+          `=== Server running on port: ${port} in ${
+            process.env.NODE_ENV
+          } mode ====`
+        )
+      );
     } catch (error) {
       console.error(error);
     }

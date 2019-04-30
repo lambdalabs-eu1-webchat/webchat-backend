@@ -6,13 +6,12 @@ const errorMessages = require('../utils/errorMessage');
 const response = require('../utils/response');
 const { models } = require('../models/index');
 
-
 /**
  * [GET] Returns all users
  * @params : none,
  * @body : none,
  * @queryString : none,
-*/
+ */
 routes.get('/', async (req, res, next) => {
   try {
     const users = await models.User.find();
@@ -27,7 +26,7 @@ routes.get('/', async (req, res, next) => {
  * @params : user id (integer),
  * @body : none,
  * @queryString : none,
-*/
+ */
 routes.get('/:id', async (req, res, next) => {
   try {
     const user = await models.User.findById(req.params.id).exec();

@@ -1,11 +1,10 @@
 const faker = require('faker');
-const mongoose = require('mongoose');
 const { models } = require('../models/index');
 
 const seedChats = async hotelIds => {
   // for each hotel
   hotelIds.forEach(async (hotelId, i) => {
-    hotel_id = hotelId.hotelId;
+    let hotel_id = hotelId.hotelId;
     hotelIds[i].guests.forEach(guest => {
       // make a chat log for each guest
       const tickets = [];

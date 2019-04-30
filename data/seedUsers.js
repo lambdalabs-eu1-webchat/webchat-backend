@@ -1,11 +1,12 @@
 const faker = require('faker');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const { models } = require('../models/index');
 
 const seedUsers = async hotelIds => {
   const promises = [];
   await hotelIds.forEach(async (hotelId, i) => {
-    hotel_id = hotelId.hotelId;
+    const hotel_id = hotelId.hotelId;
 
     //make super admin
     let name = faker.name.firstName();
@@ -19,11 +20,11 @@ const seedUsers = async hotelIds => {
           hotel_id,
           name: faker.name.firstName(),
           email: `superAdmin${i}.superAdmin`,
-          password: '1234',
+          password: bcrypt.hashSync('1234', 10),
           motto: faker.company.catchPhrase(),
           user_type: 'super admin',
         },
-      ]),
+      ])
     );
     // add admin
     const adminId = new mongoose.Types.ObjectId();
@@ -37,11 +38,11 @@ const seedUsers = async hotelIds => {
           hotel_id,
           name,
           email: `admin${i}.admin`,
-          password: '1234',
+          password: bcrypt.hashSync('1234', 10),
           motto: faker.company.catchPhrase(),
           user_type: 'admin',
         },
-      ]),
+      ])
     );
 
     // add receptionists
@@ -55,7 +56,7 @@ const seedUsers = async hotelIds => {
         hotel_id,
         name,
         email: faker.internet.email(),
-        password: '1234',
+        password: bcrypt.hashSync('1234', 10),
         motto: faker.company.catchPhrase(),
         user_type: 'recptionist',
       });

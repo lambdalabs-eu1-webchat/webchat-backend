@@ -2,6 +2,7 @@ const userRoutes = require('./userRoutes');
 const hotelRoutes = require('./hotelRoutes');
 const { logger, errorLogger } = require('../middleware/winston');
 const path = require('../utils/path');
+const auth = require('./auth');
 
 module.exports = server => {
   // winston logger
@@ -13,6 +14,7 @@ module.exports = server => {
   });
 
   // routes
+  server.use(path.auth, auth);
   server.use(path.users, userRoutes);
   server.use(path.hotel, hotelRoutes);
 
