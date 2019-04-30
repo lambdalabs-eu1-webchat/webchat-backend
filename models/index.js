@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const User = require('./userModels');
+const User = require('./usersModels');
 const Hotel = require('./hotelModels');
 const Chat = require('./chatsModels');
 

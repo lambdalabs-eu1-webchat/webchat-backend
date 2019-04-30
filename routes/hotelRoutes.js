@@ -136,7 +136,7 @@ routes.get('/:_id', validateObjectId, async (req, res, next) => {
 /**
  *  @api {put} api/hotel/:_id Put hotel information
  *  @apiVersion 0.1.0
- *  @apiName putHotel/_:id
+ *  @apiName putHotel/:_id
  *  @apiGroup Hotels
  *
  *  @apiParam {String} _id hotel id
