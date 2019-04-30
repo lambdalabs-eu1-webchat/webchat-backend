@@ -6,7 +6,8 @@
   "scripts": {
     "server": "nodemon index.js",
     "start": "node index.js",
-    "test": "cross-env NODE_ENV=testing jest --watch --verbose"
+    "test": "cross-env NODE_ENV=testing jest --watch --verbose",
+    "docs": "npx apidoc -f .js -i ./routes -o docs/ -e node_modules/"
   },
   "repository": {
     "type": "git",
@@ -32,7 +33,9 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "apidoc": "^0.17.7",
     "cross-env": "^5.2.0",
+    "eslint": "^5.16.0",
     "jest": "^24.7.1",
     "nodemon": "^1.18.11",
     "supertest": "^4.0.2"

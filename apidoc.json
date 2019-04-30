@@ -1,0 +1,9 @@
+{
+  "name": "Hotel Messaging API Documentation",
+  "version": "1.0.0",
+  "description": "API hotel messaging for Lambda School",
+  "template": {
+    "forceLanguage": "en",
+    "withGenerator": true
+  }
+}
