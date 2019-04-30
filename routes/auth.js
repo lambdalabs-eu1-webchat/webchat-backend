@@ -1,7 +1,9 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const createToken = require('../utils/createToken');
 const { models } = require('../models/index');
+const { duplicateEmail, invalidCredentials } = require('../utils/errorMessage');
+const documentExists = require('../utils/documentExists');
 
 const routes = express.Router();
 
@@ -11,13 +13,10 @@ routes.post(
   async (req, res, next) => {
     try {
       // Check if this name already exist in DB
-      let { name, hotel_id, password } = req.body;
-      const [existingUser] = await models.User.where({ name });
+      let { name, hotel_id, password, email } = req.body;
 
-      if (existingUser) {
-        return res.status(422).json({
-          message: 'That name is taken already.',
-        });
+      if (await documentExists({ email }, 'User')) {
+        return res.status(422).json(duplicateEmail);
       }
 
       password = bcrypt.hashSync(password, 10);
@@ -58,13 +57,13 @@ routes.post(
         const { id, hotel_id } = user;
 
         const token = createToken({ id, name, hotel_id });
-        console.log('user before:', user);
+
         // remove password from the returned user object, so it's not sent to FE
         user.password = undefined;
-        console.log('user after:', user);
+
         res.status(200).json({ user, token });
       } else {
-        res.status(401).json({ message: 'Invalid Credentials' });
+        res.status(401).json(invalidCredentials);
       }
     } catch (err) {
       next(err);

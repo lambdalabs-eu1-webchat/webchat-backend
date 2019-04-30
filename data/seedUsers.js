@@ -1,6 +1,6 @@
 const faker = require('faker');
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { models } = require('../models/index');
 
 const seedUsers = async hotelIds => {

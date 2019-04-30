@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { super_secret } = require('../utils/secrets');
+const { invalidCredentials } = require('../utils/errorMessage');
 
 const jwtKey = process.env.JWT_SECRET || super_secret;
 
@@ -10,7 +11,7 @@ module.exports = (req, res, next) => {
     jwt.verify(token, jwtKey, (err, decoded) => {
       if (err) {
         console.error(err);
-        res.status(401).json({ message: 'Invalid Credentials' });
+        res.status(401).json(invalidCredentials);
       } else {
         req.tokenPayload = decoded;
         next();
