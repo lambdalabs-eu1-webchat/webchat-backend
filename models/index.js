@@ -1,8 +1,4 @@
 const mongoose = require('mongoose');
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master
 const User = require('./usersModels');
 const Hotel = require('./hotelModels');
 const Chat = require('./chatsModels');
