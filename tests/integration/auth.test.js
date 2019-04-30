@@ -83,4 +83,40 @@ describe('/api/auth', () => {
       expect(createdUser.text).not.toHaveProperty('password');
     });
   });
+
+  describe('POST /login', () => {
+    it('should return 200 on success', async () => {
+      const newUser = {
+        name: 'Joe',
+        password: '1234',
+      };
+      return request(server)
+        .post('/api/auth/login')
+        .send(newUser)
+        .expect(200);
+    });
+
+    it('should return 401 on bad credentials', async () => {
+      const newUser = {
+        name: 'Joe',
+        password: '12345896',
+      };
+      return request(server)
+        .post('/api/auth/login')
+        .send(newUser)
+        .expect(401);
+    });
+
+    it('should return return the user object without password', async () => {
+      const newUser = {
+        name: 'Joe',
+        password: '1234',
+      };
+      const createdUser = await request(server)
+        .post('/api/auth/login')
+        .send(newUser);
+
+      expect(createdUser.text).not.toHaveProperty('password');
+    });
+  });
 });
