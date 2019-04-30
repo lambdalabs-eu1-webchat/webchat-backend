@@ -10,8 +10,8 @@ module.exports = async () => {
       models.User.deleteMany({}),
       models.Hotel.deleteMany({}),
     ]);
-    let hotels = await seedHotel();
-    let hotelsWithUsers = await seedUsers(hotels);
+    const hotels = await seedHotel();
+    const hotelsWithUsers = await seedUsers(hotels);
     await seedChats(hotelsWithUsers);
     console.log('Done seeding');
   } catch (error) {

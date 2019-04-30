@@ -11,8 +11,8 @@ connectDb()
       const allUsersArray = await models.User.find();
       // run seeds if in development ENV & there are no users seeded in the DB
       if (
-        process.env.NODE_ENV === 'development' &&
-        allUsersArray.length === 0
+        true ||
+        (process.env.NODE_ENV === 'development' && allUsersArray.length === 0)
       ) {
         seed();
       }

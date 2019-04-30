@@ -1,12 +1,13 @@
 const faker = require('faker');
 const { models } = require('../models/index');
 const randomMinMax = require('../utils/helperFunctions.js').randomMinMax;
+const remainder = require('../utils/helperFunctions.js').remainder;
 
 const seedChats = async hotels => {
   // for each hotel
   const chats = [];
-  hotels.forEach((hotel, i) => {
-    hotel_id = hotel._id;
+  hotels.forEach(hotel => {
+    const hotel_id = hotel._id;
     const queueOrActiveFunc = queueOrActive(); // function that toggles active and queue
     hotel.guests.forEach((guest, j) => {
       // get the staff member
@@ -98,8 +99,4 @@ function queueOrActive() {
   };
 }
 
-function remainder(numerator, denominator) {
-  const num = numerator / denominator;
-  return num - Math.floor(num);
-}
 module.exports = seedChats;

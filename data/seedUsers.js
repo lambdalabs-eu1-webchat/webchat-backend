@@ -4,22 +4,23 @@ const bcrypt = require('bcrypt');
 const { models } = require('../models/index');
 const randomMinMax = require('../utils/helperFunctions.js').randomMinMax;
 const remainder = require('../utils/helperFunctions.js').remainder;
+const USER_TYPES = require('../models/USER_TYPES.js');
 
 const seedUsers = async hotels => {
   const users = []; // list of promises to wait for
   const updatedHotels = JSON.parse(JSON.stringify(hotels));
   updatedHotels.forEach((hotel, i) => {
-    hotel_id = hotel._id;
+    const hotel_id = hotel._id;
 
     //make super admin for this hotel
     const superAdmin = {
       _id: new mongoose.Types.ObjectId(),
       hotel_id,
       name: faker.name.firstName(),
-      email: `superAdmin${i}.superAdmin`,
+      email: `superAdmin${i}@superAdmin.com`,
       password: '1234',
       motto: faker.company.catchPhrase(),
-      user_type: 'super admin',
+      user_type: USER_TYPES.SUPER_ADMIN,
     };
 
     // make admins
@@ -32,7 +33,7 @@ const seedUsers = async hotels => {
         email: faker.internet.email(),
         password: bcrypt.hashSync('1234', 10),
         motto: faker.company.catchPhrase(),
-        user_type: 'admin',
+        user_type: USER_TYPES.ADMIN,
       });
     }
     // make receptionists
@@ -46,7 +47,7 @@ const seedUsers = async hotels => {
         email: faker.internet.email(),
         password: bcrypt.hashSync('1234', 10),
         motto: faker.company.catchPhrase(),
-        user_type: 'receptionist',
+        user_type: USER_TYPES.RECEPTIONIST,
       });
     }
     // make guests
@@ -60,7 +61,7 @@ const seedUsers = async hotels => {
         hotel_id,
         name: faker.name.firstName(),
         passcode: `${j}${i}`,
-        user_type: 'guest',
+        user_type: USER_TYPES.GUEST,
         room: {
           name: rooms[roomIndex].name,
           id: rooms[roomIndex]._id,

@@ -4,9 +4,12 @@ const MODEL_NAMES = require('./MODEL_NAMES');
 const ticketSchema = new mongoose.Schema({
   status: {
     type: String,
+    enum: ['active', 'queued', 'closed'],
   },
   rating: {
     type: Number,
+    min: 1,
+    max: 5,
   },
   staff_member: {
     id: {

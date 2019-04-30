@@ -2,8 +2,10 @@ const mongoose = require('mongoose');
 const MODEL_NAMES = require('./MODEL_NAMES');
 
 const roomSchema = new mongoose.Schema({
+  //_id
   name: {
     type: String,
+    required: true,
   },
 });
 
@@ -13,6 +15,7 @@ const hotelSchema = new mongoose.Schema({
   rooms: [roomSchema],
   name: {
     type: String,
+    required: true,
   },
   motto: {
     type: String,
