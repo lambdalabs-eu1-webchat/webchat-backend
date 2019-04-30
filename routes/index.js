@@ -18,6 +18,7 @@ module.exports = server => {
   server.use(path.auth, auth);
   server.use(path.users, userRoutes);
   server.use(path.hotel, hotelRoutes);
+  server.use(path.hotel, roomRoutes)
 
   // error logger - must be last
   server.use(errorLogger);

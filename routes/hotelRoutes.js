@@ -9,8 +9,6 @@ const validateHotelPost = require('../middleware/validateHotelPost');
 const formatHotel = require('../middleware/formatHotel');
 const validateHotelChange = require('../middleware/validateHotelChange');
 
-// ========== HOTEL - created when a Super Admin USER type is created ==========
-
 /**
  *  @api {get} api/hotel Add new hotel
  *  @apiVersion 0.1.0
@@ -42,12 +40,12 @@ const validateHotelChange = require('../middleware/validateHotelChange');
  *  @apiErrorExample Error-Response: minimum hotel requirements not met
  *    HTTP/1.1 400 BAD REQUEST
  *    {
- *      "message": "a hotel must be added with at least a name and motto"
+ *      "message": "A hotel must be added with at least a name and motto."
  *    }
  *  @apiErrorExample Error-Response: duplicate hotel name
  *    HTTP/1.1 400 BAD REQUEST
  *    {
- *      "message": "a hotel with this name already exists"
+ *      "message": "A hotel with this name already exists."
  *    }
  */
 routes.post('/', formatHotel, validateHotelPost, async (req, res, next) => {
@@ -105,18 +103,18 @@ routes.post('/', formatHotel, validateHotelPost, async (req, res, next) => {
  *     }
  *     ],
  *   "name": "Nicolas Group",
- *   "motto": "Function-based contextually-based collaboration",
+ *   "motto": "Function-based contextually-based collaboration.",
  *   "__v": 0
  *    }
  *  @apiErrorExample Error-Response: invalid object id
  *    HTTP/1.1 400 BAD REQUEST
  *    {
- *      "message": "an invalid ObjectId was passed"
+ *      "message": "An invalid ObjectId was passed."
  *    }
  *  @apiErrorExample Error-Response: hotel id does not exist
  *    HTTP/1.1 400 BAD REQUEST
  *    {
- *      "message": "an invalid ObjectId was passed"
+ *      "message: 'No hotel exists with this id.""
  *    }
  */
 routes.get('/:_id', validateObjectId, async (req, res, next) => {
@@ -184,17 +182,17 @@ routes.get('/:_id', validateObjectId, async (req, res, next) => {
  *   @apiErrorExample Error-Response: the hotel id does not exist
  *    HTTP/1.1 400 BAD REQUEST
  *    {
- *      message: 'no hotel exists with this id'
+ *      message: 'No hotel exists with this id.'
  *    }
  *  @apiErrorExample Error-Response: no valid changes requested
- *    HTTP/1.1 400 BAD REQUEST: message: 'no hotel exists with this id'
+ *    HTTP/1.1 400 BAD REQUEST: message: 'No hotel exists with this id'
  *    {
- *      "message": "a hotel must be added with at least a name and motto"
+ *      "message": "A hotel must be added with at least a name and motto."
  *    }
  *  @apiErrorExample Error-Response: changes requested that are the same as  existing hotel information
  *    HTTP/1.1 400 BAD REQUEST
  *    {
- *      "message": "the hotel could not be updated or you did not provide any new information"
+ *      "message": "The hotel could not be updated or you did not provide any new information."
  *    }
  */
 routes.put(
