@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 const Hotel = require('../../models/hotelModels');
-//  process.env.TEST_SUITE = 'hotels-test';
-
 describe('Hotel Model', () => {
   it('should return a error if rooms is not an array', done => {
     const hotel = new Hotel({ rooms: 1, name: 'West', motto: 'a motto' });
