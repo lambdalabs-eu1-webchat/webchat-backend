@@ -1,5 +1,4 @@
 const faker = require('faker');
-const mongoose = require('mongoose');
 const { models } = require('../models/index');
 
 const seedChats = async hotels => {

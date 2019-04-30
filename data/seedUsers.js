@@ -1,5 +1,6 @@
 const faker = require('faker');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const { models } = require('../models/index');
 
 const seedUsers = async hotels => {
@@ -27,7 +28,7 @@ const seedUsers = async hotels => {
         hotel_id,
         name: faker.name.firstName(),
         email: faker.internet.email(),
-        password: '1234',
+        password: bcrypt.hashSync('1234', 10),
         motto: faker.company.catchPhrase(),
         user_type: 'admin',
       });
@@ -41,7 +42,7 @@ const seedUsers = async hotels => {
         hotel_id,
         name: faker.name.firstName(),
         email: faker.internet.email(),
-        password: '1234',
+        password: bcrypt.hashSync('1234', 10),
         motto: faker.company.catchPhrase(),
         user_type: 'receptionist',
       });
