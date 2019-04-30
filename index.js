@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const server = require('./api/server');
 const seed = require('./data/index');
 const { models, connectDb } = require('./models/index');
