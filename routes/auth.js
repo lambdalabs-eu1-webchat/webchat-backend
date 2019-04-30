@@ -15,7 +15,7 @@ routes.post(
       const [existingUser] = await models.User.where({ name });
 
       if (existingUser) {
-        return res.status(400).json({
+        return res.status(422).json({
           message: 'That name is taken already.',
         });
       }
@@ -33,7 +33,6 @@ routes.post(
         id: user.id,
         name,
         hotel_id,
-        chat_id: user.chat_id,
       });
 
       // send the user info and token in response
@@ -56,9 +55,9 @@ routes.post(
 
       // check user credentials
       if (user && bcrypt.compareSync(password, user.password)) {
-        const { id, hotel_id, chat_id } = user;
+        const { id, hotel_id, } = user;
 
-        const token = createToken({ id, name, hotel_id, chat_id });
+        const token = createToken({ id, name, hotel_id, });
 
         // remove password from the returned user object, so it's not sent to FE
         user.password = undefined;
