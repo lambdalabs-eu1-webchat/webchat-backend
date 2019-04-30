@@ -1,7 +1,7 @@
 {
-  "name": "Team builder API Documentation",
+  "name": "Hotel Messaging API Documentation",
   "version": "1.0.0",
-  "description": "API team builder for Lambda School",
+  "description": "API hotel messaging for Lambda School",
   "template": {
     "forceLanguage": "en",
     "withGenerator": true
