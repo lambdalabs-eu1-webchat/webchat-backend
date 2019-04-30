@@ -1,4 +1,9 @@
 const errorMessage = {
+  getUsers: { message: 'The users could not be retrieved' },
+  getUserById: { message: 'The user could not be retrieved' },
+  updateUser: { message: 'The user could not be updated' },
+  deleteUser: { message: 'The user could not be deleted' },
+  addUser: { message: 'The user could not be added' },
   getUsers: { message: 'the users could not be retrieved' },
   getUserById: { message: 'the user could not be retrieved' },
   noHotel: { message: 'no hotel exists with this id' },
@@ -22,7 +27,7 @@ const errorMessage = {
   },
   duplicateHotel: {
     message: 'a hotel with this name already exists',
-  }
+  },
 };
 
 module.exports = errorMessage;

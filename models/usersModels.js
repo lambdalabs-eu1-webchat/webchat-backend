@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const MODEL_NAMES = require('./MODEL_NAMES');
 
 // schema maps to a MongoDB collection and defines the shape of the documents within that collection
-const userModels = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   // _id
   hotel_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -45,6 +45,6 @@ const userModels = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model(MODEL_NAMES.USERS, userModels);
+const User = mongoose.model(MODEL_NAMES.USERS, userSchema);
 
 module.exports = User;
