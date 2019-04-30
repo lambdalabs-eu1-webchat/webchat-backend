@@ -40,9 +40,9 @@ routes.post(
         // grab the hotel after any changes during the room push
         const updatedHotel = await models.Hotel.findById(_id);
 
-        // if some/all room names were duplicates, res with the current hotel rooms and an error message
+        // if some/all room names were duplicates, res with the current hotel rooms and a message to say some weren not added
         if (duplicateRooms.length) {
-          res.status(400).json({
+          res.status(200).json({
             ...errorMessage.duplicateRoom,
             currentRoomList: updatedHotel.rooms,
           });
@@ -92,7 +92,7 @@ routes.put(
         // check if the room exists
         if (await subDocumentExists(hotel, 'rooms', _roomId)) {
           const room = await hotel.rooms.id(_roomId);
-          room.name = roomUpdates.name;
+          room.name = capitalizeLetters(roomUpdates.name);
           await hotel.save();
 
           // get updated documents
