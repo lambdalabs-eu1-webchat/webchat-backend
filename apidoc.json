@@ -1,0 +1,9 @@
+{
+  "name": "Team builder API Documentation",
+  "version": "1.0.0",
+  "description": "API team builder for Lambda School",
+  "template": {
+    "forceLanguage": "en",
+    "withGenerator": true
+  }
+}
