@@ -1,11 +1,11 @@
-const error = require('../utils/error');
+const errorMessage = require('../utils/errorMessage');
 
 const validateObjectId = (req, res, next) => {
-  const { id } = req.params;
-  if (id.match(/^[0-9a-fA-F]{24}$/)) {
+  const { _id } = req.params;
+  if (_id.match(/^[0-9a-fA-F]{24}$/)) {
     next();
   } else {
-    res.status(400).json(error.invalidObjectId);
+    res.status(400).json(errorMessage.invalidObjectId);
   }
 };
 

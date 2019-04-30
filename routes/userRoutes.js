@@ -1,7 +1,7 @@
 const express = require('express');
 const routes = express.Router();
 
-const error = require('../utils/error');
+const error = require('../utils/errorMessage');
 const { models } = require('../models/index');
 
 

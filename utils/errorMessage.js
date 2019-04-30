@@ -1,4 +1,4 @@
-const error = {
+const errorMessage = {
   getUsers: { message: 'the users could not be retrieved' },
   getUserById: { message: 'the user could not be retrieved' },
   noHotel: { message: 'no hotel exists with this id' },
@@ -25,4 +25,4 @@ const error = {
   }
 };
 
-module.exports = error;
+module.exports = errorMessage;

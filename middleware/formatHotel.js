@@ -1,4 +1,4 @@
-const formatHotelChange = (req, res, next) => {
+const formatHotel = (req, res, next) => {
   const hotel = req.body;
   if (hotel.name) {
     hotel.name = hotel.name
@@ -9,4 +9,4 @@ const formatHotelChange = (req, res, next) => {
   next();
 };
 
-module.exports = formatHotelChange;
+module.exports = formatHotel;

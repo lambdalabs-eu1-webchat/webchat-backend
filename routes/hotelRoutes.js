@@ -1,8 +1,9 @@
 const express = require('express');
 const routes = express.Router();
 
-const error = require('../utils/error');
+const errorMessage = require('../utils/errorMessage');
 const { models } = require('../models/index');
+const documentExists = require('../utils/documentExists');
 const validateObjectId = require('../middleware/validateObjectId');
 const validateHotelPost = require('../middleware/validateHotelPost');
 const formatHotel = require('../middleware/formatHotel');
@@ -49,7 +50,7 @@ const validateHotelChange = require('../middleware/validateHotelChange');
  *      "message": "a hotel with this name already exists"
  *    }
  */
-routes.post('/', validateHotelPost, formatHotel, async (req, res, next) => {
+routes.post('/', formatHotel, validateHotelPost, async (req, res, next) => {
   const hotel = req.body;
   try {
     const newHotel = new models.Hotel(hotel);
@@ -57,7 +58,7 @@ routes.post('/', validateHotelPost, formatHotel, async (req, res, next) => {
     if (newHotel.id) {
       res.status(201).json(newHotel);
     } else {
-      res.status(400).json(error.addHotel);
+      res.status(400).json(errorMessage.addHotel);
     }
   } catch (error) {
     next(error);
@@ -65,12 +66,12 @@ routes.post('/', validateHotelPost, formatHotel, async (req, res, next) => {
 });
 
 /**
- *  @api {get} api/hotel/:id Get hotel information
+ *  @api {get} api/hotel/:_id Get hotel information
  *  @apiVersion 0.1.0
- *  @apiName getHotel/:id
+ *  @apiName getHotel/:_id
  *  @apiGroup Hotels
  *
- *  @apiParam {String} id hotel id
+ *  @apiParam {String} _id hotel id
  *
  *  @apiSuccess {String} _id The id of the hotel
  *  @apiSuccess {Array}  rooms An array of the rooms
@@ -110,7 +111,7 @@ routes.post('/', validateHotelPost, formatHotel, async (req, res, next) => {
  *  @apiErrorExample Error-Response: invalid object id
  *    HTTP/1.1 400 BAD REQUEST
  *    {
- *      "message": "no hotel exists with this id"
+ *      "message": "an invalid ObjectId was passed"
  *    }
  *  @apiErrorExample Error-Response: hotel id does not exist
  *    HTTP/1.1 400 BAD REQUEST
@@ -118,14 +119,14 @@ routes.post('/', validateHotelPost, formatHotel, async (req, res, next) => {
  *      "message": "an invalid ObjectId was passed"
  *    }
  */
-routes.get('/:id', validateObjectId, async (req, res, next) => {
-  const { id } = req.params;
+routes.get('/:_id', validateObjectId, async (req, res, next) => {
+  const { _id } = req.params;
   try {
-    const hotelInfo = await models.Hotel.findById(id);
+    const hotelInfo = await models.Hotel.findById(_id);
     if (hotelInfo) {
       res.status(200).json(hotelInfo);
     } else {
-      res.status(400).json(error.noHotel);
+      res.status(400).json(errorMessage.noHotel);
     }
   } catch (error) {
     next(error);
@@ -133,18 +134,18 @@ routes.get('/:id', validateObjectId, async (req, res, next) => {
 });
 
 /**
- *  @api {get} api/hotel/:id Put hotel information
+ *  @api {put} api/hotel/:_id Put hotel information
  *  @apiVersion 0.1.0
- *  @apiName putHotel/:id
+ *  @apiName putHotel/_:id
  *  @apiGroup Hotels
  *
- *  @apiParam {String} id hotel id
+ *  @apiParam {String} _id hotel id
  *  @apiParam {json} hotel hotel information updates
  *  @apiParamExample {json} Request-Example:
  *    {
  *      "name": "nicolas group ltd",
  *    }
- * 
+ *
  *  @apiSuccess {String} _id The id of the hotel
  *  @apiSuccess {Array}  rooms An array of the rooms
  *  @apiSuccess {String} name The hotel name
@@ -180,10 +181,15 @@ routes.get('/:id', validateObjectId, async (req, res, next) => {
  *   "motto": "Function-based contextually-based collaboration",
  *   "__v": 0
  *    }
- *  @apiErrorExample Error-Response: no valid changes requested
+ *   @apiErrorExample Error-Response: the hotel id does not exist
  *    HTTP/1.1 400 BAD REQUEST
  *    {
- *      "message": "message": "a hotel must be added with at least a name and motto"
+ *      message: 'no hotel exists with this id'
+ *    }
+ *  @apiErrorExample Error-Response: no valid changes requested
+ *    HTTP/1.1 400 BAD REQUEST: message: 'no hotel exists with this id'
+ *    {
+ *      "message": "a hotel must be added with at least a name and motto"
  *    }
  *  @apiErrorExample Error-Response: changes requested that are the same as  existing hotel information
  *    HTTP/1.1 400 BAD REQUEST
@@ -191,24 +197,34 @@ routes.get('/:id', validateObjectId, async (req, res, next) => {
  *      "message": "the hotel could not be updated or you did not provide any new information"
  *    }
  */
-routes.put('/:id', validateHotelChange, formatHotel, async (req, res, next) => {
-  const { id } = req.params;
-  const hotelUpdates = req.body;
-  try {
-    const updateResult = await models.Hotel.updateOne(
-      { _id: id },
-      hotelUpdates,
-    );
-    const updatedHotel = await models.Hotel.findById(id);
-    if (updateResult.nModified) {
-      res.status(200).json(updatedHotel);
-    } else {
-      res.status(400).json(error.updateHotel);
+routes.put(
+  '/:_id',
+  validateObjectId,
+  formatHotel,
+  validateHotelChange,
+  async (req, res, next) => {
+    try {
+      const { _id } = req.params;
+      const hotelUpdates = req.body;
+      if (await documentExists({ _id }, 'Hotel')) {
+        const updateResult = await models.Hotel.updateOne(
+          { _id },
+          hotelUpdates,
+        );
+        const updatedHotel = await models.Hotel.findById(_id);
+        if (updateResult.nModified) {
+          res.status(200).json(updatedHotel);
+        } else {
+          res.status(400).json(errorMessage.updateHotel);
+        }
+      } else {
+        res.status(400).json(errorMessage.noHotel);
+      }
+    } catch (error) {
+      next(error);
     }
-  } catch (error) {
-    next(error);
-  }
-});
+  },
+);
 
 // ========== ROOMS ========== DRAFT
 
