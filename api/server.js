@@ -22,6 +22,13 @@ server.use(async (req, res, next) => {
   }
 });
 
+app.set('views', __dirname + 'views')
+  .engine('html', require('ejs').renderFile)
+  .use(app.router)
+  .use(express.static(__dirname + '/public'))
+  .
+
+
 server.get('/', (req, res) => {
   res.status(200).json({ message: 'API works!' });
 });
