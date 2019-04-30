@@ -2,6 +2,8 @@ const faker = require('faker');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const { models } = require('../models/index');
+const randomMinMax = require('../utils/helperFunctions.js').randomMinMax;
+const remainder = require('../utils/helperFunctions.js').remainder;
 
 const seedUsers = async hotels => {
   const users = []; // list of promises to wait for
@@ -35,7 +37,7 @@ const seedUsers = async hotels => {
     }
     // make receptionists
     const receptionists = [];
-    const numberReceptionists = Math.random() * (7 - 2) + 2;
+    const numberReceptionists = randomMinMax(2, 7); //Math.random() * (7 - 2) + 2;
     for (let j = 0; j < numberReceptionists; j++) {
       receptionists.push({
         _id: new mongoose.Types.ObjectId(),
@@ -49,7 +51,7 @@ const seedUsers = async hotels => {
     }
     // make guests
     const guests = [];
-    const numberGuests = Math.random() * (50 - 25) + 25;
+    const numberGuests = randomMinMax(25, 50); // Math.random() * (50 - 25) + 25;
     const rooms = hotel.rooms;
     for (let j = 0; j < numberGuests; j++) {
       const roomIndex = Math.round(remainder(j, rooms.length) * rooms.length); // loops over all rooms
@@ -78,8 +80,4 @@ const seedUsers = async hotels => {
   return updatedHotels;
 };
 
-function remainder(numerator, denominator) {
-  const num = numerator / denominator;
-  return num - Math.floor(num);
-}
 module.exports = seedUsers;

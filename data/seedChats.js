@@ -1,5 +1,6 @@
 const faker = require('faker');
 const { models } = require('../models/index');
+const randomMinMax = require('../utils/helperFunctions.js').randomMinMax;
 
 const seedChats = async hotels => {
   // for each hotel
@@ -18,7 +19,7 @@ const seedChats = async hotels => {
         ];
       // make a chat log for each guest
       const tickets = [];
-      const numberTickets = Math.floor(Math.random() * (10 - 1) + 1);
+      const numberTickets = randomMinMax(1, 10); //Math.floor(Math.random() * (10 - 1) + 1);
       for (let i = 0; i < numberTickets; i++) {
         const status =
           guest.is_left || !(i === numberTickets - 1)
@@ -29,7 +30,7 @@ const seedChats = async hotels => {
           messages: makeMessages(guest, receptionist),
           rating:
             status === 'closed'
-              ? Math.floor(Math.random() * (5 - 1) + 1)
+              ? randomMinMax(1, 5) //Math.floor(Math.random() * (5 - 1) + 1)
               : null,
         });
       }
@@ -62,7 +63,7 @@ const seedChats = async hotels => {
 };
 
 function makeMessages(guest, receptionist) {
-  const numMessages = Math.random() * (20 - 1) + 1;
+  const numMessages = randomMinMax(1, 20); //Math.random() * (20 - 1) + 1;
   const messages = [];
   for (let i = 0; i < numMessages; i++) {
     messages.push(
@@ -81,7 +82,7 @@ function makeMessage(name, id) {
       name,
       id,
     },
-    text: faker.lorem.sentence(Math.random() * (100 - 8) + 8),
+    text: faker.lorem.sentence(randomMinMax(8, 100)), // Math.random() * (100 - 8) + 8
   };
 }
 
