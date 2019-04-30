@@ -37,6 +37,7 @@ const errorMessage = {
   noRoomName: {
     message: 'Every room must have a provided name',
   },
+  noRoom: { message: 'No room exists with this id.' },
 };
 
 module.exports = errorMessage;
