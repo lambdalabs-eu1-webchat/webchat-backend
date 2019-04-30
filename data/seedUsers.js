@@ -1,98 +1,85 @@
 const faker = require('faker');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const { models } = require('../models/index');
 
-const seedUsers = async hotelIds => {
-  const promises = [];
-  await hotelIds.forEach(async (hotelId, i) => {
-    hotel_id = hotelId.hotelId;
+const seedUsers = async hotels => {
+  const users = []; // list of promises to wait for
+  const updatedHotels = JSON.parse(JSON.stringify(hotels));
+  updatedHotels.forEach((hotel, i) => {
+    hotel_id = hotel._id;
 
-    //make super admin
-    let name = faker.name.firstName();
-    const superAdminId = new mongoose.Types.ObjectId();
-    hotelIds[i].superAdmin = { superAdminId, name };
+    //make super admin for this hotel
+    const superAdmin = {
+      _id: new mongoose.Types.ObjectId(),
+      hotel_id,
+      name: faker.name.firstName(),
+      email: `superAdmin${i}.superAdmin`,
+      password: '1234',
+      motto: faker.company.catchPhrase(),
+      user_type: 'super admin',
+    };
 
-    promises.push(
-      models.User.insertMany([
-        {
-          _id: superAdminId,
-          hotel_id,
-          name: faker.name.firstName(),
-          email: `superAdmin${i}.superAdmin`,
-          password: '1234',
-          motto: faker.company.catchPhrase(),
-          user_type: 'super admin',
-        },
-      ]),
-    );
-    // add admin
-    const adminId = new mongoose.Types.ObjectId();
-    // array so could add more later if want
-    name = faker.name.firstName();
-    hotelIds[i].adminIds = [{ adminId, name }];
-    promises.push(
-      models.User.insertMany([
-        {
-          _id: adminId,
-          hotel_id,
-          name,
-          email: `admin${i}.admin`,
-          password: '1234',
-          motto: faker.company.catchPhrase(),
-          user_type: 'admin',
-        },
-      ]),
-    );
-
-    // add receptionists
-    hotelIds[i].receptionists = [];
-    const recptionists = [];
+    // make admins
+    const admins = [];
     for (let j = 0; j < 3; j++) {
-      const receptionistId = new mongoose.Types.ObjectId();
-      name = faker.name.firstName();
-      recptionists.push({
-        _id: receptionistId,
+      admins.push({
+        _id: new mongoose.Types.ObjectId(),
         hotel_id,
-        name,
+        name: faker.name.firstName(),
         email: faker.internet.email(),
-        password: '1234',
+        password: bcrypt.hashSync('1234', 10),
         motto: faker.company.catchPhrase(),
-        user_type: 'recptionist',
+        user_type: 'admin',
       });
-      hotelIds[i].receptionists.push({ name, receptionistId });
     }
-    promises.push(models.User.insertMany(recptionists));
-    // add guests
-    hotelIds[i].guests = [];
-    const guests = [];
-    for (let j = 0; j < 5; j++) {
-      const guestId = new mongoose.Types.ObjectId();
-      name = faker.name.firstName();
-      guests.push({
-        _id: guestId,
+    // make receptionists
+    const receptionists = [];
+    const numberReceptionists = Math.random() * (7 - 2) + 2;
+    for (let j = 0; j < numberReceptionists; j++) {
+      receptionists.push({
+        _id: new mongoose.Types.ObjectId(),
         hotel_id,
-        name,
-        passcode: `1234${j}${i}`,
+        name: faker.name.firstName(),
+        email: faker.internet.email(),
+        password: bcrypt.hashSync('1234', 10),
+        motto: faker.company.catchPhrase(),
+        user_type: 'receptionist',
+      });
+    }
+    // make guests
+    const guests = [];
+    const numberGuests = Math.random() * (50 - 25) + 25;
+    const rooms = hotel.rooms;
+    for (let j = 0; j < numberGuests; j++) {
+      const roomIndex = Math.round(remainder(j, rooms.length) * rooms.length); // loops over all rooms
+      guests.push({
+        _id: new mongoose.Types.ObjectId(),
+        hotel_id,
+        name: faker.name.firstName(),
+        passcode: `${j}${i}`,
         user_type: 'guest',
         room: {
-          name: `${j}`,
-          id: hotelIds[i].roomIds[j],
+          name: rooms[roomIndex].name,
+          id: rooms[roomIndex]._id,
         },
-      });
-      hotelIds[i].guests.push({
-        guestId,
-        name,
-        room: {
-          id: hotelIds[i].roomIds[j],
-          name: `${j}`,
-        },
+        is_left: j / rooms.length > 1,
       });
     }
-    promises.push(models.User.insertMany(guests));
+    updatedHotels[i].superAdmin = superAdmin;
+    updatedHotels[i].admins = admins;
+    updatedHotels[i].receptionists = receptionists;
+    updatedHotels[i].guests = guests;
+    users.push(superAdmin, ...admins, ...receptionists, ...guests);
     // set the user ids
   });
-  await Promise.all(promises);
-  return hotelIds;
+  console.log(`Users created: ${users.length} `);
+  await models.User.insertMany(users);
+  return updatedHotels;
 };
 
+function remainder(numerator, denominator) {
+  const num = numerator / denominator;
+  return num - Math.floor(num);
+}
 module.exports = seedUsers;

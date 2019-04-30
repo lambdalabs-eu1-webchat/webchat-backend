@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "server": "nodemon index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "cross-env NODE_ENV=testing jest --watch --verbose"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/lambdalabs-eu1-webchat/webchat-backend#readme",
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "dotenv": "^7.0.0",
@@ -25,6 +27,7 @@
     "express-winston": "^3.1.0",
     "faker": "^4.1.0",
     "helmet": "^3.16.0",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.2.3",
     "mongoose": "^5.5.3",
     "socket.io": "^2.2.0",
@@ -32,6 +35,7 @@
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
+    "eslint": "^5.16.0",
     "jest": "^24.7.1",
     "nodemon": "^1.18.11",
     "supertest": "^4.0.2"
