@@ -184,7 +184,7 @@ routes.post('/', async (req, res, next) => {
     if (incomingUser.name) {
       res.status(422).json({ message: 'User already in database' });
     } else {
-      res.status(400).json(errorMessages.updateUser);
+      res.status(400).json(errorMessages.addUser);
     }
     next(error);
   }
