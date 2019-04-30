@@ -1,7 +1,9 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const routes = express.Router();
 
-const error = require('../utils/error');
+const errorMessages = require('../utils/errorMessage');
+const response = require('../utils/response');
 const { models } = require('../models/index');
 
 /**
@@ -41,12 +43,22 @@ routes.get('/:id', async (req, res, next) => {
  * @queryString : none,
  */
 routes.post('/', async (req, res, next) => {
-  const user = req.body;
-  const newUser = models.User(user);
+  const incomingUser = req.body;
+  const newUser = models.User(incomingUser);
+  if (incomingUser.password) {
+    incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
+  }
   try {
     const result = await newUser.save();
-    res.status(201).json(result);
+    const resultWithoutPassword = { ...result._doc };
+    delete resultWithoutPassword.password;
+    res.status(201).json(resultWithoutPassword);
   } catch(error) {
+    if (incomingUser.name) {
+      res.status(422).json({ message: 'User already in database' });
+    } else {
+      res.status(400).json(errorMessages.updateUser);
+    }
     next(error);
   }
 });
@@ -58,12 +70,24 @@ routes.post('/', async (req, res, next) => {
  * @queryString : none,
  */
 routes.put('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const incomingUser = { ...req.body };
+  if (incomingUser.password) {
+    incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
+  }
   try {
-    const user = await models.User.findById(req.params.id).exec();
-    user.set(req.body);
+    const user = await models.User.findById({ '_id': id }).exec();
+    user.set(incomingUser);
     const result = await user.save();
-    res.send(result);
+    const resultWithoutPassword = { ...result._doc };
+    delete resultWithoutPassword.password;
+    res.status(200).json(resultWithoutPassword);
   } catch (error) {
+    if (error.name === 'CastError') {
+      res.status(404).json({ message: 'User not found' });
+    } else {
+      res.status(400).json(errorMessages.updateUser);
+    }
     next(error);
   }
 });
@@ -75,10 +99,14 @@ routes.put('/:id', async (req, res, next) => {
  * @queryString : none,
  */
 routes.delete('/:id', async (req, res, next) => {
+  const { id } = req.params;
   try {
-    const result = await models.User.deleteOne({ _id: req.params.id }).exec();
-    // const result = await models.User.deleteMany({}).exec();
-    res.send(result);
+    const { deletedCount } = await models.User.remove({ '_id': id });
+    if (deletedCount) {
+      res.status(200).json(response.deleteUser);
+    } else {
+      res.status(404).json(errorMessages.deleteUser);
+    }
   } catch (error) {
     next(error);
   }
