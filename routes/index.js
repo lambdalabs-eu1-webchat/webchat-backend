@@ -1,5 +1,6 @@
 const userRoutes = require('./userRoutes');
 const hotelRoutes = require('./hotelRoutes');
+const roomRoutes = require('./roomRoutes');
 const { logger, errorLogger } = require('../middleware/winston');
 const path = require('../utils/path');
 const auth = require('./auth');
