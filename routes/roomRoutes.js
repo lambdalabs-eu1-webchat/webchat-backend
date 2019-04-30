@@ -4,6 +4,7 @@ const routes = express.Router();
 const errorMessage = require('../utils/errorMessage');
 const { models } = require('../models/index');
 const validateObjectId = require('../middleware/validateObjectId');
+const validateRoomsArr = require('../middleware/validateRoomsArr');
 const documentExists = require('../utils/documentExists');
 const capitalizeLetters = require('../utils/capitalizeLetters');
 
@@ -23,7 +24,7 @@ routes.get('/:_id/rooms', validateObjectId, async (req, res, next) => {
 });
 
 // POST HOTEL ROOMS ARRAY
-routes.post('/:_id/rooms', validateObjectId, async (req, res, next) => {
+routes.post('/:_id/rooms', validateObjectId, validateRoomsArr, async (req, res, next) => {
   const { _id } = req.params;
   const roomArr = req.body;
   try {
@@ -34,12 +35,12 @@ routes.post('/:_id/rooms', validateObjectId, async (req, res, next) => {
       const duplicateRooms = [];
 
       // go through each room and check for a duplicate match
-      roomArr.forEach(async room => {
+      roomArr.forEach(room => {
         room.name = capitalizeLetters(room.name);
         if (hotelRoomList.includes(room.name)) {
           duplicateRooms.push(room);
         } else {
-          await hotel.rooms.push(room);
+          hotel.rooms.push(room);
         }
       });
       await hotel.save();

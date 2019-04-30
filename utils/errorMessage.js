@@ -31,6 +31,12 @@ const errorMessage = {
   duplicateRoom: {
     message: 'Some/all rooms were not added because their names already exist',
   },
+  typeArr: {
+    message: 'An array was expected but not found',
+  },
+  noRoomName: {
+    message: 'Every room must have a provided name',
+  },
 };
 
 module.exports = errorMessage;
