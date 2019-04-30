@@ -55,13 +55,13 @@ routes.post(
 
       // check user credentials
       if (user && bcrypt.compareSync(password, user.password)) {
-        const { id, hotel_id, } = user;
+        const { id, hotel_id } = user;
 
-        const token = createToken({ id, name, hotel_id, });
-
+        const token = createToken({ id, name, hotel_id });
+        console.log('user before:', user);
         // remove password from the returned user object, so it's not sent to FE
         user.password = undefined;
-
+        console.log('user after:', user);
         res.status(200).json({ user, token });
       } else {
         res.status(401).json({ message: 'Invalid Credentials' });
