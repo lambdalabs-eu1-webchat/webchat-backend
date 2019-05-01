@@ -26,7 +26,7 @@ connectDb()
           } mode ====`,
         ),
       );
-      require('./routes/chats.js')(io);
+      require('./routes/chats/index')(io);
     } catch (error) {
       console.error(error);
     }
