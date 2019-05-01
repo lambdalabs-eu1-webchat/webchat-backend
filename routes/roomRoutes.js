@@ -50,7 +50,7 @@ routes.post(
             currentRoomList: updatedHotel.rooms,
           });
 
-          // if no room names were duplicates, res withthe updated hotel rooms
+          // if no room names were duplicates, res with the updated hotel rooms
         } else {
           res.status(201).json(updatedHotel.rooms);
         }
