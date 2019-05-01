@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const MODEL_NAMES = require('./MODEL_NAMES');
+const MODEL_NAMES = require('../utils/MODEL_NAMES');
 
 // schema maps to a MongoDB collection and defines the shape of the documents within that collection
 const userSchema = new mongoose.Schema({

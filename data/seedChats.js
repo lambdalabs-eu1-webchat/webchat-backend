@@ -2,7 +2,7 @@ const faker = require('faker');
 const { models } = require('../models/index');
 const randomMinMax = require('../utils/helperFunctions.js').randomMinMax;
 const remainder = require('../utils/helperFunctions.js').remainder;
-const TICKET_STATUSES = require('../models/TICKET_STATUSES.js');
+const TICKET_STATUSES = require('../utils/TICKET_STATUSES.js');
 
 const seedChats = async hotels => {
   // for each hotel
@@ -16,7 +16,7 @@ const seedChats = async hotels => {
         hotel.receptionists[
           Math.round(
             remainder(j, hotel.receptionists.length) *
-              hotel.receptionists.length,
+              hotel.receptionists.length
           )
         ];
       // make a chat log for each guest
@@ -71,8 +71,8 @@ function makeMessages(guest, receptionist) {
     messages.push(
       makeMessage(
         i % 2 === 0 ? guest.name : receptionist.name,
-        i % 2 === 0 ? guest._id : receptionist._id,
-      ),
+        i % 2 === 0 ? guest._id : receptionist._id
+      )
     );
   }
   return messages;

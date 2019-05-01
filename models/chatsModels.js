@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const MODEL_NAMES = require('./MODEL_NAMES');
-const TICKET_STATUSES = require('./TICKET_STATUSES.js');
+const MODEL_NAMES = require('../utils/MODEL_NAMES');
+const TICKET_STATUSES = require('../utils/TICKET_STATUSES');
 
 const ticketSchema = new mongoose.Schema({
   status: {
