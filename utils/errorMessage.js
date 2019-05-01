@@ -14,7 +14,7 @@ const errorMessage = {
   },
   addRoom: { message: 'The room could not be added.' },
   updateRoom: { message: 'The room could not be updated.' },
-  removeRoom: { message: 'Rhe room could not be deleted.' },
+  removeRoom: { message: 'The room could not be deleted.' },
   invalidObjectId: { message: 'An invalid ObjectId was passed.' },
   invalidHotelPost: {
     message: 'A hotel must be added with at least a name and motto.',
