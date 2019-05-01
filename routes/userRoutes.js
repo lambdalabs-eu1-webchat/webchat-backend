@@ -20,6 +20,9 @@ routes.get('/:id', async (req, res, next) => {
     const user = await models.User.findById(req.params.id).exec();
     res.send(user);
   } catch (error) {
+    if (error.name === 'CastError') {
+      res.status(404).json(errorMessages.getUserById);
+    }
     next(error);
   }
 });
