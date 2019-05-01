@@ -5,7 +5,7 @@ const errorMessage = require('../utils/errorMessage');
 const response = require('../utils/response');
 const { models } = require('../models/index');
 const validateObjectId = require('../middleware/validateObjectId');
-const validateRoomObjectId = require('../middleware/validateRoomObjectId');
+const validateSubDocObjectId = require('../middleware/validateSubDocObjectId');
 const validateRoomsArr = require('../middleware/validateRoomsArr');
 const validateRoomChange = require('../middleware/validateRoomChange');
 const documentExists = require('../utils/documentExists');
@@ -85,7 +85,7 @@ routes.get('/:_id/rooms', validateObjectId, async (req, res, next) => {
 routes.put(
   '/:_id/rooms/:_roomId',
   validateObjectId,
-  validateRoomObjectId,
+  validateSubDocObjectId,
   validateRoomChange,
   async (req, res, next) => {
     const { _id, _roomId } = req.params;
@@ -122,7 +122,7 @@ routes.put(
 routes.delete(
   '/:_id/rooms/:_roomId',
   validateObjectId,
-  validateRoomObjectId,
+  validateSubDocObjectId,
   async (req, res, next) => {
     const { _id, _roomId } = req.params;
     try {

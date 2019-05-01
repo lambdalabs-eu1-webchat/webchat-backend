@@ -1,6 +1,6 @@
 const errorMessage = require('../utils/errorMessage');
 
-const validateRoomObjectId = (req, res, next) => {
+const validateSubDocObjectId = (req, res, next) => {
   const { _roomId } = req.params;
   if (_roomId.match(/^[0-9a-fA-F]{24}$/)) {
     next();
@@ -9,4 +9,4 @@ const validateRoomObjectId = (req, res, next) => {
   }
 };
 
-module.exports = validateRoomObjectId;
+module.exports = validateSubDocObjectId;
