@@ -53,7 +53,7 @@ describe('/api/hotel', () => {
         .send(newRoom)
         .expect(400);
     });
-    it('should return return the correct message if no room name is passed', async () => {
+    it('should return the correct message if no room name is passed', async () => {
       const newHotel = {
         name: 'The Dorechester',
         motto: 'Keepin it fine',
