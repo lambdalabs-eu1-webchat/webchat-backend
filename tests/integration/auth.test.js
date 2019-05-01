@@ -32,7 +32,7 @@ describe('/api/auth', () => {
         email: 'joe@hotmail.com',
         password: '1234',
         motto: 'Cross-platform executive application',
-        user_type: 'recptionist',
+        user_type: USER_TYPES.RECEPTIONIST,
       };
       return request(server)
         .post('/api/auth/register')
@@ -47,7 +47,7 @@ describe('/api/auth', () => {
         email: 'joel@hotmail.com',
         password: '1234',
         motto: 'Cross-platform executive application',
-        user_type: 'recptionist',
+        user_type: USER_TYPES.RECEPTIONIST,
       };
       const newUser2 = {
         hotel_id: '5cc74ab1f16ec37bc8cc4cdb',
@@ -55,7 +55,7 @@ describe('/api/auth', () => {
         email: 'joel@hotmail.com',
         password: '1234',
         motto: 'Cross-platform executive application',
-        user_type: 'recptionist',
+        user_type: USER_TYPES.RECEPTIONIST,
       };
       await request(server)
         .post('/api/auth/register')
@@ -75,7 +75,7 @@ describe('/api/auth', () => {
         email: 'frank@hotmail.com',
         password: '1234',
         motto: 'Cross-platform executive application',
-        user_type: 'recptionist',
+        user_type: USER_TYPES.RECEPTIONIST,
       };
       const createdUser = await request(server)
         .post('/api/auth/register')
