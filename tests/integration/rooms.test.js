@@ -27,7 +27,7 @@ describe('/api/hotel', () => {
     expect(process.env.NODE_ENV).toBe('testing');
   });
 
-  describe('POST /', () => {
+  describe('POST /:_id/rooms', () => {
     it('should return 400 BAD REQUEST if an invalid ObjectId for the hotel is passed', async () => {
       return request(server)
         .post('/api/hotel/5cc96f85b801980553d606ex/rooms')
@@ -192,4 +192,53 @@ describe('/api/hotel', () => {
       );
     });
   });
+
+  describe('GET /:_id/rooms', () => {
+    it('should return 400 BAD REQUEST if an invalid ObjectId is passed', async () => {
+        return request(server)
+          .get('/api/hotel/5cc96f85b801980553d606ex/rooms')
+          .expect(400);
+      });
+      it('should return the correct message if an invalid ObjectId is passed', async () => {
+        return request(server)
+          .get('/api/hotel/5cc96f85b801980553d606ex/rooms')
+          .expect(errorMessage.invalidObjectId);
+      });
+      it('should return 400 BAD REQUEST if a non-existant hotel id is passed', async () => {
+        return request(server)
+          .get('/api/hotel/5cc96f85b801980553d606e9/rooms')
+          .expect(400);
+      });
+      it('should return the correct message if a non-existant hotel id is passed', async () => {
+        return request(server)
+          .get('/api/hotel/5cc96f85b801980553d606e9/rooms')
+          .expect(errorMessage.noHotel);
+      });
+      it('should return 200 OK if a valid hotel id is passed', async () => {
+        const newHotel = {
+          name: 'Winterfell',
+          motto: 'Problems',
+        };
+        const newlyCreatedHotel = await request(server)
+          .post('/api/hotel')
+          .send(newHotel);
+        const id = newlyCreatedHotel.body._id;
+        return request(server)
+          .get(`/api/hotel/${id}/rooms`)
+          .expect(200);
+      });
+      it('should return the hotel rooms  list if a valid hotel id is passed', async () => {
+        const newHotel = {
+          name: 'Waterbrooke',
+          motto: 'H2O',
+        };
+        const newlyCreatedHotel = await request(server)
+          .post('/api/hotel')
+          .send(newHotel);
+        const id = newlyCreatedHotel.body._id;
+        return request(server)
+          .get(`/api/hotel/${id}/rooms`)
+          .expect([]);
+      });
+  })
 });
