@@ -11,7 +11,10 @@
  *      " password": "1234",
  *        "email": "nicolasgroup@gmail.com"
  *    }
- *  @apiSuccess {String} registered
+ *  @apiSuccess {String} name
+ * @apiSuccess {String} _id  Unique id of the user.
+ *  @apiSuccess {String} email  Email of the user.
+ *@apiSuccess {String} token - unique user token
  *
  *  @apiSuccessExample Success-Response: registered
  *    HTTP/1.1 200 OK
@@ -25,7 +28,7 @@
  *  @apiErrorExample Error-Response: wrong token
  *    HTTP/1.1 400 BAD REQUEST
  *    {
- *      "message":"invalidCredentials"
+ *      "message":"Invalid Credidentials"
  *    }
  *  @apiErrorExample Error-Response: token missmatch/ missing token
  *    HTTP/1.1 401Unauthorized:

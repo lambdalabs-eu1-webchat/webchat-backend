@@ -143,7 +143,7 @@
  * @apiName updateUser
  * @apiGroup Users
  *
- * * @apiParam id id of the user
+ * @apiParam id id of the user
  *
  * @apiSuccess {Boolean} is_left boolean.
  * @apiSuccess {String} _id  Unique id of the user.
