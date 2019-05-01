@@ -85,4 +85,62 @@ describe('/api/users', () => {
       expect(response.body.user_type).toEqual('recptionist');
     });
   });
+
+  describe('POST /', () => {
+    it('should return 201 Created if the request is successful', async () => {
+      const newUser3 = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Andrea",
+        "email": "andrea.roman@gmail.com",
+        "password": "1234",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+      const createdUser = await request(server)
+          .post(`/api/users`)
+          .send(newUser3);
+      expect(createdUser.status).toBe(201);
+    });
+    it('should return 422 Unprocessable Entity if the name is already in the database', async () => {
+      const newUser5 = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Martin",
+        "email": "martin.roman@gmail.com",
+        "password": "1234",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+
+      const newUser6 = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Martin",
+        "email": "martin.roman@gmail.com",
+        "password": "1234",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+      const createdUser1 = await request(server)
+          .post(`/api/users`)
+          .send(newUser5);
+
+      const createdUser2 = await request(server)
+          .post(`/api/users`)
+          .send(newUser6);
+      expect(createdUser2.status).toBe(422);
+    });
+    it('should return the newly created user if the request is successful', async () => {
+      const newUser7 = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Martina",
+        "email": "martina.roman@gmail.com",
+        "password": "1234",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+      const createdUser = await request(server)
+          .post(`/api/users`)
+          .send(newUser7);
+      expect(createdUser.body.name).toEqual('Martina');
+    });
+  });
 });
