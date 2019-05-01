@@ -195,50 +195,279 @@ describe('/api/hotel', () => {
 
   describe('GET /:_id/rooms', () => {
     it('should return 400 BAD REQUEST if an invalid ObjectId is passed', async () => {
-        return request(server)
-          .get('/api/hotel/5cc96f85b801980553d606ex/rooms')
-          .expect(400);
-      });
-      it('should return the correct message if an invalid ObjectId is passed', async () => {
-        return request(server)
-          .get('/api/hotel/5cc96f85b801980553d606ex/rooms')
-          .expect(errorMessage.invalidObjectId);
-      });
-      it('should return 400 BAD REQUEST if a non-existant hotel id is passed', async () => {
-        return request(server)
-          .get('/api/hotel/5cc96f85b801980553d606e9/rooms')
-          .expect(400);
-      });
-      it('should return the correct message if a non-existant hotel id is passed', async () => {
-        return request(server)
-          .get('/api/hotel/5cc96f85b801980553d606e9/rooms')
-          .expect(errorMessage.noHotel);
-      });
-      it('should return 200 OK if a valid hotel id is passed', async () => {
-        const newHotel = {
-          name: 'Winterfell',
-          motto: 'Problems',
-        };
-        const newlyCreatedHotel = await request(server)
-          .post('/api/hotel')
-          .send(newHotel);
-        const id = newlyCreatedHotel.body._id;
-        return request(server)
-          .get(`/api/hotel/${id}/rooms`)
-          .expect(200);
-      });
-      it('should return the hotel rooms  list if a valid hotel id is passed', async () => {
-        const newHotel = {
-          name: 'Waterbrooke',
-          motto: 'H2O',
-        };
-        const newlyCreatedHotel = await request(server)
-          .post('/api/hotel')
-          .send(newHotel);
-        const id = newlyCreatedHotel.body._id;
-        return request(server)
-          .get(`/api/hotel/${id}/rooms`)
-          .expect([]);
-      });
-  })
+      return request(server)
+        .get('/api/hotel/5cc96f85b801980553d606ex/rooms')
+        .expect(400);
+    });
+    it('should return the correct message if an invalid ObjectId is passed', async () => {
+      return request(server)
+        .get('/api/hotel/5cc96f85b801980553d606ex/rooms')
+        .expect(errorMessage.invalidObjectId);
+    });
+    it('should return 400 BAD REQUEST if a non-existant hotel id is passed', async () => {
+      return request(server)
+        .get('/api/hotel/5cc96f85b801980553d606e9/rooms')
+        .expect(400);
+    });
+    it('should return the correct message if a non-existant hotel id is passed', async () => {
+      return request(server)
+        .get('/api/hotel/5cc96f85b801980553d606e9/rooms')
+        .expect(errorMessage.noHotel);
+    });
+    it('should return 200 OK if a valid hotel id is passed', async () => {
+      const newHotel = {
+        name: 'Winterfell',
+        motto: 'Problems',
+      };
+      const newlyCreatedHotel = await request(server)
+        .post('/api/hotel')
+        .send(newHotel);
+      const id = newlyCreatedHotel.body._id;
+      return request(server)
+        .get(`/api/hotel/${id}/rooms`)
+        .expect(200);
+    });
+    it('should return the hotel rooms  list if a valid hotel id is passed', async () => {
+      const newHotel = {
+        name: 'Waterbrooke',
+        motto: 'H2O',
+      };
+      const newlyCreatedHotel = await request(server)
+        .post('/api/hotel')
+        .send(newHotel);
+      const id = newlyCreatedHotel.body._id;
+      return request(server)
+        .get(`/api/hotel/${id}/rooms`)
+        .expect([]);
+    });
+  });
+
+  describe('PUT /:_id/rooms/:_id', () => {
+    it('should return 400 BAD REQUEST if an invalid hotel ObjectId is passed', async () => {
+      return request(server)
+        .put('/api/hotel/5cc96f85b801980553d606ex/rooms/d')
+        .expect(400);
+    });
+    it('should return the correct message if an invalid hotel ObjectId is passed', async () => {
+      return request(server)
+        .put('/api/hotel/5cc96f85b801980553d606ex/rooms/d')
+        .expect(errorMessage.invalidObjectId);
+    });
+    it('should return 400 BAD REQUEST if an invalid room ObjectId is passed', async () => {
+      return request(server)
+        .put(
+          '/api/hotel/5cc96f85b801980553d606ed/rooms/5cc96f85b801980553d606ex',
+        )
+        .expect(400);
+    });
+    it('should return the correct message if an invalid room ObjectId is passed', async () => {
+      return request(server)
+        .put(
+          '/api/hotel/5cc96f85b801980553d606ed/rooms/5cc96f85b801980553d606ex',
+        )
+        .expect(errorMessage.invalidObjectId);
+    });
+    it('should return 400 BAD REQUEST if a room name is not included in the body', async () => {
+      const newHotel = {
+        name: 'Kekule',
+        motto: 'Circular joy',
+      };
+      const newRoom = [
+        {
+          name: 'Room101',
+        },
+      ];
+      const newlyCreatedHotel = await request(server)
+        .post('/api/hotel')
+        .send(newHotel);
+      const id = newlyCreatedHotel.body._id;
+      const newlyCreatedRoom = await request(server)
+        .post(`/api/hotel/${id}/rooms`)
+        .send(newRoom);
+      const roomId = newlyCreatedRoom.body[0]._id;
+      const roomChanges = {};
+      return request(server)
+        .put(`/api/hotel/${id}/rooms/${roomId}`)
+        .send(roomChanges)
+        .expect(400);
+    });
+    it('should return the correct message if a room name is not included in the body', async () => {
+      const newHotel = {
+        name: 'Paradise',
+        motto: 'MVP',
+      };
+      const newRoom = [
+        {
+          name: 'Para 1',
+        },
+      ];
+      const newlyCreatedHotel = await request(server)
+        .post('/api/hotel')
+        .send(newHotel);
+      const id = newlyCreatedHotel.body._id;
+      const newlyCreatedRoom = await request(server)
+        .post(`/api/hotel/${id}/rooms`)
+        .send(newRoom);
+      const roomId = newlyCreatedRoom.body[0]._id;
+      const roomChanges = {};
+      return request(server)
+        .put(`/api/hotel/${id}/rooms/${roomId}`)
+        .send(roomChanges)
+        .expect(errorMessage.invalidRoomPut);
+    });
+    it('should return 400 BAD REQUEST if the room is sent to a hotel that does not exist', async () => {
+      const newHotel = {
+        name: 'Fjord',
+        motto: 'Mind the drop',
+      };
+      const newRoom = [
+        {
+          name: 'Drop Shaft',
+        },
+      ];
+      const newlyCreatedHotel = await request(server)
+        .post('/api/hotel')
+        .send(newHotel);
+      const id = newlyCreatedHotel.body._id;
+      const newlyCreatedRoom = await request(server)
+        .post(`/api/hotel/${id}/rooms`)
+        .send(newRoom);
+      const roomId = newlyCreatedRoom.body[0]._id;
+      const roomChanges = {
+        name: 'Gravity Pull',
+      };
+      return request(server)
+        .put(`/api/hotel/5cc96f85b801980553d606e9/rooms/${roomId}`)
+        .send(roomChanges)
+        .expect(400);
+    });
+    it('should return the correct message if the room is sent to a hotel that does not exist', async () => {
+      const newHotel = {
+        name: 'Victoria Falls',
+        motto: 'Mighty windy',
+      };
+      const newRoom = [
+        {
+          name: 'Sea breeze',
+        },
+      ];
+      const newlyCreatedHotel = await request(server)
+        .post('/api/hotel')
+        .send(newHotel);
+      const id = newlyCreatedHotel.body._id;
+      const newlyCreatedRoom = await request(server)
+        .post(`/api/hotel/${id}/rooms`)
+        .send(newRoom);
+      const roomId = newlyCreatedRoom.body[0]._id;
+      const roomChanges = {
+        name: 'Ocean side',
+      };
+      return request(server)
+        .put(`/api/hotel/5cc96f85b801980553d606e9/rooms/${roomId}`)
+        .send(roomChanges)
+        .expect(errorMessage.noHotel);
+    });
+    it('should return 400 BAD REQUEST if the room update is sent to a room that does not exist', async () => {
+      const newHotel = {
+        name: 'Disneyland',
+        motto: 'Happy times',
+      };
+      const newRoom = [
+        {
+          name: 'Fun',
+        },
+      ];
+      const newlyCreatedHotel = await request(server)
+        .post('/api/hotel')
+        .send(newHotel);
+      const id = newlyCreatedHotel.body._id;
+      await request(server)
+        .post(`/api/hotel/${id}/rooms`)
+        .send(newRoom);
+      const roomChanges = {
+        name: 'Mildly-fun',
+      };
+      return request(server)
+        .put(`/api/hotel/${id}/rooms/5cc96f85b801980553d606e9`)
+        .send(roomChanges)
+        .expect(400);
+    });
+    it('should return the correct message if the room update is sent to a room that does not exist', async () => {
+      const newHotel = {
+        name: 'Hainsville',
+        motto: 'Hainsy',
+      };
+      const newRoom = [
+        {
+          name: 'Room 12',
+        },
+      ];
+      const newlyCreatedHotel = await request(server)
+        .post('/api/hotel')
+        .send(newHotel);
+      const id = newlyCreatedHotel.body._id;
+      await request(server)
+        .post(`/api/hotel/${id}/rooms`)
+        .send(newRoom);
+      const roomChanges = {
+        name: 'Room 12a',
+      };
+      return request(server)
+        .put(`/api/hotel/${id}/rooms/5cc96f85b801980553d606e9`)
+        .send(roomChanges)
+        .expect(errorMessage.noRoom);
+    });
+    it('should return 200 OK if a valid room update is sent to a valid room id', async () => {
+      const newHotel = {
+        name: 'Bach',
+        motto: 'Melodies afoot',
+      };
+      const newRoom = [
+        {
+          name: 'C Major',
+        },
+      ];
+      const newlyCreatedHotel = await request(server)
+        .post('/api/hotel')
+        .send(newHotel);
+      const id = newlyCreatedHotel.body._id;
+      const newlyCreatedRoom = await request(server)
+        .post(`/api/hotel/${id}/rooms`)
+        .send(newRoom);
+      const roomId = newlyCreatedRoom.body[0]._id;
+      const roomChanges = {
+        name: 'C Minor',
+      };
+      return request(server)
+        .put(`/api/hotel/${id}/rooms/${roomId}`)
+        .send(roomChanges)
+        .expect(200);
+    });
+    it('should return the updated room if a valid room update is sent to a valid room id', async () => {
+      const newHotel = {
+        name: 'Tyneside',
+        motto: 'Quay side joy',
+      };
+      const newRoom = [
+        {
+          name: 'Millenium Bridge',
+        },
+      ];
+      const newlyCreatedHotel = await request(server)
+        .post('/api/hotel')
+        .send(newHotel);
+      const id = newlyCreatedHotel.body._id;
+      const newlyCreatedRoom = await request(server)
+        .post(`/api/hotel/${id}/rooms`)
+        .send(newRoom);
+      const roomId = newlyCreatedRoom.body[0]._id;
+      const roomChanges = {
+        name: 'Tyne Bridge',
+      };
+      const updatedRoom = await request(server)
+        .put(`/api/hotel/${id}/rooms/${roomId}`)
+        .send(roomChanges);
+      expect(updatedRoom.body.name).toEqual('Tyne Bridge');
+    });
+  });
 });
