@@ -25,15 +25,10 @@
  *     "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibmljb2xhcyBncm91cCIsImlhdCI6MTU1NjcxMDMwMX0.RdXMwTg3AMjiquiacVVMWL_kyUTOgdjTZLTdrPxzfoA"
  *    }
  *
- *  @apiErrorExample Error-Response: wrong token
- *    HTTP/1.1 400 BAD REQUEST
+  @apiErrorExample Error-Response: minimum register requirements
+ *    HTTP/1.1 401 BAD REQUEST
  *    {
- *      "message":"Invalid Credidentials"
- *    }
- *  @apiErrorExample Error-Response: token missmatch/ missing token
- *    HTTP/1.1 401Unauthorized:
- *    {
- *     "message": "No token provided."
+ *      "message": "Invalid Credentials"
  *    }
  */
 
@@ -66,9 +61,9 @@
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibmljb2xhcyBncm91cCIsImlhdCI6MTU1NjcxMjM1MX0.qZZdI05J4W4gPdpHvNjxHrJorONfXTImbuWo1h_B2XU"
  *    }
  *
- *  @apiErrorExample Error-Response: minimum login requirements
- *    HTTP/1.1 401 BAD REQUEST
+ *  *  @apiErrorExample Error-Response: token missmatch/ missing token
+ *    HTTP/1.1 401Unauthorized:
  *    {
- *      "message": "Invalid Credentials"
+ *     "message": "Token Not Valid"
  *    }
  */
