@@ -6,16 +6,33 @@ const CHATLOG = KEYWORDS.CHATLOG;
 
 module.exports = handleJoin;
 
+/**
+ * if guest requires:
+ * {
+ *  user_id: 'asdjkasf',
+ * }
+ *
+ * if staff member requires:
+ *
+ * {
+ *  user_id: 'asdhfkjashdkjfh',
+ *  chat_id: 'fjasdhfkjhasdkjfhjka'
+ * }
+ */
 async function handleJoin(data, socket) {
-  console.log('here');
-  // get the user
-  const user = await models.User.findById({ _id: data.user_id });
+  const { user_id } = data;
+  // get the user and check what type he is
+  const user = await models.User.findById({
+    _id: user_id,
+  });
+  //======================GUEST======================
   if (user.user_type === USER_TYPES.GUEST) {
     const chat = await models.Chat.findOne({
       'guest.id': data.user_id,
     });
+    // make a chat if they don't have one
+    // first time logining in
     if (!chat) {
-      // make a chat if they don't have one
       const newChat = new models.Chat({
         tickets: [],
         guest: {
@@ -48,7 +65,6 @@ async function handleJoin(data, socket) {
     user.user_type === USER_TYPES.SUPER_ADMIN ||
     user.user_type === USER_TYPES.RECEPTIONIST
   ) {
-    //
     const chat = await models.Chat.findById({
       _id: data.chat_id,
     });
@@ -59,7 +75,10 @@ async function handleJoin(data, socket) {
       socket.emit(CHATLOG, chat);
       // if joining change the staff_member
       if (!chat.staff_member.id) {
-        chat.staff_member = { id: user._id, name: user.name };
+        chat.staff_member = {
+          id: user._id,
+          name: user.name,
+        };
         chat.save(error => {
           socket.emit('console', error);
           socket.emit('console', 'saving staff member');
@@ -68,3 +87,6 @@ async function handleJoin(data, socket) {
     }
   }
 }
+// get all the chats the staff member is currently active in
+// const chats = await models.Chat.find({'staff_member.id':user_id});
+//   // join all of the chats
