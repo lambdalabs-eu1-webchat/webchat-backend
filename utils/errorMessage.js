@@ -4,7 +4,7 @@ const errorMessage = {
   invalidCredentials: { message: 'Invalid credentials' },
   duplicateEmail: { message: 'This email is taken already.' },
   updateUser: { message: 'The user could not be updated' },
-  deleteUser: { message: 'The user could not be deleted' },
+  deleteUser: { message: 'The user could not be found' },
   addUser: { message: 'The user could not be added' },
   noHotel: { message: 'no hotel exists with this id' },
   addHotel: { message: 'the hotel could not be added' },

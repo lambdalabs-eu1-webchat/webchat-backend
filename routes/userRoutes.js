@@ -6,12 +6,6 @@ const errorMessages = require('../utils/errorMessage');
 const response = require('../utils/response');
 const { models } = require('../models/index');
 
-/**
- * [GET] Returns all users
- * @params : none,
- * @body : none,
- * @queryString : none,
- */
 routes.get('/', async (req, res, next) => {
   try {
     const users = await models.User.find();
@@ -21,12 +15,6 @@ routes.get('/', async (req, res, next) => {
   }
 });
 
-/**
- * [GET] Returns user by id
- * @params : user id (integer),
- * @body : none,
- * @queryString : none,
- */
 routes.get('/:id', async (req, res, next) => {
   try {
     const user = await models.User.findById(req.params.id).exec();
@@ -36,12 +24,6 @@ routes.get('/:id', async (req, res, next) => {
   }
 });
 
-/**
- * [POST] Creates a new user
- * @params : none,
- * @body : none,
- * @queryString : none,
- */
 routes.post('/', async (req, res, next) => {
   const incomingUser = req.body;
   const newUser = models.User(incomingUser);
@@ -57,18 +39,12 @@ routes.post('/', async (req, res, next) => {
     if (incomingUser.name) {
       res.status(422).json({ message: 'User already in database' });
     } else {
-      res.status(400).json(errorMessages.updateUser);
+      res.status(400).json(errorMessages.addUser);
     }
     next(error);
   }
 });
 
-/**
- * [PUT] Updates a user by id
- * @params : user id (integer),
- * @body : req.body,
- * @queryString : none,
- */
 routes.put('/:id', async (req, res, next) => {
   const { id } = req.params;
   const incomingUser = { ...req.body };
@@ -92,12 +68,6 @@ routes.put('/:id', async (req, res, next) => {
   }
 });
 
-/**
- * [DELETE] Deletes a user by id
- * @params : user id (integer),
- * @body : none,
- * @queryString : none,
- */
 routes.delete('/:id', async (req, res, next) => {
   const { id } = req.params;
   try {
