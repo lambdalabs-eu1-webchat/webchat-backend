@@ -8,7 +8,7 @@ describe('/api/users', () => {
 
   beforeAll(async () => {
     connection = await mongoose.connect('mongodb://localhost:27017/jest', {
-      useNewUrlParser: true
+      useNewUrlParser: true,
     });
 
     const db = mongoose.model('users', {});
@@ -51,7 +51,7 @@ describe('/api/users', () => {
         email: 'eleanor.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
 
       const createdUser = await request(server)
@@ -74,7 +74,7 @@ describe('/api/users', () => {
         email: 'anton.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -86,7 +86,7 @@ describe('/api/users', () => {
       expect(response.body.motto).toEqual(
         'Streamlined contextually-based interface'
       );
-      expect(response.body.user_type).toEqual('recptionist');
+      expect(response.body.user_type).toEqual('receptionist');
     });
   });
 
@@ -98,7 +98,7 @@ describe('/api/users', () => {
         email: 'andrea.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -112,7 +112,7 @@ describe('/api/users', () => {
         email: 'martin.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
 
       const newUser6 = {
@@ -121,7 +121,7 @@ describe('/api/users', () => {
         email: 'martin.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser1 = await request(server)
         .post('/api/users')
@@ -139,7 +139,7 @@ describe('/api/users', () => {
         email: 'martina.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -156,7 +156,7 @@ describe('/api/users', () => {
         email: 'samuel.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -167,7 +167,7 @@ describe('/api/users', () => {
         email: 'samantha.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const id = createdUser.body._id;
       const response = await request(server)
@@ -182,7 +182,7 @@ describe('/api/users', () => {
         email: 'sabrina.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -194,7 +194,7 @@ describe('/api/users', () => {
         email: 'sabrina.roman@gmail.com',
         password: '123456',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const id = createdUser.body._id;
       const response = await request(server)
@@ -210,7 +210,7 @@ describe('/api/users', () => {
         email: 'winston.roman@gmail.com',
         password: '12345',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -221,7 +221,7 @@ describe('/api/users', () => {
         email: 'wade.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const response = await request(server)
         .put('/api/users/5dafdsavzvcxsgfdfff')
@@ -235,7 +235,7 @@ describe('/api/users', () => {
         email: 'lili.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -246,7 +246,7 @@ describe('/api/users', () => {
         email: 'leyla.roman@gmail.com',
         password: '1234567',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const id = createdUser.body._id;
       const response = await request(server)
@@ -265,7 +265,7 @@ describe('/api/users', () => {
         email: 'anya.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -281,7 +281,7 @@ describe('/api/users', () => {
         email: 'anya.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -298,7 +298,7 @@ describe('/api/users', () => {
         email: 'antonia.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -313,7 +313,7 @@ describe('/api/users', () => {
         email: 'anya.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
