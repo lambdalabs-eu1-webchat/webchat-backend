@@ -5,6 +5,8 @@ const routes = express.Router();
 const errorMessages = require('../utils/errorMessage');
 const response = require('../utils/response');
 const { models } = require('../models/index');
+const { updateUser } = require('../utils/helperFunctions');
+const validateObjectId = require('../middleware/validateObjectId');
 
 routes.get('/', async (req, res, next) => {
   try {
@@ -15,9 +17,9 @@ routes.get('/', async (req, res, next) => {
   }
 });
 
-routes.get('/:id', async (req, res, next) => {
+routes.get('/:_id', async (req, res, next) => {
   try {
-    const user = await models.User.findById(req.params.id).exec();
+    const user = await models.User.findById(req.params._id).exec();
     res.send(user);
   } catch (error) {
     next(error);
@@ -35,7 +37,7 @@ routes.post('/', async (req, res, next) => {
     const resultWithoutPassword = { ...result._doc };
     delete resultWithoutPassword.password;
     res.status(201).json(resultWithoutPassword);
-  } catch(error) {
+  } catch (error) {
     if (incomingUser.name) {
       res.status(422).json({ message: 'User already in database' });
     } else {
@@ -45,15 +47,18 @@ routes.post('/', async (req, res, next) => {
   }
 });
 
-routes.put('/:id', async (req, res, next) => {
-  const { id } = req.params;
+routes.put('/:_id', validateObjectId, async (req, res, next) => {
+  const { _id } = req.params;
   const incomingUser = { ...req.body };
   if (incomingUser.password) {
     incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
   }
   try {
-    const user = await models.User.findById({ '_id': id }).exec();
-    user.set(incomingUser);
+    const user = await models.User.findById({ _id }).exec();
+
+    // check for `incommingUser` properties and update them in the `user` object
+    updateUser(user, incomingUser);
+
     const result = await user.save();
     const resultWithoutPassword = { ...result._doc };
     delete resultWithoutPassword.password;
@@ -68,10 +73,10 @@ routes.put('/:id', async (req, res, next) => {
   }
 });
 
-routes.delete('/:id', async (req, res, next) => {
-  const { id } = req.params;
+routes.delete('/:_id', validateObjectId, async (req, res, next) => {
+  const { _id } = req.params;
   try {
-    const { deletedCount } = await models.User.remove({ '_id': id });
+    const { deletedCount } = await models.User.remove({ _id });
     if (deletedCount) {
       res.status(200).json(response.deleteUser);
     } else {
