@@ -35,7 +35,7 @@ routes.post('/', async (req, res, next) => {
     const resultWithoutPassword = { ...result._doc };
     delete resultWithoutPassword.password;
     res.status(201).json(resultWithoutPassword);
-  } catch(error) {
+  } catch (error) {
     if (incomingUser.name) {
       res.status(422).json({ message: 'User already in database' });
     } else {
@@ -52,7 +52,7 @@ routes.put('/:id', async (req, res, next) => {
     incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
   }
   try {
-    const user = await models.User.findById({ '_id': id }).exec();
+    const user = await models.User.findById({ _id: id }).exec();
     user.set(incomingUser);
     const result = await user.save();
     const resultWithoutPassword = { ...result._doc };
@@ -71,7 +71,7 @@ routes.put('/:id', async (req, res, next) => {
 routes.delete('/:id', async (req, res, next) => {
   const { id } = req.params;
   try {
-    const { deletedCount } = await models.User.remove({ '_id': id });
+    const { deletedCount } = await models.User.remove({ _id: id });
     if (deletedCount) {
       res.status(200).json(response.deleteUser);
     } else {

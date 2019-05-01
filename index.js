@@ -26,9 +26,7 @@ connectDb()
           } mode ====`,
         ),
       );
-      io.on('connection', socket => {
-        console.log('connected');
-      });
+      require('./routes/chats.js')(io);
     } catch (error) {
       console.error(error);
     }
