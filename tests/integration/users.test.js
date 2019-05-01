@@ -143,4 +143,105 @@ describe('/api/users', () => {
       expect(createdUser.body.name).toEqual('Martina');
     });
   });
+
+  describe('PUT /:id', () => {
+    it('should return 200 OK if the request is successful', async () => {
+      const newUser8 = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Samuel",
+        "email": "samuel.roman@gmail.com",
+        "password": "1234",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+      const createdUser = await request(server)
+          .post(`/api/users`)
+          .send(newUser8);
+      const updatedUser = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Samantha",
+        "email": "samantha.roman@gmail.com",
+        "password": "1234",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+      const id = createdUser.body._id;
+      const response = await request(server).put(`/api/users/${id}`).send(updatedUser);
+      expect(response.status).toBe(200);
+    });
+    it('should remove the password from the response body', async () => {
+      const newUser15 = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Sabrina",
+        "email": "sabrina.roman@gmail.com",
+        "password": "1234",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+      const createdUser = await request(server)
+          .post('/api/users')
+          .send(newUser15);
+
+      const updatedUser = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Sabrina",
+        "email": "sabrina.roman@gmail.com",
+        "password": "123456",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+      const id = createdUser.body._id;
+      const response = await request(server).put(`/api/users/${id}`).send(updatedUser);
+
+      expect(response.body).not.toHaveProperty('password');
+    });
+    it('should return 404 Not Found if the user cannot be found in the database', async () => {
+      const newUser9 = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Winston",
+        "email": "winston.roman@gmail.com",
+        "password": "12345",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+      const createdUser = await request(server)
+          .post(`/api/users`)
+          .send(newUser9);
+      const updatedUser = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Wade",
+        "email": "wade.roman@gmail.com",
+        "password": "1234",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+      const response = await request(server).put(`/api/users/5dafdsavzvcxsgfdfff`).send(updatedUser);
+      expect(response.status).toBe(404);
+    });
+    it('should return the updated user if the request is successful', async () => {
+      const newUser10 = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Lili",
+        "email": "lili.roman@gmail.com",
+        "password": "1234",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+      const createdUser = await request(server)
+          .post(`/api/users`)
+          .send(newUser10);
+      const updatedUser = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Leyla",
+        "email": "leyla.roman@gmail.com",
+        "password": "1234567",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+      const id = createdUser.body._id;
+      const response = await request(server).put(`/api/users/${id}`).send(updatedUser);
+      expect(response.body.name).toEqual('Leyla');
+      expect(response.body.email).toEqual('leyla.roman@gmail.com');
+    });
+  });
 });
