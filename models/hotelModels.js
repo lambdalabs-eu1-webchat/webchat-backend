@@ -15,7 +15,7 @@ const hotelSchema = new mongoose.Schema({
   rooms: [roomSchema],
   name: {
     type: String,
-    required: true,
+    required: [true, 'Name is required'],
   },
   motto: {
     type: String,
