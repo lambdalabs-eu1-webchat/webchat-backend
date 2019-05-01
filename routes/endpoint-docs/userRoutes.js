@@ -99,13 +99,6 @@
  */
 
 /**
- * [POST] Creates a new user
- * @params : none,
- * @body : none,
- * @queryString : none,
- */
-
-/**
  * @api {post} /users Create a user
  * @apiName addUser
  * @apiGroup Users
