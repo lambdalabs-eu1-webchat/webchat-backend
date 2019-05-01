@@ -1,50 +1,73 @@
 const MODEL_NAMES = require('../models/MODEL_NAMES');
 const USER_TYPES = require('../models/USER_TYPES.js');
 const { models } = require('../models/index');
-module.exports = function chatSocket(io) {
-  io.on('connection', async socket => {
-    /**
-     * chat_id:
-     *
-     * user:{
-     *  id:
-     *  name:
-     *  user_type
-     * }
-     *
-     */
-    socket.on(JOIN, async data => {
-      const promises = [];
-      promises.push(models.Chat.findById({ _id: data.chat_id }));
-      promises.push(models.User.findById({ _id: data.user.user_id }));
-      const [chat, user] = await Promise.all(promises);
+module.exports = chatSocket;
 
-      socket.emit('console', chat);
-      // check for the guest
+function chatSocket(io) {
+  io.on('connection', async socket => {
+    socket.on(JOIN, async data => {
+      // get the user
+      const user = await models.User.findById({ _id: data.user_id });
       if (user.user_type === USER_TYPES.GUEST) {
-        // find out if user belongs in room or if can join and do it
-        if (chat.guest.id === user._id) {
-          // it is the guest of this chat
-          socket.join(data.chat_id);
+        const chat = await models.Chat.findOne({
+          'guest.id': data.user_id,
+        });
+        if (!chat) {
+          // make a chat if they don't have one
+          const newChat = new models.Chat({
+            tickets: [
+              {
+                status: 'closed',
+                messages: [],
+              },
+            ],
+            guest: {
+              id: user._id,
+              name: user.name,
+            },
+            hotel_id: user.hotel_id,
+            room: user.room,
+          });
+          newChat.save((error, chat) => {
+            if (error) {
+              console.log(error);
+            } else {
+              // emit the chat to the guest
+              socket.emit(CHATLOG, chat);
+              // join the chat and return the chat
+              socket.join(chat._id);
+            }
+          });
+        } else {
+          // already has a chat
+          // emit the chat to the guest
+          socket.emit(CHATLOG, chat);
+          // join the chat and return the chat
+          socket.join(chat._id);
         }
+        // ===================STAFF MEMBERS =====================
       } else if (
         user.user_type === USER_TYPES.ADMIN ||
         user.user_type === USER_TYPES.SUPER_ADMIN ||
         user.user_type === USER_TYPES.RECEPTIONIST
       ) {
-        // check if no one is in or if he is in room
+        //
+        const chat = await models.Chat.findById({
+          _id: data.chat_id,
+        });
+        //check if you are the member or if no staff member
         if (!chat.staff_member || chat.staff_member.id === user._id) {
           // join the room
-          socket.join(data.chat_id);
+          socket.join(chat._id);
+          socket.emit(CHATLOG, chat);
           // if joining change the staff_member
           if (!chat.staff_member) {
             chat.staff_member = { id: user._id, name: user.name };
+            chat.save();
           }
         }
       }
-      chat.save();
     });
-
     socket.on(MESSAGE, async data => {
       io.in(data.chat_id).emit('message', {
         sender: data.user,
@@ -58,7 +81,8 @@ module.exports = function chatSocket(io) {
       chat.save();
     });
   });
-};
+}
 
 const JOIN = 'join';
 const MESSAGE = 'message';
+const CHATLOG = 'chat_log';
