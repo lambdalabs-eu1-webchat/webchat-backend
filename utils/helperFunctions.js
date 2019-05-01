@@ -3,6 +3,7 @@ module.exports = {
   randomMinMax,
   isEmail,
   updateUser,
+  updateHotel,
 };
 
 function remainder(numerator, denominator) {
@@ -26,4 +27,9 @@ function updateUser(current, newUser) {
   if (newUser.password) current.password = newUser.password;
   if (newUser.motto) current.motto = newUser.motto;
   if (newUser.user_type) current.user_type = newUser.user_type;
+}
+
+function updateHotel(current, updated) {
+  if (updated.name) current.name = updated.name;
+  if (updated.motto) current.motto = updated.motto;
 }

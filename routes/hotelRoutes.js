@@ -3,11 +3,11 @@ const routes = express.Router();
 
 const errorMessage = require('../utils/errorMessage');
 const { models } = require('../models/index');
-const documentExists = require('../utils/documentExists');
 const validateObjectId = require('../middleware/validateObjectId');
 const validateHotelPost = require('../middleware/validateHotelPost');
 const formatHotel = require('../middleware/formatHotel');
 const validateHotelChange = require('../middleware/validateHotelChange');
+const { updateHotel } = require('../utils/helperFunctions');
 
 // ========== HOTEL - created when a Super Admin USER type is created ==========
 
@@ -49,24 +49,20 @@ routes.put(
     try {
       const { _id } = req.params;
       const hotelUpdates = req.body;
-      if (await documentExists({ _id }, 'Hotel')) {
-        const updateResult = await models.Hotel.updateOne(
-          { _id },
-          hotelUpdates,
-        );
-        const updatedHotel = await models.Hotel.findById(_id);
-        if (updateResult.nModified) {
-          res.status(200).json(updatedHotel);
-        } else {
-          res.status(400).json(errorMessage.updateHotel);
-        }
+
+      const hotel = await models.Hotel.findById(_id);
+      if (hotel) {
+        updateHotel(hotel, hotelUpdates);
+
+        const result = await hotel.save();
+        res.status(200).json(result);
       } else {
         res.status(400).json(errorMessage.noHotel);
       }
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 // ========== ROOMS ========== DRAFT
