@@ -244,4 +244,71 @@ describe('/api/users', () => {
       expect(response.body.email).toEqual('leyla.roman@gmail.com');
     });
   });
+
+  describe('DELETE /:id', () => {
+    it('should return 200 OK if the request is successful', async () => {
+      const newUser11 = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Anya",
+        "email": "anya.roman@gmail.com",
+        "password": "1234",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+      const createdUser = await request(server)
+          .post(`/api/users`)
+          .send(newUser11);
+      const id = createdUser.body._id;
+      const response = await request(server).delete(`/api/users/${id}`);
+      expect(response.status).toBe(200);
+    });
+    it('should return 404 Not Found if the user cannot be found in the database', async () => {
+      const newUser12 = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Anya",
+        "email": "anya.roman@gmail.com",
+        "password": "1234",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+      const createdUser = await request(server)
+          .post(`/api/users`)
+          .send(newUser12);
+      const id = createdUser.body._id;
+      const response1 = await request(server).delete(`/api/users/${id}`);
+      const response2 = await request(server).delete(`/api/users/${id}`);
+      expect(response2.status).toEqual(404);
+    });
+    it('should remove the password from the response body', async () => {
+      const newUser13 = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Antonia",
+        "email": "antonia.roman@gmail.com",
+        "password": "1234",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+      const createdUser = await request(server)
+          .post('/api/users')
+          .send(newUser13);
+
+      expect(createdUser.body).not.toHaveProperty('password');
+    });
+    it('should return the correct message if the request is successful', async () => {
+      const newUser14 = {
+        "hotel_id": "5cc742f4f8bb9f81214e75fe",
+        "name": "Anya",
+        "email": "anya.roman@gmail.com",
+        "password": "1234",
+        "motto": "Streamlined contextually-based interface",
+        "user_type": "recptionist",
+      };
+      const createdUser = await request(server)
+          .post(`/api/users`)
+          .send(newUser14);
+      const id = createdUser.body._id;
+      const response = await request(server).delete(`/api/users/${id}`);
+      expect(response.body.message).toEqual('The user has been removed from the database');
+    });
+  });
 });
