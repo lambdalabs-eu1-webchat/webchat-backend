@@ -74,8 +74,8 @@ function chatSocket(io) {
         text: data.text,
       });
       const chat = await models.Chat.findById({ _id: data.chat_id });
-      chat.tickets[chat.tickets.length].messages.push({
-        sender: data.user, // needs a name and id
+      chat.tickets[chat.tickets.length - 1].messages.push({
+        sender: data.sender, // needs a name and id
         text: data.text, // string
       });
       chat.save();
