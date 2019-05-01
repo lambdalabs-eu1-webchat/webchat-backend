@@ -13,7 +13,7 @@ describe('/api/hotel', () => {
       useNewUrlParser: true,
     });
 
-    const db = mongoose.model('hotel', {});
+    const db = mongoose.model('hotels', {});
     await db.remove({});
   });
 
