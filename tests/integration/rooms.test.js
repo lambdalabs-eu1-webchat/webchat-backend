@@ -470,4 +470,99 @@ describe('/api/hotel', () => {
       expect(updatedRoom.body.name).toEqual('Tyne Bridge');
     });
   });
+
+  describe('DELETE /:_id/rooms/:_id', () => {
+    it('should return 400 BAD REQUEST if an invalid hotel ObjectId is passed', async () => {
+      return request(server)
+        .delete('/api/hotel/5cc96f85b801980553d606ex/rooms/d')
+        .expect(400);
+    });
+    it('should return the correct message if an invalid hotel ObjectId is passed', async () => {
+      return request(server)
+        .delete('/api/hotel/5cc96f85b801980553d606ex/rooms/d')
+        .expect(errorMessage.invalidObjectId);
+    });
+    it('should return 400 BAD REQUEST if an invalid room ObjectId is passed', async () => {
+      return request(server)
+        .delete(
+          '/api/hotel/5cc96f85b801980553d606ed/rooms/5cc96f85b801980553d606ex',
+        )
+        .expect(400);
+    });
+    it('should return the correct message if an invalid room ObjectId is passed', async () => {
+      return request(server)
+        .delete(
+          '/api/hotel/5cc96f85b801980553d606ed/rooms/5cc96f85b801980553d606ex',
+        )
+        .expect(errorMessage.invalidObjectId);
+    });
+    it('should return 200 OK if a valid room id is provided', async () => {
+      const newHotel = {
+        name: 'WEBEU1',
+        motto: 'Smashing it',
+      };
+      const newRoom = [
+        {
+          name: 'JS Fundamentals',
+        },
+      ];
+      const newlyCreatedHotel = await request(server)
+        .post('/api/hotel')
+        .send(newHotel);
+      const id = newlyCreatedHotel.body._id;
+      const newlyCreatedRoom = await request(server)
+        .post(`/api/hotel/${id}/rooms`)
+        .send(newRoom);
+      const roomId = newlyCreatedRoom.body[0]._id;
+      return request(server)
+        .delete(`/api/hotel/${id}/rooms/${roomId}`)
+        .expect(200);
+    });
+    it('should return the deleted room if a valid room id is provided', async () => {
+      const newHotel = {
+        name: 'WEBEU2',
+        motto: 'Also smashing it',
+      };
+      const newRoom = [
+        {
+          name: 'JS Fundamentals',
+        },
+      ];
+      const newlyCreatedHotel = await request(server)
+        .post('/api/hotel')
+        .send(newHotel);
+      const id = newlyCreatedHotel.body._id;
+      const newlyCreatedRoom = await request(server)
+        .post(`/api/hotel/${id}/rooms`)
+        .send(newRoom);
+      const room = newlyCreatedRoom.body[0];
+      return request(server)
+        .delete(`/api/hotel/${id}/rooms/${room._id}`)
+        .expect(room);
+    });
+    it('should remove the room from the db if a valid room id is provided', async () => {
+      const newHotel = {
+        name: 'WEBEU3',
+        motto: 'Not smashing it yet',
+      };
+      const newRoom = [
+        {
+          name: 'CSS',
+        },
+      ];
+      const newlyCreatedHotel = await request(server)
+        .post('/api/hotel')
+        .send(newHotel);
+      const id = newlyCreatedHotel.body._id;
+      const newlyCreatedRoom = await request(server)
+        .post(`/api/hotel/${id}/rooms`)
+        .send(newRoom);
+      const room = newlyCreatedRoom.body[0];
+      await request(server).delete(`/api/hotel/${id}/rooms/${room._id}`);
+      const postDeleteRoomList = await request(server).get(
+        `/api/hotel/${id}/rooms`,
+      );
+      expect(postDeleteRoomList.body).toHaveLength(0);
+    });
+  });
 });
