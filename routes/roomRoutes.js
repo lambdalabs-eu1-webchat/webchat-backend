@@ -43,7 +43,7 @@ routes.post(
         // grab the hotel after any changes during the room push
         const updatedHotel = await models.Hotel.findById(_id);
 
-        // if some/all room names were duplicates, res with the current hotel rooms and a message to say some weren not added
+        // if some/all room names were duplicates, res with the current hotel rooms and a message
         if (duplicateRooms.length) {
           res.status(200).json({
             ...response.duplicateRoom,
