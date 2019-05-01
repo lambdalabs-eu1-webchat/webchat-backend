@@ -101,4 +101,53 @@ describe('/api/hotel', () => {
           expect(newlyCreatedHotel.body.name).toEqual(newHotel.name)
       });
   });
+
+  describe('GET /:_id', () => {
+    it('should return 400 BAD REQUEST if an invalid ObjectId is passed', async () => {
+        return request(server)
+        .get('/api/hotel/5cc96f85b801980553d606ex')
+        .expect(400);
+    })
+    it('should return the correct message if an invalid ObjectId is passed', async () => {
+        return request(server)
+        .get('/api/hotel/5cc96f85b801980553d606ex')
+        .expect(errorMessage.invalidObjectId);
+    })
+    it('should return 400 BAD REQUEST if a non-existant hotel id is passed', async () => {
+        return request(server)
+        .get('/api/hotel/5cc96f85b801980553d606e9')
+        .expect(400);
+    })
+    it('should return the correct message if a non-existant hotel id is passed', async () => {
+        return request(server)
+        .get('/api/hotel/5cc96f85b801980553d606e9')
+        .expect(errorMessage.noHotel);
+    })
+    it('should return 200 OK if a valid hotel id is passed', async () => {
+        const newHotel = {
+            name: 'Artington Towers',
+            motto: 'Real Tall'
+        }
+        const newlyCreatedHotel = await request(server)
+        .post('/api/hotel')
+        .send(newHotel);
+        const id = newlyCreatedHotel.body._id;
+        return request(server)
+        .get(`/api/hotel/${id}`)
+        .expect(200);
+    })
+    it('should return the hotel if a valid hotel id is passed', async () => {
+        const newHotel = {
+            name: 'Venice Beach',
+            motto: 'All chill'
+        }
+        const newlyCreatedHotel = await request(server)
+        .post('/api/hotel')
+        .send(newHotel);
+        const hotel = newlyCreatedHotel.body;
+        return request(server)
+        .get(`/api/hotel/${hotel._id}`)
+        .expect(hotel);
+    })
+  })
 });
