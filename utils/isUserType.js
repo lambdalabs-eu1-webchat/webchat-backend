@@ -1,6 +1,7 @@
 const USER_TYPES = require('./USER_TYPES');
 
 module.exports = { isStaff, isGuest };
+
 function isStaff(user_type) {
   if (
     user_type === USER_TYPES.ADMIN ||

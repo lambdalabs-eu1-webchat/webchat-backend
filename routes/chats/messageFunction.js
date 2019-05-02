@@ -1,9 +1,7 @@
 module.exports = { messageGuest, messageStaff };
 
 const { models } = require('../../models/index');
-
 const { CHATLOG, MESSAGE } = require('./constants');
-
 const getLastTicket = require('../../utils/getLastTicket');
 
 async function messageGuest(text, socket, io) {
@@ -62,13 +60,13 @@ async function messageStaff(chat_id, text, socket, io) {
     text,
   };
   // start getting chat
-  const chatPromise = models.Chat.findById({ _id: socket.chat._id });
+  const chatPromise = models.Chat.findById({ _id: chat_id });
 
   // check if in that room
   const is_your_chat = !!socket.chats.find(chat => chat._id.equals(chat_id));
   if (is_your_chat) {
     // send the chat
-    io.in(socket.chat._id).emit(MESSAGE, message);
+    io.in(chat_id).emit(MESSAGE, message);
     // get the promise to update
     const chat = await chatPromise;
     chat.tickets[chat.tickets.length - 1].messages.push(message);
@@ -78,9 +76,10 @@ async function messageStaff(chat_id, text, socket, io) {
         socket.emit('console', error);
       } else {
         // update socket chats
-        socket.chats = socket.chats.map(chatMap =>
+        const newChats = socket.chats.map(chatMap =>
           chatMap._id.equals(chat_id) ? chat : chatMap,
         );
+        socket.chats = newChats;
       }
     });
   }

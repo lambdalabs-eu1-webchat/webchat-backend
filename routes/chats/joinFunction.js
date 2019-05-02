@@ -56,5 +56,6 @@ async function joinChatsEmployee(socket) {
   chats.forEach(chat => {
     socket.join(chat._id);
   });
+  socket.chats = chats;
   socket.emit(CHATLOGS, chats);
 }
