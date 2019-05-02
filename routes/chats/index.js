@@ -7,11 +7,12 @@ const {
   MESSAGE,
   CLOSE_TICKET,
   ASSIGN_SELF_TICKET,
-  RATING,
+  // RATING,
   LOGIN,
+  FAILED_LOGIN,
 } = require('./constants');
 
-const USER_TYPES = require('../../models/USER_TYPES.js');
+const USER_TYPES = require('../../utils/USER_TYPES');
 module.exports = chatSocket;
 
 const jwt = require('jsonwebtoken');
@@ -24,11 +25,13 @@ function chatSocket(io) {
     // tell the server to do what it needs to for setup
     // need so send a login with token
     socket.emit('connection', true);
+    console.log('connected');
     socket.on(LOGIN, token => {
+      console.log(token);
       jwt.verify(token, jwtKey, async (err, decoded) => {
         if (err) {
           console.error(err);
-          socket.emit('failed_login', 'Not a valid token');
+          socket.emit(FAILED_LOGIN, 'Not a valid token');
         } else {
           const user = await models.User.findById({ _id: decoded.payload });
           socket.user = user;
@@ -74,9 +77,13 @@ function chatSocket(io) {
             // MIGHT NOT NEED TO IF WE ARE NOT EMITING IT ANYWAHERE
             // ============================================================
             // socket.on(RATING, rating => {});
+            // need to send something to say ticket is done so it can update on this side
           }
         }
       });
+    });
+    socket.on('disconnect', () => {
+      console.log('user disconnected');
     });
   });
 }
