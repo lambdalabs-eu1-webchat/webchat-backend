@@ -15,7 +15,6 @@ describe('/api/hotel', () => {
 
     const db = mongoose.model('hotels', {});
     await db.deleteMany({});
-  });
 
   afterAll(async () => {
     await connection.close();
