@@ -43,8 +43,13 @@ routes.post('/', async (req, res, next) => {
   // if its a new Guest user, create a passcode for him
   if (user_type === USER_TYPES.GUEST) {
     const codePayload = `${name}+${room.id}`;
+    // helper function to generate Guest passcode
     var passcode = createPasscode(codePayload);
     var hashedPasscode = bcrypt.hashSync(passcode, 10);
+  }
+
+  if (user_type === USER_TYPES.SUPER_ADMIN) {
+    res.status(404).json(errorMessages.superAdminError);
   }
 
   try {
@@ -74,14 +79,14 @@ routes.post('/', async (req, res, next) => {
   }
 });
 
-routes.put('/:_id', validateObjectId, async (req, res) => {
+routes.put('/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
   const incomingUser = { ...req.body };
   if (incomingUser.password) {
     incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
   }
   try {
-    const user = await models.User.findById({ _id }).exec();
+    const user = await models.User.findById({ _id });
 
     if (user) {
       // check for `incommingUser` properties and update them in the `user` object
@@ -95,7 +100,7 @@ routes.put('/:_id', validateObjectId, async (req, res) => {
       res.status(404).json(errorMessages.getUserById);
     }
   } catch (error) {
-    res.status(400).json(errorMessages.updateUser);
+    next(error);
   }
 });
 
@@ -105,7 +110,7 @@ routes.put('/:_id', validateObjectId, async (req, res) => {
 routes.delete('/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
   try {
-    const { deletedCount } = await models.User.remove({ _id });
+    const { deletedCount } = await models.User.deleteOne({ _id });
     if (deletedCount) {
       res.status(200).json(response.deleteUser);
     } else {
