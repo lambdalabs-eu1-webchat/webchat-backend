@@ -14,12 +14,12 @@ describe('/api/hotel', () => {
     });
 
     const db = mongoose.model('hotels', {});
-    await db.remove({});
+    await db.deleteMany({});
   });
 
   afterAll(async () => {
     await connection.close();
-    await db.remove({});
+    await db.deleteMany({});
   });
 
   it('should set the testing environment', async () => {
