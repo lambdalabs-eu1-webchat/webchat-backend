@@ -50,7 +50,7 @@ routes.post('/', async (req, res, next) => {
   }
 });
 
-routes.put('/:_id', validateObjectId, async (req, res, next) => {
+routes.put('/:_id', validateObjectId, async (req, res) => {
   const { _id } = req.params;
   const incomingUser = { ...req.body };
   if (incomingUser.password) {
