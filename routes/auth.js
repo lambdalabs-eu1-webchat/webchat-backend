@@ -4,12 +4,13 @@ const createToken = require('../utils/createToken');
 const { models } = require('../models/index');
 const { duplicateEmail, invalidCredentials } = require('../utils/errorMessage');
 const documentExists = require('../utils/documentExists');
+const USER_TYPES = require('../utils/USER_TYPES');
 
 const routes = express.Router();
 
 routes.post('/register', async (req, res, next) => {
   /*
-  incomingUser = Admin/Receptionist/Guest
+  incomingUser = Super Admin
   required fields:
   - hotel_id
   - user_type = Super Admin by default!
@@ -31,7 +32,11 @@ routes.post('/register', async (req, res, next) => {
     password = bcrypt.hashSync(password, 10);
 
     // add new user to the DB, rewrite the password to be the hashed pw
-    const user = await models.User.create({ ...req.body, password });
+    const user = await models.User.create({
+      ...req.body,
+      password,
+      user_type: USER_TYPES.SUPER_ADMIN,
+    });
 
     // remove password from the returned user object, so it's not sent to FE
     user.password = undefined;
