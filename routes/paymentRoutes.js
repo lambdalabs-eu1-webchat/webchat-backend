@@ -133,11 +133,9 @@ const updatedDb = (updatedSubscription, newPlan) => {
 /*
 [DELETE]
 path: '/subscription'
-FOR_TESTING_ONLY @body: 
-{
-        currentSubscription: hardcoded string from Stripe dashboard,
-}
-currentSubscription will be replaced with a hotel_id or simply decoded from the token with no body passed
+FOR_TESTING_ONLY @params: 
+currentSubscription: hardcoded string from Stripe dashboard,
+currentSubscription will be replaced with a hotel_id or simply decoded from the token with no params passed
 What does this endpoint need to be able to do?
 Delete plans for when customers move from Pro/Plus to Free (Middleware will stop invalid changes based on user count)
 */
