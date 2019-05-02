@@ -1,5 +1,5 @@
 const { joinChatGuest, joinChatsEmployee } = require('./joinFunction');
-const handleMessage = require('./messageFunction');
+const { messageGuest } = require('./messageFunction');
 const handleCloseTicket = require('./closeTicketFunction');
 const assignSelfTicket = require('./assignSelfTicket');
 
@@ -58,6 +58,7 @@ function chatSocket(io) {
             joinChatGuest(socket);
             // setup all listeners for a guest
             // can send message
+            socket.on(MESSAGE, text => messageGuest(text, socket, io));
             // NEEDS text
             // can rate
             // NEEDS rating
