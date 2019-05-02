@@ -1,4 +1,4 @@
-const handleJoin = require('./joinFunction');
+const { joinChatGuest, joinChatsEmployee } = require('./joinFunction');
 const handleMessage = require('./messageFunction');
 const handleCloseTicket = require('./closeTicketFunction');
 const handleGetActiveChats = require('./getActiveChats');
@@ -9,10 +9,9 @@ module.exports = chatSocket;
 
 const jwt = require('jsonwebtoken');
 const { super_secret } = require('../../utils/secrets');
-const { invalidCredentials } = require('../../utils/errorMessage');
-
 const jwtKey = process.env.JWT_SECRET || super_secret;
 const { models } = require('../../models/index');
+
 function chatSocket(io) {
   io.on('connection', async socket => {
     socket.emit('connection', true);
@@ -24,8 +23,8 @@ function chatSocket(io) {
           socket.emit('failed_login', 'Not a valid token');
         } else {
           const user = await models.User.findById({ _id: decoded.payload });
-          socket.user = { id: user._id, name: user.name };
-          socket.hotel_id = decoded.hotel_id;
+          socket.user = user;
+
           if (
             user.user_type === USER_TYPES.ADMIN ||
             user.user_type === USER_TYPES.SUPER_ADMIN ||
@@ -33,9 +32,13 @@ function chatSocket(io) {
           ) {
             // setup the employee by joining all his/her active chats
             // send a log of all active chats
+            joinChatsEmployee(socket);
+            // setup all listeners for a employee
           } else if (user.user_type === USER_TYPES.GUEST) {
             // setup the guest by joining chat
             // send a log of the guests chat
+            joinChatGuest(socket);
+            // setup all listeners for a guest
           }
         }
       });
