@@ -29,6 +29,20 @@ routes.get('/:id', async (req, res, next) => {
 
 routes.post('/', async (req, res, next) => {
   const incomingUser = req.body;
+  /*
+  incomingUser = Admin/Receptionist/Guest
+  required fields:
+  - hotel_id
+  - user_type
+  - name
+  - email (null for Guest, required for rest)
+  - password (required for Admin/Receptionist)
+  - passcode (for Guest)
+  - motto (required for Admin/Receptionist)
+  - room (for Guest)
+  - check-in date (for Guest)
+*/
+
   const newUser = models.User(incomingUser);
   if (incomingUser.password) {
     incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
@@ -38,7 +52,7 @@ routes.post('/', async (req, res, next) => {
     const resultWithoutPassword = { ...result._doc };
     delete resultWithoutPassword.password;
     res.status(201).json(resultWithoutPassword);
-  } catch(error) {
+  } catch (error) {
     if (incomingUser.name) {
       res.status(422).json({ message: 'User already in database' });
     } else {
@@ -55,7 +69,7 @@ routes.put('/:id', async (req, res, next) => {
     incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
   }
   try {
-    const user = await models.User.findById({ '_id': id }).exec();
+    const user = await models.User.findById({ _id: id }).exec();
     user.set(incomingUser);
     const result = await user.save();
     const resultWithoutPassword = { ...result._doc };
@@ -74,7 +88,7 @@ routes.put('/:id', async (req, res, next) => {
 routes.delete('/:id', async (req, res, next) => {
   const { id } = req.params;
   try {
-    const { deletedCount } = await models.User.remove({ '_id': id });
+    const { deletedCount } = await models.User.remove({ _id: id });
     if (deletedCount) {
       res.status(200).json(response.deleteUser);
     } else {

@@ -7,40 +7,48 @@ const documentExists = require('../utils/documentExists');
 
 const routes = express.Router();
 
-routes.post(
-  '/register',
-  // add validation middleware
-  async (req, res, next) => {
-    try {
-      // Check if this name already exist in DB
-      let { name, hotel_id, password, email } = req.body;
+routes.post('/register', async (req, res, next) => {
+  /*
+  incomingUser = Admin/Receptionist/Guest
+  required fields:
+  - hotel_id
+  - user_type = Super Admin by default!
+  - name
+  - email
+  - password
+  - motto
 
-      if (await documentExists({ email }, 'User')) {
-        return res.status(422).json(duplicateEmail);
-      }
+  Also needs to create new Hotel
+*/
+  try {
+    // Check if this name already exist in DB
+    let { name, hotel_id, password, email } = req.body;
 
-      password = bcrypt.hashSync(password, 10);
-
-      // add new user to the DB, rewrite the password to be the hashed pw
-      const user = await models.User.create({ ...req.body, password });
-
-      // remove password from the returned user object, so it's not sent to FE
-      user.password = undefined;
-
-      // generate token
-      const token = createToken({
-        id: user.id,
-        name,
-        hotel_id,
-      });
-
-      // send the user info and token in response
-      res.status(201).json({ user, token });
-    } catch (err) {
-      next(err);
+    if (await documentExists({ email }, 'User')) {
+      return res.status(422).json(duplicateEmail);
     }
+
+    password = bcrypt.hashSync(password, 10);
+
+    // add new user to the DB, rewrite the password to be the hashed pw
+    const user = await models.User.create({ ...req.body, password });
+
+    // remove password from the returned user object, so it's not sent to FE
+    user.password = undefined;
+
+    // generate token
+    const token = createToken({
+      id: user.id,
+      name,
+      hotel_id,
+    });
+
+    // send the user info and token in response
+    res.status(201).json({ user, token });
+  } catch (err) {
+    next(err);
   }
-);
+});
 
 routes.post(
   '/login',
