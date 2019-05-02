@@ -1,4 +1,4 @@
-const USER_TYPES = require('../../models/USER_TYPES');
+// const USER_TYPES = require('../../models/USER_TYPES');
 const { models } = require('../../models/index');
 
 const KEYWORDS = require('./constants');
