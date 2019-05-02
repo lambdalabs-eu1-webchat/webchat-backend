@@ -116,4 +116,42 @@
  *        "message": "No hotel exists with this id."
  *    }
  */
-
+/**
+ *  @api {post} api/:_id room getNew room
+ *  @apiVersion 0.1.0
+ *  @apiName postRooms
+ *  @apiGroup Rooms
+ *
+ *  @apiParam {String}  hotel id 
+ * @apiParam {String}  room name 
+ *  @apiParamExample {json} Request-Example:
+ *    {
+ *      "name": "1",
+ *      "id": "5cc95fa83de71d13395320fa",
+ *    }
+ *
+ *  @apiSuccess {String} _id hotel Id
+ *  @apiSuccess {String} name of the new room
+ *  
+ *  @apiSuccessExample Success-Response: Room created
+ *    HTTP/1.1 201 OK
+ *  ...... This will appear on the bottom of the list when you do               a get request after you put
+ * [  
+ *  {
+ *   "_id": "5cc95fa83de71d13395320fa",
+ *   "name": "1"
+ *    }
+ * 
+ * ]  
+ * 
+ *  @apiErrorExample Error-Response: Wrong Unique Id
+ *    HTTP/1.1 400 BAD REQUEST
+ *    {
+ *       "message": "An invalid ObjectId was passed."
+ *    }
+ *    @apiErrorExample Error-Response: Array Missing
+ *    HTTP/1.1 400 BAD REQUEST
+ * {
+ *       "message": "An array was expected but not found"
+ * }
+ */
