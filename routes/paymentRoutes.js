@@ -99,9 +99,14 @@ routes.put('/', async (req, res, next) => {
   }
 });
 
+// change customers plan from Plus to Pro or Pro to Plus
 const changeSubscription = async (currentSubscription, newPlan) => {
   try {
-    const subscription = await stripe.subscriptions.retrieve(currentSubscription);
+    const subscription = await stripe.subscriptions.retrieve(
+      currentSubscription,
+    );
+    // note updatedSubscription.id is the same as the original -> it never changes so we don't need to send off to Db,
+    // unless we have set fields such as human readable plan
     const updatedSubscription = await stripe.subscriptions.update(
       currentSubscription,
       {
@@ -114,19 +119,43 @@ const changeSubscription = async (currentSubscription, newPlan) => {
         ],
       },
     );
-    updatedDb(updatedSubscription);
+    updatedDb(updatedSubscription, newPlan);
   } catch (error) {
     console.error(error);
   }
 };
 
 // temp sendtoDb - need to complete this once the schema is updated
-const updatedDb = updatedSubscription => {
-  console.log(updatedSubscription);
+const updatedDb = (updatedSubscription, newPlan) => {
+  console.log({ updatedSubscription, newPlan });
 };
 
-//DELETE remove subscriptions
-// stripe.subscriptions.update('sub_49ty4767H20z6a', {cancel_at_period_end: true});
+/*
+[DELETE]
+path: '/subscription'
+FOR_TESTING_ONLY @body: 
+{
+        currentSubscription: hardcoded string from Stripe dashboard,
+}
+currentSubscription will be replaced with a hotel_id or simply decoded from the token with no body passed
+What does this endpoint need to be able to do?
+Delete plans for when customers move from Pro/Plus to Free (Middleware will stop invalid changes based on user count)
+*/
+routes.delete('/:currentSubscription', async (req, res, next) => {
+  const { currentSubscription } = req.params;
+  try {
+    await stripe.subscriptions.update(currentSubscription, {
+      cancel_at_period_end: true,
+    });
+    removeSubscriptionFromDb();
+  } catch (error) {
+    next(error);
+  }
+});
+
+const removeSubscriptionFromDb = () => {
+    console.log('Removed from Db!')
+}
 
 // Change to new payment source/method
 
