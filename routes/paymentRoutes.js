@@ -8,7 +8,7 @@ const errorMessage = require('../utils/errorMessage');
 // const { models } = require('../models/index');
 
 /*
-What are the major pieces of validation (middleware) we need for the paymentEndpoints?
+What are the major pieces of validation (middleware) we need for the payment endpoints?
 Check if a customer is elligibile to switch plans with user count -> DB
 Check if a customer is  elligible to remove their plan with user count -> DB
 Check if a customers payments have expired (affects all other operations in the app so will need to be at the top-level of the server)
@@ -84,37 +84,61 @@ const addPro = async (customer, card) => {
   }
 };
 
-// temp sendtoDbconsole - need to complete this once the schema is updated
+// temp sendtoDb - need to complete this once the schema is updated
 const sendToDb = (customer, card, subscription, plan) => {
   console.log({ customer, card, subscription, plan });
 };
 
-// change customer.billing object on the hotel
-// billing object
-//  {
-//      customer: {
-//       id:
-//       card: {
-//           brand,
-//           last_4,
-//           exp_month,
-//           exp_year
-//        }
-//       }
-//       subscription_id:
-//       current_plan:
-//       billing_email:
-//  }
-
-//   const sendToDb = async (customer, card, subscription, plan) => {
-
-//     try {
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
-
 // PUT ammend subscriptions and default payments
+routes.put('/', async (req, res, next) => {
+  // currentSubscription is the unique subscription id - for testing this subID is req from the front-end
+  // but once the schema is created, just a hotel_id will be passed and sub_id will be added to req.body in middleware
+  const { currentSubscription, newPlan } = req.body;
+  try {
+    const subscription = await stripe.subscriptions.retrieve(
+      currentSubscription,
+    );
+    if (newPlan === 'Plus') {
+      const updatedSubscription = await stripe.subscriptions.update(
+        currentSubscription,
+        {
+          cancel_at_period_end: false,
+          items: [
+            {
+              id: subscription.items.data[0].id,
+              plan: PAYMENT_PLANS.PLUS_PLAN,
+            },
+          ],
+        },
+      );
+      updatedDb(updatedSubscription);
+    } else if (newPlan === 'Pro') {
+      const updatedSubscription = await stripe.subscriptions.update(
+        currentSubscription,
+        {
+          cancel_at_period_end: false,
+          items: [
+            {
+              id: subscription.items.data[0].id,
+              plan: PAYMENT_PLANS.PRO_PLAN,
+            },
+          ],
+        },
+      );
+      updatedDb(updatedSubscription);
+    } else {
+      res.status(400).json(errorMessage.invalidPlan);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// temp sendtoDb - need to complete this once the schema is updated
+const updatedDb = updatedSubscription => {
+  console.log(updatedSubscription);
+};
+
 // const subscription = await stripe.subscriptions.retrieve('sub_49ty4767H20z6a'); EXISTING SUB
 // stripe.subscriptions.update('sub_49ty4767H20z6a', {
 //   cancel_at_period_end: false,
