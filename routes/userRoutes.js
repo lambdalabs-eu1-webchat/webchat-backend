@@ -7,6 +7,9 @@ const response = require('../utils/response');
 const { models } = require('../models/index');
 const { updateUser } = require('../utils/helperFunctions');
 const validateObjectId = require('../middleware/validateObjectId');
+const USER_TYPES = require('../utils/USER_TYPES');
+const createPasscode = require('../utils/createPassCode');
+const createToken = require('../utils/createToken');
 
 routes.get('/', async (req, res, next) => {
   try {
@@ -31,33 +34,41 @@ routes.get('/:_id', validateObjectId, async (req, res, next) => {
 });
 
 routes.post('/', async (req, res, next) => {
-  const incomingUser = req.body;
-  /*
-  incomingUser = Admin/Receptionist/Guest
-  required fields:
-  - hotel_id
-  - user_type
-  - name
-  - email (null for Guest, required for rest)
-  - password (required for Admin/Receptionist)
-  - passcode (for Guest)
-  - motto (required for Admin/Receptionist)
-  - room (for Guest)
-  - check-in date (for Guest)
-*/
+  let { hotel_id, user_type, name, email, password, motto, room } = req.body;
 
-  const newUser = models.User(incomingUser);
-
-  if (incomingUser.password) {
-    incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
+  // hash password before saving it to db
+  if (password) {
+    password = bcrypt.hashSync(password, 10);
+  }
+  // if its a new Guest user, create a passcode for him
+  if (user_type === USER_TYPES.GUEST) {
+    const codePayload = `${name}+${room.id}`;
+    var passcode = createPasscode(codePayload);
+    var hashedPasscode = bcrypt.hashSync(passcode, 10);
   }
 
   try {
-    const result = await newUser.save();
-    const resultWithoutPassword = { ...result._doc };
-    delete resultWithoutPassword.password;
+    const user = await models.User.create({
+      is_left: false,
+      hotel_id,
+      user_type,
+      name,
+      email,
+      password,
+      motto,
+      room,
+      passcode: hashedPasscode,
+    });
 
-    res.status(201).json(resultWithoutPassword);
+    const { _id } = user;
+    const token = createToken({ id: _id, name, hotel_id, passcode });
+
+    // remove credentials fron user
+    const userWithoutCredentials = { ...user._doc };
+    delete userWithoutCredentials.password;
+    delete userWithoutCredentials.passcode;
+
+    res.status(201).json({ user: userWithoutCredentials, token });
   } catch (error) {
     next(error);
   }
