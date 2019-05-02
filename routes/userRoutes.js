@@ -17,14 +17,15 @@ routes.get('/', async (req, res, next) => {
   }
 });
 
-routes.get('/:_id', async (req, res, next) => {
+routes.get('/:_id', validateObjectId, async (req, res, next) => {
   try {
-    const user = await models.User.findById(req.params._id).exec();
-    res.send(user);
-  } catch (error) {
-    if (error.name === 'CastError') {
+    const user = await models.User.findById(req.params._id);
+    if (user) {
+      res.status(200).json(user);
+    } else {
       res.status(404).json(errorMessages.getUserById);
     }
+  } catch (error) {
     next(error);
   }
 });
@@ -46,20 +47,18 @@ routes.post('/', async (req, res, next) => {
 */
 
   const newUser = models.User(incomingUser);
+
   if (incomingUser.password) {
     incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
   }
+
   try {
     const result = await newUser.save();
     const resultWithoutPassword = { ...result._doc };
     delete resultWithoutPassword.password;
+
     res.status(201).json(resultWithoutPassword);
   } catch (error) {
-    if (incomingUser.email) {
-      res.status(422).json(errorMessages.duplicateEmail);
-    } else {
-      res.status(400).json(errorMessages.addUser);
-    }
     next(error);
   }
 });
@@ -89,6 +88,9 @@ routes.put('/:_id', validateObjectId, async (req, res) => {
   }
 });
 
+/**
+ * On DELETE request, do not delete user from DB, but change his `is_left` status to `true`
+ */
 routes.delete('/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
   try {
