@@ -41,13 +41,8 @@ routes.post('/', async (req, res, next) => {
     delete resultWithoutPassword.password;
     res.status(201).json(resultWithoutPassword);
   } catch (error) {
-<<<<<<< HEAD
-    if (incomingUser.name) {
-      res.status(422).json({ message: 'User already in database' });
-=======
     if (incomingUser.email) {
       res.status(422).json(errorMessages.duplicateEmail);
->>>>>>> origin/master
     } else {
       res.status(400).json(errorMessages.addUser);
     }
@@ -62,17 +57,6 @@ routes.put('/:_id', validateObjectId, async (req, res) => {
     incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
   }
   try {
-<<<<<<< HEAD
-    const user = await models.User.findById({ _id: id }).exec();
-    user.set(incomingUser);
-    const result = await user.save();
-    const resultWithoutPassword = { ...result._doc };
-    delete resultWithoutPassword.password;
-    res.status(200).json(resultWithoutPassword);
-  } catch (error) {
-    if (error.name === 'CastError') {
-      res.status(404).json({ message: 'User not found' });
-=======
     const user = await models.User.findById({ _id }).exec();
 
     if (user) {
@@ -83,7 +67,6 @@ routes.put('/:_id', validateObjectId, async (req, res) => {
       const resultWithoutPassword = { ...result._doc };
       delete resultWithoutPassword.password;
       res.status(200).json(resultWithoutPassword);
->>>>>>> origin/master
     } else {
       res.status(404).json(errorMessages.getUserById);
     }
@@ -95,11 +78,7 @@ routes.put('/:_id', validateObjectId, async (req, res) => {
 routes.delete('/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
   try {
-<<<<<<< HEAD
-    const { deletedCount } = await models.User.remove({ _id: id });
-=======
     const { deletedCount } = await models.User.remove({ _id });
->>>>>>> origin/master
     if (deletedCount) {
       res.status(200).json(response.deleteUser);
     } else {

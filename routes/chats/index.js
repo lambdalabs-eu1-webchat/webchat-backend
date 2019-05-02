@@ -4,11 +4,13 @@ const handleCloseTicket = require('./closeTicketFunction');
 const assignSelfTicket = require('./assignSelfTicket');
 
 const {
-  JOIN,
   MESSAGE,
   CLOSE_TICKET,
   ASSIGN_SELF_TICKET,
+  RATING,
+  LOGIN,
 } = require('./constants');
+
 const USER_TYPES = require('../../models/USER_TYPES.js');
 module.exports = chatSocket;
 
@@ -19,9 +21,10 @@ const { models } = require('../../models/index');
 
 function chatSocket(io) {
   io.on('connection', async socket => {
+    // tell the server to do what it needs to for setup
+    // need so send a login with token
     socket.emit('connection', true);
-    socket.on('login', token => {
-      console.log(token);
+    socket.on(LOGIN, token => {
       jwt.verify(token, jwtKey, async (err, decoded) => {
         if (err) {
           console.error(err);
@@ -29,6 +32,7 @@ function chatSocket(io) {
         } else {
           const user = await models.User.findById({ _id: decoded.payload });
           socket.user = user;
+
           // =================== SETUP FOR A EMPLOYEE ====================
           if (
             user.user_type === USER_TYPES.ADMIN ||
@@ -53,6 +57,7 @@ function chatSocket(io) {
             socket.on(MESSAGE, ({ chat_id, text }) => {
               messageStaff(chat_id, text, socket, io);
             });
+
             // =================== SETUP FOR A GUEST ==================
           } else if (user.user_type === USER_TYPES.GUEST) {
             // setup the guest by joining chat
@@ -64,6 +69,11 @@ function chatSocket(io) {
             // NEEDS text
             // can rate
             // NEEDS rating
+            // ============================================================
+            // NOT SURE IF WE ARE PLANNING ON GIVING RATING IN SOCKET OR NOT
+            // MIGHT NOT NEED TO IF WE ARE NOT EMITING IT ANYWAHERE
+            // ============================================================
+            // socket.on(RATING, rating => {});
           }
         }
       });

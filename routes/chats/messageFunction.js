@@ -77,7 +77,10 @@ async function messageStaff(chat_id, text, socket, io) {
         socket.emit('console', 'saving message');
         socket.emit('console', error);
       } else {
-        socket.chat = chat;
+        // update socket chats
+        socket.chats = socket.chats.map(chatMap =>
+          chatMap._id.equals(chat_id) ? chat : chatMap,
+        );
       }
     });
   }
