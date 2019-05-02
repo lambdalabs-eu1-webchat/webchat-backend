@@ -42,3 +42,36 @@
  *       "message": "An invalid ObjectId was passed."
  *    }
  */
+
+ /**
+ *  @api {put} api/:_id room / id  update room Id 
+ *  @apiVersion 0.1.0
+ *  @apiName putRooms / updateRooms
+ *  @apiGroup Rooms
+ *
+ *  @apiParam {String}  room Id 
+ * @apiParam {String}  new room id
+ *  @apiParamExample {json} Request-Example:
+ *    {
+ *      "id": "5cc95fa83de71d13395320fa",
+ *       "name": "1"
+ *    }
+ *
+ *  @apiSuccess {String} _id of the updated room
+ *  @apiSuccess {String} name of the updated room
+ *
+ *  @apiSuccessExample Success-Response: Room Array
+ *    HTTP/1.1 200 OK
+ * [  
+ *  {
+ * "_id": "5cc95fa83de71d13395320fc",
+ * "name": "1"
+ * }
+ * 
+ *  @apiErrorExample Error-Response: Wrong Room id or non existing room id
+ *    HTTP/1.1 400 BAD REQUEST
+ *    {
+ *        "message": "No hotel exists with this id."
+ *    }
+ */
+
