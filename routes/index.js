@@ -7,10 +7,7 @@ const auth = require('./auth');
 
 module.exports = server => {
   // winston logger
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.NODE_ENV === 'production'
-  ) {
+  if (process.env.NODE_ENV !== 'test') {
     server.use(logger);
   }
 
@@ -26,10 +23,7 @@ module.exports = server => {
   server.use(path.hotel, roomRoutes);
 
   // error logger - must be last
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.NODE_ENV === 'production'
-  ) {
+  if (process.env.NODE_ENV !== 'test') {
     server.use(errorLogger);
   }
 };
