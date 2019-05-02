@@ -4,6 +4,7 @@ const CHATLOG = 'chat_log';
 const CHATLOGS = 'chat_logs';
 const CLOSE_TICKET = 'close_ticket';
 const ACTIVE_CHATS = 'active_chats';
+const RATING = 'rating';
 module.exports = {
   JOIN,
   MESSAGE,
@@ -11,4 +12,5 @@ module.exports = {
   CLOSE_TICKET,
   CHATLOGS,
   ACTIVE_CHATS,
+  RATING,
 };
