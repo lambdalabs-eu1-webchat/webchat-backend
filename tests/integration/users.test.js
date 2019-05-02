@@ -3,26 +3,26 @@ const server = require('../../api/server');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+let connection;
+let db;
+
+beforeAll(async () => {
+  connection = await mongoose.connect(process.env.JEST_DATABASE_URL, {
+    useNewUrlParser: true,
+  });
+
+  db = mongoose.model('users', {});
+  await db.deleteMany({});
+});
+
+afterAll(async () => {
+  // await connection.close();
+  await db.deleteMany({});
+});
+
 describe('/api/users', () => {
-  let connection;
-  let db;
-
-  beforeAll(async () => {
-    connection = await mongoose.connect(process.env.JEST_DATABASE_URL, {
-      useNewUrlParser: true
-    });
-
-    const db = mongoose.model('users', {});
-    await db.deleteMany({});
-  });
-
-  afterAll(async () => {
-    await connection.close();
-    await db.deleteMany({});
-  });
-
   it('should set the testing environment', async () => {
-    expect(process.env.NODE_ENV).toBe('testing');
+    expect(process.env.NODE_ENV).toBe('test');
   });
 
   describe('GET /', () => {
@@ -48,16 +48,16 @@ describe('/api/users', () => {
     it('should return 200 OK if request is successful', async () => {
       const newUser = {
         hotel_id: '5cc742f4f8bb9f81214e75fe',
-        name: 'Eleanor',
-        email: 'eleanor.roman@gmail.com',
+        name: 'Ela',
+        email: 'eleanor.romana@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
-
       const createdUser = await request(server)
         .post('/api/users')
         .send(newUser);
+
       const id = createdUser.body._id;
       const response = await request(server).get(`/api/users/${id}`);
       expect(response.status).toEqual(200);
@@ -75,19 +75,20 @@ describe('/api/users', () => {
         email: 'anton.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
         .send(newUser2);
       const id = createdUser.body._id;
+
       const response = await request(server).get(`/api/users/${id}`);
       expect(response.body.name).toEqual('Anton');
       expect(response.body.email).toEqual('anton.roman@gmail.com');
       expect(response.body.motto).toEqual(
         'Streamlined contextually-based interface'
       );
-      expect(response.body.user_type).toEqual('recptionist');
+      expect(response.body.user_type).toEqual('receptionist');
     });
   });
 
@@ -99,12 +100,12 @@ describe('/api/users', () => {
         email: 'andrea.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
-        .send(newUser3);
-      expect(createdUser.status).toBe(201);
+        .send(newUser3)
+        .expect(201);
     });
     it('should return 422 Unprocessable Entity if the name is already in the database', async () => {
       const newUser5 = {
@@ -113,7 +114,7 @@ describe('/api/users', () => {
         email: 'martin.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
 
       const newUser6 = {
@@ -122,7 +123,7 @@ describe('/api/users', () => {
         email: 'martin.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser1 = await request(server)
         .post('/api/users')
@@ -130,8 +131,8 @@ describe('/api/users', () => {
 
       const createdUser2 = await request(server)
         .post('/api/users')
-        .send(newUser6);
-      expect(createdUser2.status).toBe(422);
+        .send(newUser6)
+        .expect(422);
     });
     it('should return the newly created user if the request is successful', async () => {
       const newUser7 = {
@@ -140,7 +141,7 @@ describe('/api/users', () => {
         email: 'martina.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -157,7 +158,7 @@ describe('/api/users', () => {
         email: 'samuel.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -168,7 +169,7 @@ describe('/api/users', () => {
         email: 'samantha.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const id = createdUser.body._id;
       const response = await request(server)
@@ -183,7 +184,7 @@ describe('/api/users', () => {
         email: 'sabrina.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -195,7 +196,7 @@ describe('/api/users', () => {
         email: 'sabrina.roman@gmail.com',
         password: '123456',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const id = createdUser.body._id;
       const response = await request(server)
@@ -211,7 +212,7 @@ describe('/api/users', () => {
         email: 'winston.roman@gmail.com',
         password: '12345',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -222,10 +223,10 @@ describe('/api/users', () => {
         email: 'wade.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const response = await request(server)
-        .put('/api/users/5dafdsavzvcxsgfdfff')
+        .put('/api/users/5cc742f4f8bb9f81214e75fd')
         .send(updatedUser);
       expect(response.status).toBe(404);
     });
@@ -236,7 +237,7 @@ describe('/api/users', () => {
         email: 'lili.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -247,7 +248,7 @@ describe('/api/users', () => {
         email: 'leyla.roman@gmail.com',
         password: '1234567',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const id = createdUser.body._id;
       const response = await request(server)
@@ -266,7 +267,7 @@ describe('/api/users', () => {
         email: 'anya.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -282,7 +283,7 @@ describe('/api/users', () => {
         email: 'anya.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -299,7 +300,7 @@ describe('/api/users', () => {
         email: 'antonia.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')
@@ -314,7 +315,7 @@ describe('/api/users', () => {
         email: 'anya.roman@gmail.com',
         password: '1234',
         motto: 'Streamlined contextually-based interface',
-        user_type: 'recptionist'
+        user_type: 'receptionist',
       };
       const createdUser = await request(server)
         .post('/api/users')

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Chat = require('../../models/chatsModels');
-const STATUSES = require('../../models/TICKET_STATUSES.js');
+const STATUSES = require('../../utils/TICKET_STATUSES.js');
 describe('Chat Model', () => {
   it('should return a error if not a valid ticket status', done => {
     const chat = new Chat({
@@ -21,7 +21,7 @@ describe('Chat Model', () => {
     });
     chat.validate(res => {
       expect(res.errors['tickets.0.status'].message).toBe(
-        '`tiv` is not a valid enum value for path `status`.',
+        '`tiv` is not a valid enum value for path `status`.'
       );
       done();
     });
@@ -67,7 +67,7 @@ describe('Chat Model', () => {
     });
     chat.validate(res => {
       expect(res.errors['hotel_id'].message).toBe(
-        'Cast to ObjectID failed for value "123" at path "hotel_id"',
+        'Cast to ObjectID failed for value "123" at path "hotel_id"'
       );
       done();
     });
