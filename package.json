@@ -6,7 +6,7 @@
   "scripts": {
     "server": "nodemon index.js",
     "start": "node index.js",
-    "test": "cross-env NODE_ENV=testing jest --watch --verbose",
+    "test": "cross-env NODE_ENV=test jest --watch --verbose",
     "docs": "npx apidoc -f .js -i ./routes -o docs/ -e node_modules/"
   },
   "repository": {

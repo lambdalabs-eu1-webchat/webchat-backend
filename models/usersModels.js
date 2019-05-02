@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const MODEL_NAMES = require('./MODEL_NAMES');
-const USER_TYPES = require('./USER_TYPES');
+const MODEL_NAMES = require('../utils/MODEL_NAMES');
+const USER_TYPES = require('../utils/USER_TYPES');
 
 // schema maps to a MongoDB collection and defines the shape of the documents within that collection
 const userSchema = new mongoose.Schema({
@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     sparse: true, // allows for null with unique
     validate: [
+      // eslint-disable-next-line no-useless-escape
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       'Not a valid email',
     ],

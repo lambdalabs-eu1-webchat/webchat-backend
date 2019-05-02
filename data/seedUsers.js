@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const { models } = require('../models/index');
 const randomMinMax = require('../utils/helperFunctions.js').randomMinMax;
 const remainder = require('../utils/helperFunctions.js').remainder;
-const USER_TYPES = require('../models/USER_TYPES.js');
+const USER_TYPES = require('../utils/USER_TYPES.js');
 
 const seedUsers = async hotels => {
   const users = []; // list of promises to wait for

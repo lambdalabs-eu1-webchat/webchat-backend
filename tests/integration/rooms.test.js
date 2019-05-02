@@ -24,7 +24,7 @@ describe('/api/hotel', () => {
   });
 
   it('should set the testing environment', async () => {
-    expect(process.env.NODE_ENV).toBe('testing');
+    expect(process.env.NODE_ENV).toBe('test');
   });
 
   describe('POST /:_id/rooms', () => {
@@ -188,7 +188,7 @@ describe('/api/hotel', () => {
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoomsArray);
       expect(duplicateNameResponse.body.message).toBe(
-        response.duplicateRoom.message,
+        response.duplicateRoom.message
       );
     });
   });
@@ -256,14 +256,14 @@ describe('/api/hotel', () => {
     it('should return 400 BAD REQUEST if an invalid room ObjectId is passed', async () => {
       return request(server)
         .put(
-          '/api/hotel/5cc96f85b801980553d606ed/rooms/5cc96f85b801980553d606ex',
+          '/api/hotel/5cc96f85b801980553d606ed/rooms/5cc96f85b801980553d606ex'
         )
         .expect(400);
     });
     it('should return the correct message if an invalid room ObjectId is passed', async () => {
       return request(server)
         .put(
-          '/api/hotel/5cc96f85b801980553d606ed/rooms/5cc96f85b801980553d606ex',
+          '/api/hotel/5cc96f85b801980553d606ed/rooms/5cc96f85b801980553d606ex'
         )
         .expect(errorMessage.invalidObjectId);
     });
@@ -485,14 +485,14 @@ describe('/api/hotel', () => {
     it('should return 400 BAD REQUEST if an invalid room ObjectId is passed', async () => {
       return request(server)
         .delete(
-          '/api/hotel/5cc96f85b801980553d606ed/rooms/5cc96f85b801980553d606ex',
+          '/api/hotel/5cc96f85b801980553d606ed/rooms/5cc96f85b801980553d606ex'
         )
         .expect(400);
     });
     it('should return the correct message if an invalid room ObjectId is passed', async () => {
       return request(server)
         .delete(
-          '/api/hotel/5cc96f85b801980553d606ed/rooms/5cc96f85b801980553d606ex',
+          '/api/hotel/5cc96f85b801980553d606ed/rooms/5cc96f85b801980553d606ex'
         )
         .expect(errorMessage.invalidObjectId);
     });
@@ -560,7 +560,7 @@ describe('/api/hotel', () => {
       const room = newlyCreatedRoom.body[0];
       await request(server).delete(`/api/hotel/${id}/rooms/${room._id}`);
       const postDeleteRoomList = await request(server).get(
-        `/api/hotel/${id}/rooms`,
+        `/api/hotel/${id}/rooms`
       );
       expect(postDeleteRoomList.body).toHaveLength(0);
     });
