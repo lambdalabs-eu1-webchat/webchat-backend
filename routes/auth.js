@@ -9,18 +9,6 @@ const USER_TYPES = require('../utils/USER_TYPES');
 const routes = express.Router();
 
 routes.post('/register', async (req, res, next) => {
-  /*
-  incomingUser = Super Admin
-  required fields:
-  - hotel_id
-  - user_type = Super Admin by default!
-  - name
-  - email
-  - password
-  - motto
-
-  Also needs to create new Hotel
-*/
   try {
     // Check if this name already exist in DB
     let { name, hotel_id, password, email } = req.body;
@@ -55,33 +43,29 @@ routes.post('/register', async (req, res, next) => {
   }
 });
 
-routes.post(
-  '/login',
-  // add validation middleware
-  async (req, res, next) => {
-    try {
-      const { name, password } = req.body;
+routes.post('/login', async (req, res, next) => {
+  try {
+    const { name, password } = req.body;
 
-      // check if user with name exist
-      const [user] = await models.User.where({ name });
+    // check if user with name exist
+    const [user] = await models.User.where({ name });
 
-      // check user credentials
-      if (user && bcrypt.compareSync(password, user.password)) {
-        const { id, hotel_id } = user;
+    // check user credentials
+    if (user && bcrypt.compareSync(password, user.password)) {
+      const { id, hotel_id } = user;
 
-        const token = createToken({ id, name, hotel_id });
+      const token = createToken({ id, name, hotel_id });
 
-        // remove password from the returned user object, so it's not sent to FE
-        user.password = undefined;
+      // remove password from the returned user object, so it's not sent to FE
+      user.password = undefined;
 
-        res.status(200).json({ user, token });
-      } else {
-        res.status(401).json(invalidCredentials);
-      }
-    } catch (err) {
-      next(err);
+      res.status(200).json({ user, token });
+    } else {
+      res.status(401).json(invalidCredentials);
     }
+  } catch (err) {
+    next(err);
   }
-);
+});
 
 module.exports = routes;
