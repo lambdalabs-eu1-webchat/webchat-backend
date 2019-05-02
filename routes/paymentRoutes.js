@@ -84,7 +84,7 @@ const addPro = async (customer, card) => {
   }
 };
 
-// temp sendtoDbconsole
+// temp sendtoDbconsole - need to complete this once the schema is updated
 const sendToDb = (customer, card, subscription, plan) => {
   console.log({ customer, card, subscription, plan });
 };
