@@ -23,7 +23,7 @@ describe('/api/hotel', () => {
   });
 
   it('should set the testing environment', async () => {
-    expect(process.env.NODE_ENV).toBe('testing');
+    expect(process.env.NODE_ENV).toBe('test');
   });
 
   describe('POST /', () => {

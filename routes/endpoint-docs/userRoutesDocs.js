@@ -28,7 +28,7 @@
  *       "email": "Gregoria.Roob@gmail.com",
  *      "password": "$2a$10$fc9UVvh8oWpDmXjjXdCQkuRlJfXDjLzdwl4oMwfw/BhXqpVp.Tn5K",
  *      "motto": "Expanded zero tolerance time-frame",
- *       "user_type": "recptionist",
+ *       "user_type": "receptionist",
  *      "__v": 0
  *   },
  *    {
@@ -39,7 +39,7 @@
  *      "email": "Rebekah.Kris30@hotmail.com",
  *      "password": "$2a$10$fc9UVvh8oWpDmXjjXdCQkuRlJfXDjLzdwl4oMwfw/BhXqpVp.Tn5K",
  *      "motto": "Enhanced scalable Graphical User Interface",
- *       "user_type": "recptionist",
+ *       "user_type": "receptionist",
  *      "__v": 0
  *      },
  *   {
@@ -50,7 +50,7 @@
  *      "email": "Obie26@yahoo.com",
  *      "password": "$2a$10$fc9UVvh8oWpDmXjjXdCQkuRlJfXDjLzdwl4oMwfw/BhXqpVp.Tn5K",
  *      "motto": "Multi-tiered systematic toolset",
- *      "user_type": "recptionist",
+ *      "user_type": "receptionist",
  *      "__v": 0
  *   },
  *  ]
@@ -127,7 +127,7 @@
  *        "name": "Eleanor",
  *        "email": "eleanor.roman@gmail.com",
  *        "motto": "Streamlined contextually-based interface",
- *        "user_type": "recptionist",
+ *        "user_type": "receptionist",
  *        "__v": 0
  *      }
  * @apiErrorExample Error-Response: User already in database
@@ -169,7 +169,7 @@
  *         "name": "Eleonora",
  *        "email": "eleonora.roman@gmail.com",
  *        "motto": "Streamlined contextually-based interface",
- *        "user_type": "recptionist",
+ *        "user_type": "receptionist",
  *        "__v": 0
  *     }
  * @apiErrorExample Error-Response: User not found

@@ -7,7 +7,12 @@ const auth = require('./auth');
 
 module.exports = server => {
   // winston logger
-  server.use(logger);
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.NODE_ENV === 'production'
+  ) {
+    server.use(logger);
+  }
 
   // sanity check endpoint
   server.get('/', (req, res) => {
@@ -18,8 +23,13 @@ module.exports = server => {
   server.use(path.auth, auth);
   server.use(path.users, userRoutes);
   server.use(path.hotel, hotelRoutes);
-  server.use(path.hotel, roomRoutes)
+  server.use(path.hotel, roomRoutes);
 
   // error logger - must be last
-  server.use(errorLogger);
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.NODE_ENV === 'production'
+  ) {
+    server.use(errorLogger);
+  }
 };
