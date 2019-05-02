@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const MODEL_NAMES = require('./MODEL_NAMES');
+const MODEL_NAMES = require('../utils/MODEL_NAMES');
 
 const roomSchema = new mongoose.Schema({
   //_id

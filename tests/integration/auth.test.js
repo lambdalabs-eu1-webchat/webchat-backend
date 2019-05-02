@@ -1,27 +1,28 @@
 const request = require('supertest');
 const server = require('../../api/server');
 const mongoose = require('mongoose');
-const USER_TYPES = require('../../models/USER_TYPES');
+const USER_TYPES = require('../../utils/USER_TYPES');
+require('dotenv').config();
 
 describe('/api/auth', () => {
   let connection;
   let db;
 
   beforeAll(async () => {
-    connection = await mongoose.connect('mongodb://localhost:27017/jest', {
+    connection = await mongoose.connect(process.env.JEST_DATABASE_URL, {
       useNewUrlParser: true,
     });
-    const db = mongoose.model('users', {});
-    await db.remove({});
+    db = mongoose.model('users', {});
+    await db.deleteMany({});
   });
 
   afterAll(async () => {
     await connection.close();
-    await db.remove({});
+    await db.deleteMany({});
   });
 
   it('is in the right environment', async () => {
-    expect(process.env.NODE_ENV).toBe('testing');
+    expect(process.env.NODE_ENV).toBe('test');
   });
 
   describe('POST /register', () => {

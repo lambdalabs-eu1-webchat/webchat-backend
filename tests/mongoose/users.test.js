@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('../../models/usersModels');
-const USER_TYPES = require('../../models/USER_TYPES');
+const USER_TYPES = require('../../utils/USER_TYPES');
 describe('User Model', () => {
   it('should return an error if no email given with employee', done => {
     const user = new User({
@@ -51,7 +51,7 @@ describe('User Model', () => {
     });
     user.validate(res => {
       expect(res.errors['passcode'].message).toBe(
-        'Path `passcode` is required.',
+        'Path `passcode` is required.'
       );
       done();
     });

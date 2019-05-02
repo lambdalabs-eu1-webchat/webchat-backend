@@ -1,5 +1,5 @@
 const { joinChatGuest, joinChatsEmployee } = require('./joinFunction');
-const { messageGuest } = require('./messageFunction');
+const { messageGuest, messageStaff } = require('./messageFunction');
 const handleCloseTicket = require('./closeTicketFunction');
 const assignSelfTicket = require('./assignSelfTicket');
 
@@ -50,7 +50,9 @@ function chatSocket(io) {
             });
             // can message his chats-
             // NEEDS chat_ID and text
-
+            socket.on(MESSAGE, ({ chat_id, text }) => {
+              messageStaff(chat_id, text, socket, io);
+            });
             // =================== SETUP FOR A GUEST ==================
           } else if (user.user_type === USER_TYPES.GUEST) {
             // setup the guest by joining chat
