@@ -89,8 +89,8 @@
  *       "name": "1"
  *    }
  * 
- *  @apiSuccess {String} _id of the updated room
- *  @apiSuccess {String} name of the updated room
+ *  @apiSuccess {String} _id of the remaining rooms
+ *  @apiSuccess {String} name of the remaining rooms
  *
  *  @apiSuccessExample Success-Response: Room Array
  *    HTTP/1.1 200 OK
