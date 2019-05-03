@@ -40,6 +40,9 @@ const errorMessage = {
   invalidRoomPut: {
     message: 'A room must be updated with a new name.',
   },
+  invalidPlan: {
+    message: 'The plan you requested does not exist.',
+  },
 };
 
 module.exports = errorMessage;
