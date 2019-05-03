@@ -6,7 +6,7 @@ const createToken = ({ id, name, hotel_id }) =>
     // token payload
     { payload: id, name, hotel_id },
     // token secret
-    process.env.JWT_SECRET || super_secret,
+    process.env.JWT_SECRET || super_secret
   );
 
 module.exports = createToken;

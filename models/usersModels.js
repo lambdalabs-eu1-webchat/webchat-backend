@@ -8,7 +8,14 @@ const userSchema = new mongoose.Schema({
   hotel_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: MODEL_NAMES.HOTELS,
-    required: true,
+    required: function() {
+      const user_type = this.user_type;
+      return (
+        user_type === USER_TYPES.GUEST ||
+        user_type === USER_TYPES.ADMIN ||
+        user_type === USER_TYPES.RECEPTIONIST
+      );
+    },
   },
   user_type: {
     type: String,
@@ -28,8 +35,15 @@ const userSchema = new mongoose.Schema({
     unique: true,
     sparse: true, // allows for null with unique
     validate: [
-      // eslint-disable-next-line no-useless-escape
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      function(email) {
+        // eslint-disable-next-line no-useless-escape
+        const regExpString = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (email !== null) {
+          return regExpString.test(email);
+        } else {
+          return false;
+        }
+      },
       'Not a valid email',
     ],
     required: function() {
