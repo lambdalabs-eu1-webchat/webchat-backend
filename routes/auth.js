@@ -68,4 +68,35 @@ routes.post('/login', async (req, res, next) => {
   }
 });
 
+routes.post('/loginchat', async (req, res, next) => {
+  try {
+    const { passcode } = req.body;
+
+    // check if user with this  exist
+    const [user] = await models.User.where({ passcode });
+
+    // check user credentials
+    if (user && bcrypt.compareSync(passcode, user.passcode)) {
+      const { id, hotel_id, name } = user;
+
+      const token = createToken({
+        id,
+        name,
+        hotel_id,
+        passcode: user.passcode,
+      });
+
+      // remove password from the returned user object, so it's not sent to FE
+      user.password = undefined;
+      user.passcode = undefined;
+
+      res.status(200).json({ user, token });
+    } else {
+      res.status(401).json(invalidCredentials);
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = routes;
