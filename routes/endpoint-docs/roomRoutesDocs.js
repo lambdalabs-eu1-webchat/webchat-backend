@@ -41,11 +41,6 @@
  *    {
  *       "message": "An invalid ObjectId was passed."
  *    }
- *   @apiErrorExample Error-Response: Wrong path
- *    HTTP/1.1 400 BAD REQUEST
- *    {
- *       "message": "Error"
- *    }
  *    @apiErrorExample Error-Response: Wrong  {Json}
  *    HTTP/1.1 400 BAD REQUEST
  *    {
@@ -78,10 +73,10 @@
  * "name": "1"
  * }
  * 
- *  @apiErrorExample Error-Response: Wrong Room id or non existing room id
+ *  @apiErrorExample Error-Response:  updateRoom: 
  *    HTTP/1.1 400 BAD REQUEST
  *    {
- *        "message": "No hotel exists with this id."
+ *       { message: 'The room could not be updated' },
  *    }
  *  @apiErrorExample Error-Response:  Wrong  {Json}
  *    HTTP/1.1 400 BAD REQUEST
@@ -131,15 +126,15 @@
  *    }
  * ]  ..............till the last room
  * 
- *  @apiErrorExample Error-Response: Wrong Path
+ *  @apiErrorExample Error-Response : addRoom that exists
  *    HTTP/1.1 400 BAD REQUEST
  *    {
- *        "message": "No hotel exists with this id."
+ *         { message: 'The room could not be added.' },
  *    }
- * @apiErrorExample Error-Response:  Wrong  {Json}
+ * @apiErrorExample Error-Response:  Wrong  {Json} Or Non existing User:   deleteUser: 
  *    HTTP/1.1 400 BAD REQUEST
  *    {
- *        "message": "No hotel exists with this id."
+ *        { message: 'The user could not be deleted' },
  *    }
  * @apiErrorExample Error-Response: Delete an already deleted room
  *    HTTP/1.1 400 BAD REQUEST
@@ -185,14 +180,11 @@
  * {
  *       "message": "An array was expected but not found"
  * }
- *  @apiErrorExample Error-Response: Wrong path
- *    HTTP/1.1 400 BAD REQUEST
- * {
- *       "message": "Error"
- * }
+ 
  *  @apiErrorExample Error-Response: Invalid {json} body
  *    HTTP/1.1 400 BAD REQUEST
  * {
  *       "message": "Invalid Credidentials"
  * }
  */
+
