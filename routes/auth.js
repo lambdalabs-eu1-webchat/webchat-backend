@@ -39,7 +39,7 @@ routes.post(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 routes.post(
@@ -68,7 +68,7 @@ routes.post(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 module.exports = routes;
