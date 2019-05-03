@@ -135,7 +135,7 @@
  *  
  *  @apiSuccessExample Success-Response: Room created
  *    HTTP/1.1 201 OK
- *  ...... This will appear on the bottom of the list when you do               a get request after you put
+ *  This will appear on the bottom of the list when you do  a get request after you put
  * [  
  *  {
  *   "_id": "5cc95fa83de71d13395320fa",
