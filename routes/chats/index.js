@@ -26,6 +26,7 @@ function chatSocket(io) {
     // tell the server to do what it needs to for setup
     // need so send a login with token
     socket.emit('connection', true);
+
     socket.on(LOGIN, token => {
       console.log(token);
       jwt.verify(token, jwtKey, async (err, decoded) => {
@@ -57,7 +58,7 @@ function chatSocket(io) {
             // setup the employee by joining all his/her active chats
             // send a log of all active chats
             joinChatsEmployee(socket);
-            // remove login listener
+            // remove login listener so that a client cannot login multiple times and have the above events fire multiple times
             socket.off(LOGIN);
           }
           // =================== SETUP FOR A GUEST ==================
@@ -77,7 +78,7 @@ function chatSocket(io) {
             // ============================================================
             // socket.on(RATING, rating => {});
             // need to send something to say ticket is done so it can update on this side
-            // remove login listener
+            // remove login listener so that a client cannot login multiple times and have the above events fire multiple times
             socket.off(LOGIN);
           }
         }
