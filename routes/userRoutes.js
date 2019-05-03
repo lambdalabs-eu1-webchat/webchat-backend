@@ -24,9 +24,22 @@ routes.get('/:_id', validateObjectId, async (req, res, next) => {
   try {
     const user = await models.User.findById(req.params._id);
     if (user) {
+      // if the user id exists, return the user
       res.status(200).json(user);
     } else {
-      res.status(404).json(errorMessages.getUserById);
+      // if the user id does not exist
+      // check if a hotel id exist
+      const hotel = await models.Hotel.findById(req.params._id);
+      if (hotel) {
+        // if hotel id exists, find all users with that hotel ID and return them
+        const hotelUsers = await models.User.where({ hotel_id: hotel._id });
+        const hotelStaff = hotelUsers.filter(
+          user => user.user_type !== USER_TYPES.GUEST
+        );
+        res.status(200).json(hotelStaff);
+      } else {
+        res.status(404).json(errorMessages.getUserById);
+      }
     }
   } catch (error) {
     next(error);
@@ -46,6 +59,13 @@ routes.post('/', async (req, res, next) => {
     // helper function to generate Guest passcode
     var passcode = createPasscode(codePayload);
     var hashedPasscode = bcrypt.hashSync(passcode, 10);
+
+    /**
+     * search for all users based on `name`
+     * loop through all users with this `name`
+     * check for which users `passcode` passes bcrypt check
+     *
+     */
   }
 
   if (user_type === USER_TYPES.SUPER_ADMIN) {
