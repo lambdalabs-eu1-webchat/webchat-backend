@@ -57,6 +57,8 @@ function chatSocket(io) {
             // setup the employee by joining all his/her active chats
             // send a log of all active chats
             joinChatsEmployee(socket);
+            // remove login listener
+            socket.off(LOGIN);
           }
           // =================== SETUP FOR A GUEST ==================
           else if (isGuest(user.user_type)) {
@@ -75,6 +77,8 @@ function chatSocket(io) {
             // ============================================================
             // socket.on(RATING, rating => {});
             // need to send something to say ticket is done so it can update on this side
+            // remove login listener
+            socket.off(LOGIN);
           }
         }
         socket.on('disconnect', () => {
