@@ -11,6 +11,10 @@ const USER_TYPES = require('../utils/USER_TYPES');
 const createPasscode = require('../utils/createPassCode');
 const createToken = require('../utils/createToken');
 
+/**
+ * @todo - Separate between ALL users and DELETED(is_left=true) users
+ */
+
 routes.get('/', async (req, res, next) => {
   try {
     const users = await models.User.find();
@@ -33,11 +37,13 @@ routes.get('/:_id', validateObjectId, async (req, res, next) => {
       if (hotel) {
         // if hotel id exists, find all users with that hotel ID and return them
         const hotelUsers = await models.User.where({ hotel_id: hotel._id });
+        // filter only hotel staff
         const hotelStaff = hotelUsers.filter(
           user => user.user_type !== USER_TYPES.GUEST
         );
         res.status(200).json(hotelStaff);
       } else {
+        // if user or hotel id does not exist, send error msg
         res.status(404).json(errorMessages.getUserById);
       }
     }
@@ -59,13 +65,6 @@ routes.post('/', async (req, res, next) => {
     // helper function to generate Guest passcode
     var passcode = createPasscode(codePayload);
     var hashedPasscode = bcrypt.hashSync(passcode, 10);
-
-    /**
-     * search for all users based on `name`
-     * loop through all users with this `name`
-     * check for which users `passcode` passes bcrypt check
-     *
-     */
   }
 
   if (user_type === USER_TYPES.SUPER_ADMIN) {
@@ -125,7 +124,7 @@ routes.put('/:_id', validateObjectId, async (req, res, next) => {
 });
 
 /**
- * On DELETE request, do not delete user from DB, but change his `is_left` status to `true`
+ * @todo - On DELETE request, do not delete user from DB, but change his `is_left` status to `true`
  */
 routes.delete('/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
