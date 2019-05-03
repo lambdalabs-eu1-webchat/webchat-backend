@@ -50,16 +50,16 @@ routes.post('/register', async (req, res, next) => {
 
 routes.post('/login', async (req, res, next) => {
   try {
-    const { name, password } = req.body;
+    const { email, password } = req.body;
 
     // check if user with name exist
-    const [user] = await models.User.where({ name });
+    const [user] = await models.User.where({ email });
 
     // check user credentials
     if (user && bcrypt.compareSync(password, user.password)) {
       const { id, hotel_id } = user;
 
-      const token = createToken({ id, name, hotel_id });
+      const token = createToken({ id, name: user.name, hotel_id });
 
       // remove password from the returned user object, so it's not sent to FE
       user.password = undefined;
