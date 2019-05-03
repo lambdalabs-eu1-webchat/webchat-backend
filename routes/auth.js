@@ -68,14 +68,9 @@ routes.post('/login', async (req, res, next) => {
     } else {
       res.status(401).json(invalidCredentials);
     }
-<<<<<<< HEAD
   } catch (err) {
     next(err);
   }
 });
-=======
-  },
-);
->>>>>>> master
 
 module.exports = routes;
