@@ -68,6 +68,11 @@
  * @apiGroup Users
  *
  * @apiParam {Number} _id Users unique ID.
+ * @apiParamsExample  {} Request-Example:
+ *    {
+ *   
+ *    }
+ *
  *
  * @apiSuccess {Boolean} is_left boolean.
  * @apiSuccess {String} _id  Unique id of the user.
