@@ -4,6 +4,7 @@ const errorMessage = {
   invalidCredentials: { message: 'Invalid credentials' },
   duplicateEmail: { message: 'This email is taken already.' },
   updateUser: { message: 'The user could not be updated' },
+  invalidUserName: { message: 'Invalid user name' },
   deleteUser: { message: 'The user could not be deleted' },
   addUser: { message: 'The user could not be added.' },
   superAdminError: { message: 'Can\'t create Super Admin in this endpoint.' },
