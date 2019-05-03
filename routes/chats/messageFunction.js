@@ -32,12 +32,12 @@ async function messageGuest(text, socket, io) {
         io.in(chat._id).emit(CHATLOG, newChat);
         socket.chat = newChat;
         // tell the employees that it is in the queue
-        io.in('add queue', newChat);
+        io.in(user.hotel_id).emit('add queue', newChat);
       }
     });
   } else {
     // doesnt need to open a new ticket so send the messge
-    io.in(socket.chat._id).emit(MESSAGE, message);
+    io.in(socket.chat._id).emit(MESSAGE, { message, chat_id: socket.chat._id });
     // get the promise to update
     const chat = await chatPromise;
     chat.tickets[chat.tickets.length - 1].messages.push(message);
@@ -66,7 +66,7 @@ async function messageStaff(chat_id, text, socket, io) {
   const is_your_chat = !!socket.chats.find(chat => chat._id.equals(chat_id));
   if (is_your_chat) {
     // send the chat
-    io.in(chat_id).emit(MESSAGE, message);
+    io.in(chat_id).emit(MESSAGE, { message, chat_id });
     // get the promise to update
     const chat = await chatPromise;
     chat.tickets[chat.tickets.length - 1].messages.push(message);

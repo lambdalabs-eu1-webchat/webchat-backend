@@ -56,6 +56,8 @@ async function joinChatsEmployee(socket) {
   chats.forEach(chat => {
     socket.join(chat._id);
   });
+  // need to join a room to get info on queues for hotel
+  socket.join(socket.user.hotel_id);
   socket.chats = chats;
   socket.emit(CHATLOGS, chats);
 }
