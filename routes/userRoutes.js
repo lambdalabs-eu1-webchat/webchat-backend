@@ -39,7 +39,7 @@ routes.get('/:_id', validateObjectId, async (req, res, next) => {
         const hotelUsers = await models.User.where({ hotel_id: hotel._id });
         // filter only hotel staff
         const hotelStaff = hotelUsers.filter(
-          user => user.user_type !== USER_TYPES.GUEST
+          user => user.user_type !== USER_TYPES.GUEST,
         );
         res.status(200).json(hotelStaff);
       } else {
@@ -92,7 +92,7 @@ routes.post('/', async (req, res, next) => {
     delete userWithoutCredentials.password;
     delete userWithoutCredentials.passcode;
 
-    res.status(201).json({ user: userWithoutCredentials, token });
+    res.status(201).json({ user: userWithoutCredentials, passcode, token });
   } catch (error) {
     next(error);
   }
