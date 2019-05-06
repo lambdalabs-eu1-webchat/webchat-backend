@@ -55,14 +55,14 @@ const addSubscription = async (plan, customer, card, hotel_id) => {
         },
       ],
     });
-    sendToDb(customer, card, subscription, plan, hotel_id);
+    await sendSubToDb(customer, card, subscription, plan, hotel_id);
   } catch (error) {
     console.error(error);
   }
 };
 
 // update the human-readable plan key and create a billing object on the hotel resource
-const sendToDb = async (customer, card, subscription, plan, hotel_id) => {
+const sendSubToDb = async (customer, card, subscription, plan, hotel_id) => {
   const hotel = await models.Hotel.findById({ _id: hotel_id });
   const billingObj = {
     customer: {
@@ -110,13 +110,15 @@ What does this endpoint need to be able to do?
 Move customers between paid plans (middleware will check eligibility) -> Stripe and DB (updates the hotels billing object with a new subscription id)
 */
 routes.put('/', async (req, res, next) => {
-  const { currentSubscription, newPlan } = req.body;
+  const { hotel_id, newPlan } = req.body;
   try {
     if (
       newPlan === PAYMENT_PLANS.PLUS_PLAN ||
       newPlan === PAYMENT_PLANS.PRO_PLAN
     ) {
-      await changeSubscription(currentSubscription, newPlan);
+      await changeSubscription(hotel_id, newPlan);
+      const updatedHotel = await models.Hotel.findById({ _id: hotel_id });
+      res.status(200).json(updatedHotel);
     } else {
       res.status(400).json(errorMessage.invalidPlan);
     }
@@ -126,8 +128,10 @@ routes.put('/', async (req, res, next) => {
 });
 
 // change customers plan from Plus to Pro or Pro to Plus
-const changeSubscription = async (currentSubscription, newPlan) => {
+const changeSubscription = async (hotel_id, newPlan) => {
   try {
+    const hotel = await models.Hotel.findById({ _id: hotel_id });
+    const currentSubscription = hotel.billing.sub_id;
     const subscription = await stripe.subscriptions.retrieve(
       currentSubscription,
     );
@@ -145,15 +149,22 @@ const changeSubscription = async (currentSubscription, newPlan) => {
         ],
       },
     );
-    updatedDb(updatedSubscription, newPlan);
+    await updateSubOnDb(hotel, updatedSubscription, newPlan);
   } catch (error) {
     console.error(error);
   }
 };
 
 // temp sendtoDb - need to complete this once the schema is updated
-const updatedDb = (updatedSubscription, newPlan) => {
-  console.log({ updatedSubscription, newPlan });
+const updateSubOnDb = async (hotel, updatedSubscription, newPlan) => {
+  try {
+  hotel.plan = updatedSubscription.plan.nickname.toLowerCase();
+  hotel.billing.plan_id = newPlan;
+  await hotel.save();
+  }
+  catch (error) {
+    console.error(error);
+  }
 };
 
 /*
