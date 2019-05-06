@@ -43,6 +43,7 @@ const errorMessage = {
   invalidPlan: {
     message: 'The plan you requested does not exist.',
   },
+  missingPassword: { message: 'Missing password' },
 };
 
 module.exports = errorMessage;
