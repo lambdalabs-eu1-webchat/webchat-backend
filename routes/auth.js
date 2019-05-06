@@ -43,6 +43,7 @@ routes.post('/register', async (req, res, next) => {
       // add new user to the DB, rewrite the password to be the hashed pw
       const user = await models.User.create({
         name,
+        is_left: false,
         email,
         password,
         motto,
