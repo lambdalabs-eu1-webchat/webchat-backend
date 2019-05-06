@@ -101,7 +101,7 @@ path: '/subscription'
 @body: 
 {
     hotel_id: (tbd - could be taken from decodedToken),
-    newPlan: (Plus OR Pro plan IDs),
+    newPlan: (Free OR Plus OR Pro plan IDs),
 }
 */
 routes.put('/', async (req, res, next) => {
@@ -160,35 +160,6 @@ const updateSubOnDb = async (hotel, updatedSubscription, newPlan) => {
     console.error(error);
   }
 };
-
-// /*
-// [DELETE]
-// path: '/subscription'
-// params: /hotel_id
-
-// THIS REMOVES EXISTING SUBS AND MOVES CUSTOMER ONTO THE PLACEHOLDER FREE SUB
-// */
-// routes.delete('/:hotel_id', async (req, res, next) => {
-//   const { hotel_id } = req.params;
-//   try {
-//     // grab current sub from hotel billing obj
-//     const hotel = await models.Hotel.findById({ _id: hotel_id });
-//     const currentSubscription = hotel.billing.sub_id;
-//     await stripe.subscriptions.update(currentSubscription, {
-//       cancel_at_period_end: true,
-//     });
-//     await removeSubFromDb(hotel);
-//     const updatedHotel = await models.Hotel.findById({ _id: hotel_id });
-//     res.status(200).json(updatedHotel);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
-// const removeSubFromDb = async (hotel) => {
-//   hotel.plan = 'free';
-//   hotel.billing.plan_id = undefined;
-// };
 
 /*
 [PUT]
