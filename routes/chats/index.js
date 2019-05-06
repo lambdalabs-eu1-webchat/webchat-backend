@@ -77,7 +77,7 @@ function chatSocket(io) {
             // NOT SURE IF WE ARE PLANNING ON GIVING RATING IN SOCKET OR NOT
             // MIGHT NOT NEED TO IF WE ARE NOT EMITING IT ANYWHERE
             // ============================================================
-            // socket.on(RATING, rating => {});
+            socket.on(RATING, rating => {});
             // need to send something to say ticket is done so it can update on this side
             // remove login listener so that a client cannot login multiple times and have the above events fire multiple times
             socket.off(LOGIN);

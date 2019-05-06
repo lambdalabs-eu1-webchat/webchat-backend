@@ -27,7 +27,7 @@
  *
  *  @apiSuccess (200) {Expect} Guest server to emit('chat_log', chat) or emit('message', message) to room
  *  @apiSuccess (200) {Expect} Staff_member  server to emit('message', message) to room
- * @apiSuccess (200) {Expect} Staff_members  server to emit('add_queued', chat) to hotel staff if makes a new ticket
+ *  @apiSuccess (200) {Expect} Staff_members  server to emit('add_queued', chat) to hotel staff if makes a new ticket
  */
 
 /**
