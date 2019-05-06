@@ -16,22 +16,26 @@ const createToken = require('../utils/createToken');
  */
 
 routes.get('/', async (req, res, next) => {
-  if (req.query.hotel_id) {
-    const hotelId = req.query.hotel_id;
-    const hotel = await models.Hotel.findById(hotelId);
-    if (hotel) {
-      // if hotel id exists, find all users with that hotel ID and return them
-      const hotelUsers = await models.User.where({hotel_id: hotelId});
-      // filter only hotel staff
-      const hotelStaff = hotelUsers.filter(
-        user => user.user_type !== USER_TYPES.GUEST
-      );
-      res.status(200).json(hotelStaff);
-    }
-  }
   try {
-    const users = await models.User.find();
-    res.status(200).json(users);
+    if (req.query.hotel_id) {
+      // if there is hotel_id in query string, find all hotel staff
+      const hotelId = req.query.hotel_id;
+      const hotel = await models.Hotel.findById(hotelId);
+      if (hotel) {
+        // if hotel id exists, find all users with that hotel ID and return them
+        const hotelUsers = await models.User.where({ hotel_id: hotelId });
+        // filter only hotel staff
+        const hotelStaff = hotelUsers.filter(
+          user => user.user_type !== USER_TYPES.GUEST
+        );
+        res.status(200).json(hotelStaff);
+      } else {
+        res.status(404).json(errorMessages.noHotel);
+      }
+    } else {
+      const users = await models.User.find();
+      res.status(200).json(users);
+    }
   } catch (error) {
     next(error);
   }
