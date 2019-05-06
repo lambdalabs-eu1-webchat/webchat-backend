@@ -96,7 +96,7 @@ routes.post('/', async (req, res, next) => {
     delete userWithoutCredentials.password;
     delete userWithoutCredentials.passcode;
 
-    res.status(201).json({ user: userWithoutCredentials, token });
+    res.status(201).json({ user: userWithoutCredentials, passcode, token });
   } catch (error) {
     next(error);
   }
