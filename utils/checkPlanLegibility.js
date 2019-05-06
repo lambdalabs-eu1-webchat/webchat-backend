@@ -1,10 +1,11 @@
 const axios = require('axios');
+const path = require('../utils/path');
 const PAYMENT_PLANS = require('./PAYMENT_PLANS');
 
 const checkPlanLegibility = async (hotel_Id, newPlan) => {
   try {
-    const staff = await axios.get(`http://localhost:7000/api/users?hotel_id=${hotel_Id}`);
-    // const staff = await axios.get(`https://web-chat-labs.herokuapp.com/api/users?hotel_id=${hotel_Id}`);
+    // const staff = await axios.get(`http://localhost:7000/api/users?hotel_id=${hotel_Id}`);
+    const staff = await axios.get(`${path.getStaff}${hotel_Id}`);
     const staffCount = staff.data.length;
     // dont allow switches to free accounts with more than 5 users
     if (newPlan === PAYMENT_PLANS.FREE_PLAN && staffCount > 5) {
