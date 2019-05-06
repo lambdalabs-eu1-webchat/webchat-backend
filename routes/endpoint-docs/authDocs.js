@@ -1,7 +1,7 @@
 /**
- *  @api {post} api/register
+ *  @api {post} api/register Register
  *  @apiVersion 0.1.0
- *  @apiName postAuth
+ *  @apiName postRegister
  *  @apiGroup Auth
  *
  *  @apiParam {json} user information
@@ -41,11 +41,10 @@
  *    }
  */
 
-
- /**
- *  @api {post} api/login
+/**
+ *  @api {post} api/login Login
  *  @apiVersion 0.1.0
- *  @apiName postAuth
+ *  @apiName postLogin
  *  @apiGroup Auth
  *
  *  @apiParam {json} login information
