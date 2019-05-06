@@ -1,7 +1,9 @@
 module.exports = { messageGuest, messageStaff };
 
+const mongoose = require('mongoose');
+
 const { models } = require('../../models/index');
-const { CHATLOG, MESSAGE } = require('./constants');
+const { CHATLOG, MESSAGE, ADD_QUEUED } = require('./constants');
 const getLastTicket = require('../../utils/getLastTicket');
 
 async function messageGuest(text, socket, io) {
@@ -9,6 +11,7 @@ async function messageGuest(text, socket, io) {
   const message = {
     sender: { id: user._id, name: user.name },
     text,
+    _id: new mongoose.Types.ObjectId(),
   };
   // start getting chat
   const chatPromise = models.Chat.findById({ _id: socket.chat._id });
@@ -32,7 +35,7 @@ async function messageGuest(text, socket, io) {
         io.in(chat._id).emit(CHATLOG, newChat);
         socket.chat = newChat;
         // tell the employees that it is in the queue
-        io.in(user.hotel_id).emit('add queue', newChat);
+        io.in(user.hotel_id).emit(ADD_QUEUED, newChat);
       }
     });
   } else {
@@ -58,6 +61,7 @@ async function messageStaff(chat_id, text, socket, io) {
   const message = {
     sender: { id: user._id, name: user.name },
     text,
+    _id: new mongoose.Types.ObjectId(),
   };
   // start getting chat
   const chatPromise = models.Chat.findById({ _id: chat_id });

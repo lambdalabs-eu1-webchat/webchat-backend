@@ -19,7 +19,7 @@ async function handleCloseTicket(chat_id, socket, io) {
       socket.emit('console', error);
     } else {
       // get a rating for the ticket
-      io.emit.in(chat._id)(RATING, { ticket_id: ticket._id });
+      io.emit.in(chat._id)(RATING, ticket._id);
       // leave the chat
       socket.leave(chat._id);
       const newChats = socket.chats.filter(

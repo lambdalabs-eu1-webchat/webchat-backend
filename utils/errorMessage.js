@@ -45,7 +45,8 @@ const errorMessage = {
   },
   tooManyUsers: {
     message: 'There are too many staff accounts on this hotel to switch plans.',
-  }
+  },
+  missingPassword: { message: 'Missing password' },
 };
 
 module.exports = errorMessage;
