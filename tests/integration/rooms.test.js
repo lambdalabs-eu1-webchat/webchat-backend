@@ -40,14 +40,18 @@ describe('/api/hotel', () => {
     });
     it('should return 400 BAD REQUEST if no room name is passed', async () => {
       const newHotel = {
-        name: 'Grand Budapest',
-        motto: 'Mendels',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancyq@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [{}];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       return request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom)
@@ -55,14 +59,18 @@ describe('/api/hotel', () => {
     });
     it('should return the correct message if no room name is passed', async () => {
       const newHotel = {
-        name: 'The Dorechester',
-        motto: 'Keepin it fine',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancyw@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [{}];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       return request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom)
@@ -70,14 +78,18 @@ describe('/api/hotel', () => {
     });
     it('should return 400 BAD REQUEST if the room is not passsed as an array', async () => {
       const newHotel = {
-        name: 'Valles Marineris',
-        motto: 'Martian Territory',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancye@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = {};
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       return request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom)
@@ -85,14 +97,18 @@ describe('/api/hotel', () => {
     });
     it('should return the correct message if the room is not passsed as an array', async () => {
       const newHotel = {
-        name: 'Mons Olympus',
-        motto: 'Peaky',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancyr@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = {};
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       return request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom)
@@ -122,8 +138,12 @@ describe('/api/hotel', () => {
     });
     it('should return 201 CREATED if a valid room is passed to a valid hotel', async () => {
       const newHotel = {
-        name: 'Icelandia',
-        motto: 'Chill times',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancty@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [
         {
@@ -131,9 +151,9 @@ describe('/api/hotel', () => {
         },
       ];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       return request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom)
@@ -141,8 +161,12 @@ describe('/api/hotel', () => {
     });
     it('should return the correct message if a valid room is passed to a valid hotel', async () => {
       const newHotel = {
-        name: 'Octavul',
-        motto: '8 rooms only',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancyz@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [
         {
@@ -150,9 +174,9 @@ describe('/api/hotel', () => {
         },
       ];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       const newlyCreatedRoom = await request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom);
@@ -161,8 +185,12 @@ describe('/api/hotel', () => {
     });
     it('should return the correct message if some rooms are added but some are duplicate names', async () => {
       const newHotel = {
-        name: 'Haverside',
-        motto: 'Summer dreams',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancyi@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [
         {
@@ -170,9 +198,9 @@ describe('/api/hotel', () => {
         },
       ];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       await request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom);
@@ -216,26 +244,34 @@ describe('/api/hotel', () => {
     });
     it('should return 200 OK if a valid hotel id is passed', async () => {
       const newHotel = {
-        name: 'Winterfell',
-        motto: 'Problems',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancyo@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       return request(server)
         .get(`/api/hotel/${id}/rooms`)
         .expect(200);
     });
     it('should return the hotel rooms  list if a valid hotel id is passed', async () => {
       const newHotel = {
-        name: 'Waterbrooke',
-        motto: 'H2O',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancyp@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       return request(server)
         .get(`/api/hotel/${id}/rooms`)
         .expect([]);
@@ -269,8 +305,12 @@ describe('/api/hotel', () => {
     });
     it('should return 400 BAD REQUEST if a room name is not included in the body', async () => {
       const newHotel = {
-        name: 'Kekule',
-        motto: 'Circular joy',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancsy@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [
         {
@@ -278,9 +318,9 @@ describe('/api/hotel', () => {
         },
       ];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       const newlyCreatedRoom = await request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom);
@@ -293,8 +333,12 @@ describe('/api/hotel', () => {
     });
     it('should return the correct message if a room name is not included in the body', async () => {
       const newHotel = {
-        name: 'Paradise',
-        motto: 'MVP',
+        name: 'Nancy',
+        password: '1234',
+        email: 'naancy@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [
         {
@@ -302,9 +346,9 @@ describe('/api/hotel', () => {
         },
       ];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       const newlyCreatedRoom = await request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom);
@@ -317,8 +361,12 @@ describe('/api/hotel', () => {
     });
     it('should return 400 BAD REQUEST if the room is sent to a hotel that does not exist', async () => {
       const newHotel = {
-        name: 'Fjord',
-        motto: 'Mind the drop',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancfy@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [
         {
@@ -326,9 +374,9 @@ describe('/api/hotel', () => {
         },
       ];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       const newlyCreatedRoom = await request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom);
@@ -343,8 +391,12 @@ describe('/api/hotel', () => {
     });
     it('should return the correct message if the room is sent to a hotel that does not exist', async () => {
       const newHotel = {
-        name: 'Victoria Falls',
-        motto: 'Mighty windy',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nangcy@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [
         {
@@ -352,9 +404,9 @@ describe('/api/hotel', () => {
         },
       ];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       const newlyCreatedRoom = await request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom);
@@ -369,8 +421,12 @@ describe('/api/hotel', () => {
     });
     it('should return 400 BAD REQUEST if the room update is sent to a room that does not exist', async () => {
       const newHotel = {
-        name: 'Disneyland',
-        motto: 'Happy times',
+        name: 'Nancy',
+        password: '1234',
+        email: 'naaancy@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [
         {
@@ -378,9 +434,9 @@ describe('/api/hotel', () => {
         },
       ];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       await request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom);
@@ -394,8 +450,12 @@ describe('/api/hotel', () => {
     });
     it('should return the correct message if the room update is sent to a room that does not exist', async () => {
       const newHotel = {
-        name: 'Hainsville',
-        motto: 'Hainsy',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nanascy@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [
         {
@@ -403,9 +463,9 @@ describe('/api/hotel', () => {
         },
       ];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       await request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom);
@@ -419,8 +479,12 @@ describe('/api/hotel', () => {
     });
     it('should return 200 OK if a valid room update is sent to a valid room id', async () => {
       const newHotel = {
-        name: 'Bach',
-        motto: 'Melodies afoot',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancyvxc@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [
         {
@@ -428,9 +492,9 @@ describe('/api/hotel', () => {
         },
       ];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       const newlyCreatedRoom = await request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom);
@@ -445,8 +509,12 @@ describe('/api/hotel', () => {
     });
     it('should return the updated room if a valid room update is sent to a valid room id', async () => {
       const newHotel = {
-        name: 'Tyneside',
-        motto: 'Quay side joy',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancyhjk@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [
         {
@@ -454,9 +522,9 @@ describe('/api/hotel', () => {
         },
       ];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       const newlyCreatedRoom = await request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom);
@@ -498,8 +566,12 @@ describe('/api/hotel', () => {
     });
     it('should return 200 OK if a valid room id is provided', async () => {
       const newHotel = {
-        name: 'WEBEU1',
-        motto: 'Smashing it',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancnjy@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [
         {
@@ -507,9 +579,9 @@ describe('/api/hotel', () => {
         },
       ];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       const newlyCreatedRoom = await request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom);
@@ -520,8 +592,12 @@ describe('/api/hotel', () => {
     });
     it('should return the deleted room if a valid room id is provided', async () => {
       const newHotel = {
-        name: 'WEBEU2',
-        motto: 'Also smashing it',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nanchiy@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [
         {
@@ -529,9 +605,9 @@ describe('/api/hotel', () => {
         },
       ];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       const newlyCreatedRoom = await request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom);
@@ -542,8 +618,12 @@ describe('/api/hotel', () => {
     });
     it('should remove the room from the db if a valid room id is provided', async () => {
       const newHotel = {
-        name: 'WEBEU3',
-        motto: 'Not smashing it yet',
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancyhiip@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newRoom = [
         {
@@ -551,9 +631,9 @@ describe('/api/hotel', () => {
         },
       ];
       const newlyCreatedHotel = await request(server)
-        .post('/api/hotel')
+        .post('/api/auth/register')
         .send(newHotel);
-      const id = newlyCreatedHotel.body._id;
+      const id = newlyCreatedHotel.body.hotel._id;
       const newlyCreatedRoom = await request(server)
         .post(`/api/hotel/${id}/rooms`)
         .send(newRoom);
