@@ -11,10 +11,6 @@ const USER_TYPES = require('../utils/USER_TYPES');
 const createPasscode = require('../utils/createPassCode');
 const createToken = require('../utils/createToken');
 
-/**
- * @todo - Separate between ALL users and DELETED(is_left=true) users
- */
-
 routes.get('/', async (req, res, next) => {
   try {
     if (req.query.hotel_id) {
@@ -23,7 +19,9 @@ routes.get('/', async (req, res, next) => {
       const hotel = await models.Hotel.findById(hotelId);
       if (hotel) {
         // if hotel id exists, find all users with that hotel ID and return them
-        const hotelUsers = await models.User.where({ hotel_id: hotelId });
+        const hotelUsers = await models.User.where({ hotel_id: hotelId }).where(
+          { is_left: false }
+        );
         // filter only hotel staff
         const hotelStaff = hotelUsers.filter(
           user => user.user_type !== USER_TYPES.GUEST
@@ -33,7 +31,7 @@ routes.get('/', async (req, res, next) => {
         res.status(404).json(errorMessages.noHotel);
       }
     } else {
-      const users = await models.User.find();
+      const users = await models.User.where({ is_left: false });
       res.status(200).json(users);
     }
   } catch (error) {
@@ -133,7 +131,14 @@ routes.put('/:_id', validateObjectId, async (req, res, next) => {
 routes.delete('/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
   try {
-    const { deletedCount } = await models.User.deleteOne({ _id });
+    const options = { runValidators: true };
+    const deletedCount = await models.User.findByIdAndUpdate(
+      _id,
+      {
+        is_left: true,
+      },
+      options
+    );
     if (deletedCount) {
       res.status(200).json(response.deleteUser);
     } else {
