@@ -5,7 +5,7 @@ require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SK);
 const PAYMENT_PLANS = require('../utils/PAYMENT_PLANS');
 const errorMessage = require('../utils/errorMessage');
-// const { models } = require('../models/index');
+const { models } = require('../models/index');
 
 /*
 What are the major pieces of validation (middleware) we need for the payment endpoints?
@@ -23,31 +23,29 @@ path: '/subscription'
     planName: 'Plus OR Pro plan IDs',
     email: that will be associated with billing for invoices/receipts etc.
 }
-What does this endpoint need to be able to do?
-Create new customers, assign them subscriptions -> Stripe and DB (just adds to the hotels billing object (tbd))
 */
 routes.post('/', async (req, res, next) => {
-  const { id, card, email, plan } = req.body;
+  const { id, card, email, plan, hotel_id } = req.body;
   try {
     const customer = await stripe.customers.create({
-      // email: email of superAdmin should go here
       email,
       description: 'Create new customer',
       source: id,
     });
     if (plan === PAYMENT_PLANS.PLUS_PLAN || plan === PAYMENT_PLANS.PRO_PLAN) {
-      await addSubscription(plan, customer, card);
+      await addSubscription(plan, customer, card, hotel_id);
     } else {
       res.status(400).json(errorMessage.invalidPlan);
     }
-    res.status(201).json({ message: 'completed  it' });
+    const updatedHotel = await models.Hotel.findById({ _id: hotel_id });
+    res.status(201).json(updatedHotel);
   } catch (error) {
     next(error);
   }
 });
 
 // add new payment/customer to PLUS plan
-const addSubscription = async (plan, customer, card) => {
+const addSubscription = async (plan, customer, card, hotel_id) => {
   try {
     const subscription = await stripe.subscriptions.create({
       customer: customer.id,
@@ -57,15 +55,43 @@ const addSubscription = async (plan, customer, card) => {
         },
       ],
     });
-    sendToDb(customer, card, subscription, plan);
+    sendToDb(customer, card, subscription, plan, hotel_id);
   } catch (error) {
     console.error(error);
   }
 };
 
-// temp sendtoDb - need to complete this once the schema is updated
-const sendToDb = (customer, card, subscription, plan) => {
-  console.log({ customer, card, subscription, plan });
+// update the human-readable plan key and create a billing object on the hotel resource
+const sendToDb = async (customer, card, subscription, plan, hotel_id) => {
+  const hotel = await models.Hotel.findById({ _id: hotel_id });
+  const billingObj = {
+    customer: {
+      id: customer.id,
+      email: customer.email,
+    },
+    card: {
+      id: card.id,
+      last_four: card.last4,
+      brand: card.brand,
+      expiration: {
+        month: card.exp_month,
+        year: card.exp_year,
+      },
+    },
+    plan_id: plan,
+    sub_id: subscription.id,
+  };
+  try {
+    if (plan === PAYMENT_PLANS.PLUS_PLAN) {
+      hotel.plan = 'plus';
+    } else {
+      hotel.plan = 'pro';
+    }
+    hotel.billing = billingObj;
+    await hotel.save();
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 /*
