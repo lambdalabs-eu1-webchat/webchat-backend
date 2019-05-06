@@ -21,7 +21,7 @@ describe('/api/auth', () => {
     await db.deleteMany({});
   });
 
-  it('is in the right environment', async () => {
+  it('is in the right environment', () => {
     expect(process.env.NODE_ENV).toBe('test');
   });
 
@@ -69,7 +69,7 @@ describe('/api/auth', () => {
         .expect(422);
     });
 
-    it('should return return the user object without password', async () => {
+    it('should return return the user object without password', async done => {
       const newUser4 = {
         hotel_id: '5cc74ab1f16ec37bc8cc4cdb',
         name: 'Frank',
@@ -83,6 +83,7 @@ describe('/api/auth', () => {
         .send(newUser4);
 
       expect(createdUser.text).not.toHaveProperty('password');
+      done();
     });
   });
 
@@ -109,7 +110,7 @@ describe('/api/auth', () => {
         .expect(401);
     });
 
-    it('should return return the user object without password', async () => {
+    it('should return return the user object without password', async done => {
       const newUser = {
         name: 'Joe',
         password: '1234',
@@ -119,6 +120,7 @@ describe('/api/auth', () => {
         .send(newUser);
 
       expect(createdUser.text).not.toHaveProperty('password');
+      done();
     });
   });
 });
