@@ -21,7 +21,7 @@
  *  @apiSuccess {String} plan The human readable plan name
  *  @apiSuccess {Object} billing The updated billing object
  *
- *  @apiSuccessExample Success-Response: add hotel
+ *  @apiSuccessExample Success-Response: add customer/billing/sub
  *    HTTP/1.1 201 CREATED
  *    {
  *   "_id": "5cc7448e8372e2234f04325f",
@@ -70,7 +70,7 @@
  *  @apiSuccess {String} plan The human readable plan name
  *  @apiSuccess {Object} billing The updated billing object
  *
- *  @apiSuccessExample Success-Response: add hotel
+ *  @apiSuccessExample Success-Response: switch payment plan
  *    HTTP/1.1 201 CREATED
  *    {
  *   "_id": "5cc7448e8372e2234f04325f",
@@ -126,7 +126,7 @@
  *  @apiSuccess {String} plan The human readable plan name
  *  @apiSuccess {Object} billing The updated billing object
  *
- *  @apiSuccessExample Success-Response: add hotel
+ *  @apiSuccessExample Success-Response: change payment method
  *    HTTP/1.1 201 CREATED
  *    {
  *   "_id": "5cc7448e8372e2234f04325f",
