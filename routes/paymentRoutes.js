@@ -59,14 +59,14 @@ const addSubscription = async (plan, customer, card, hotel_id) => {
         },
       ],
     });
-    await sendSubToDb(customer, card, subscription, plan, hotel_id);
+    await updateSubOnDb(customer, card, subscription, plan, hotel_id);
   } catch (error) {
     console.error(error);
   }
 };
 
 // update the human-readable plan key and create a billing object on the hotel resource
-const sendSubToDb = async (customer, card, subscription, plan, hotel_id) => {
+const updateSubOnDb = async (customer, card, subscription, plan, hotel_id) => {
   const hotel = await models.Hotel.findById({ _id: hotel_id });
   const billingObj = {
     customer: {
@@ -186,7 +186,7 @@ routes.put('/:method', async (req, res, next) => {
       source: id,
       email,
     });
-    await updatePaymentInDb(hotel, card, email);
+    await updateMethodOnDb(hotel, card, email);
     const updatedHotel = await models.Hotel.findById({ _id: hotel_id });
     res.status(200).json(updatedHotel);
   } catch (error) {
@@ -194,7 +194,7 @@ routes.put('/:method', async (req, res, next) => {
   }
 });
 
-const updatePaymentInDb = async (hotel, card, email) => {
+const updateMethodInDb = async (hotel, card, email) => {
   try {
     const cardObj = {
       id: card.id,
