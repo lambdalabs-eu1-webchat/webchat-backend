@@ -77,14 +77,6 @@ const userSchema = new mongoose.Schema({
   },
   motto: {
     type: String,
-    required: function() {
-      const user_type = this.user_type;
-      return (
-        user_type === USER_TYPES.SUPER_ADMIN ||
-        user_type === USER_TYPES.ADMIN ||
-        user_type === USER_TYPES.RECEPTIONIST
-      );
-    },
   },
   is_left: {
     type: Boolean,
