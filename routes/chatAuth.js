@@ -62,7 +62,7 @@ routes.delete('/chat/:_id', validateObjectId, async (req, res, next) => {
         passcode: null,
         is_left: true,
       },
-      options
+      options,
     );
     if (guestWithoutPasscode) {
       res.status(200).json(response.updateUser);
