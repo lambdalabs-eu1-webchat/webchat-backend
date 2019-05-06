@@ -48,7 +48,7 @@ function chatSocket(io) {
             // can assign himself to a ticket
             // NEEDS chat_id
             socket.on(ASSIGN_SELF_TICKET, chat_id => {
-              assignSelfTicket(chat_id, socket);
+              assignSelfTicket(chat_id, socket, io);
             });
             // can message his chats-
             // NEEDS chat_ID and text
@@ -68,13 +68,14 @@ function chatSocket(io) {
             joinChatGuest(socket);
             // setup all listeners for a guest
             // can send message
-            socket.on(MESSAGE, text => messageGuest(text, socket, io));
             // NEEDS text
+            socket.on(MESSAGE, text => messageGuest(text, socket, io));
+
             // can rate
             // NEEDS rating
             // ============================================================
             // NOT SURE IF WE ARE PLANNING ON GIVING RATING IN SOCKET OR NOT
-            // MIGHT NOT NEED TO IF WE ARE NOT EMITING IT ANYWAHERE
+            // MIGHT NOT NEED TO IF WE ARE NOT EMITING IT ANYWHERE
             // ============================================================
             // socket.on(RATING, rating => {});
             // need to send something to say ticket is done so it can update on this side
@@ -83,6 +84,7 @@ function chatSocket(io) {
           }
         }
         socket.on('disconnect', () => {
+          // could emit the users rooms that this person went offline
           console.log(`${socket.user.name} disconnected`);
         });
       });

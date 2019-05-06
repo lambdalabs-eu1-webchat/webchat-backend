@@ -9,6 +9,7 @@
  *  @apiSuccess (200) {Expect}  Guest server to emit('chat_log', chat)
  *  @apiSuccess (200) {Expect}  Staff_member server to emit('chat_logs', chats)
  *
+ *  @apiError (400) {Expect} all_users server to emit('failed_login','Not a valid token')
  */
 
 /**
@@ -26,6 +27,7 @@
  *
  *  @apiSuccess (200) {Expect} Guest server to emit('chat_log', chat) or emit('message', message) to room
  *  @apiSuccess (200) {Expect} Staff_member  server to emit('message', message) to room
+ * @apiSuccess (200) {Expect} Staff_members  server to emit('add_queued', chat) to hotel staff if makes a new ticket
  */
 
 /**
@@ -140,6 +142,8 @@
  *  @apiVersion 0.1.0
  *  @apiName onRating
  *  @apiGroup Chats
+ *
+ *
  */
 
 /**
@@ -152,4 +156,27 @@
  *  @apiparam {Int} rating An int between 0 and 5
  *  @apiParamExample {js} emit-example:
  *  emit('rating,3)
+ */
+
+/**
+ *  @api {emit} on('close_ticket',chat_id)  Close Ticket
+ *  @apiPermission Staff_members
+ *  @apiVersion 0.1.0
+ *  @apiName emitCloseTicket
+ *  @apiGroup Chats
+ *
+ *  @apiSuccess (200) {Expect} Guest Server to emit('rating', ticket_id) to the guest
+ *  @apiSuccess (200) {Expect} Staff_member Server to emit('chat_logs', chats) to the staff_member
+ */
+
+/**
+ *  @api {emit} on('assign_self_ticket',chat_id)  Close Ticket
+ *  @apiPermission Staff_members
+ *  @apiVersion 0.1.0
+ *  @apiName emitCloseTicket
+ *  @apiGroup Chats
+ *
+ *  @apiSuccess (200) {Expect} Guest Server to emit('chat_log', chat) to the guest
+ *  @apiSuccess (200) {Expect} Staff_member Server to emit('chat_logs', chats) to the staff_member
+ *  @apiSuccess (200) {Expect} Staff_members Server to emit('remove_queued', chat_id) to all staff_members in hotel
  */
