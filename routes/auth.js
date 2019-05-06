@@ -15,11 +15,6 @@ const {
 
 const routes = express.Router();
 
-/**
- * Register new Super Admin
- * @todo - create new hotel to get hotel_id
- */
-
 routes.post('/register', async (req, res, next) => {
   try {
     let { name, password, email, motto, hotel_name, hotel_motto } = req.body;
