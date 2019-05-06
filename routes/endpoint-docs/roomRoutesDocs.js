@@ -44,11 +44,11 @@
  *    {
  *       "message": "An invalid ObjectId was passed."
  *    }
- *    HTTP/1.1 400 BAD REQUEST: data no passed as an array
+ *  @apiErrorExample HTTP/1.1 400 BAD REQUEST: data no passed as an array
  *    {
  *       "message": "An array was expected but not found."
  *    }
- *    @apiErrorExample Error-Response: hotel does not exist
+ *  @apiErrorExample Error-Response: hotel does not exist
  *    HTTP/1.1 400 BAD REQUEST
  *    {
  *       "message": "No hotel exists with this id."
@@ -130,17 +130,17 @@
  *    {
  *       "message": "An invalid ObjectId was passed."
  *    }
- *    @apiErrorExample Error-Response: hotel does not exist
+ *  @apiErrorExample Error-Response: hotel does not exist
  *    HTTP/1.1 400 BAD REQUEST
  *    {
  *       "message": "No hotel exists with this id."
  *    }
- *    @apiErrorExample Error-Response: room does not exist
+ *  @apiErrorExample Error-Response: room does not exist
  *    HTTP/1.1 400 BAD REQUEST
  *    {
  *       "message": "No room exists with this id."
  *    }
- *    @apiErrorExample Error-Response: no updated name was passed
+ *  @apiErrorExample Error-Response: no updated name was passed
  *    HTTP/1.1 400 BAD REQUEST
  *    {
  *       "message": "A room must be updated with a new name."
@@ -172,12 +172,12 @@
  *    {
  *       "message": "An invalid ObjectId was passed."
  *    }
- *    @apiErrorExample Error-Response: hotel does not exist
+ *  @apiErrorExample Error-Response: hotel does not exist
  *    HTTP/1.1 400 BAD REQUEST
  *    {
  *       "message": "No hotel exists with this id."
  *    }
- *    @apiErrorExample Error-Response: room does not exist
+ *  @apiErrorExample Error-Response: room does not exist
  *    HTTP/1.1 400 BAD REQUEST
  *    {
  *       "message": "No room exists with this id."
