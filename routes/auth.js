@@ -4,6 +4,7 @@ const createToken = require('../utils/createToken');
 const { models } = require('../models/index');
 const documentExists = require('../utils/documentExists');
 const USER_TYPES = require('../utils/USER_TYPES');
+const capitalizeLetters = require('../utils/capitalizeLetters');
 const {
   addHotel,
   duplicateEmail,
@@ -32,6 +33,7 @@ routes.post('/register', async (req, res, next) => {
       return res.status(422).json(missingPassword);
     }
 
+    hotel_name = capitalizeLetters(hotel_name);
     // create new hotel
     const newHotel = await models.Hotel.create({
       name: hotel_name,
