@@ -43,6 +43,9 @@ const errorMessage = {
   invalidPlan: {
     message: 'The plan you requested does not exist.',
   },
+  tooManyUsers: {
+    message: 'There are too many staff accounts on this hotel to switch plans.',
+  }
 };
 
 module.exports = errorMessage;

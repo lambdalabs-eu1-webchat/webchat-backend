@@ -8,6 +8,7 @@ const errorMessage = require('../utils/errorMessage');
 const { models } = require('../models/index');
 const validateObjectId = require('../middleware/validateObjectId');
 const documentExists = require('../utils/documentExists');
+const checkPlanLegibility = require('../utils/checkPlanLegibility');
 
 /*
 [POST]
@@ -62,14 +63,14 @@ const addSubscription = async (_id, plan, customer, card) => {
         },
       ],
     });
-    await updateSubOnDb(_id, customer, card, subscription, plan);
+    await addSubOnDb(_id, customer, card, subscription, plan);
   } catch (error) {
     console.error(error);
   }
 };
 
 // update the human-readable plan key and create a billing object on the hotel resource
-const updateSubOnDb = async (_id, customer, card, subscription, plan) => {
+const addSubOnDb = async (_id, customer, card, subscription, plan) => {
   const hotel = await models.Hotel.findById(_id);
   const billingObj = {
     customer: {
@@ -120,20 +121,24 @@ routes.put('/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
   const { newPlan } = req.body;
   try {
-    if (await documentExists({ _id }, 'Hotel')) {
-      if (
-        newPlan === PAYMENT_PLANS.FREE_PLAN ||
-        newPlan === PAYMENT_PLANS.PLUS_PLAN ||
-        newPlan === PAYMENT_PLANS.PRO_PLAN
-      ) {
-        await changeSubscription(_id, newPlan);
-        const updatedHotel = await models.Hotel.findById(_id);
-        res.status(200).json(updatedHotel);
+    if (await checkPlanLegibility(_id, newPlan)) {
+      if (await documentExists({ _id }, 'Hotel')) {
+        if (
+          newPlan === PAYMENT_PLANS.FREE_PLAN ||
+          newPlan === PAYMENT_PLANS.PLUS_PLAN ||
+          newPlan === PAYMENT_PLANS.PRO_PLAN
+        ) {
+          await changeSubscription(_id, newPlan);
+          const updatedHotel = await models.Hotel.findById(_id);
+          res.status(200).json(updatedHotel);
+        } else {
+          res.status(400).json(errorMessage.invalidPlan);
+        }
       } else {
-        res.status(400).json(errorMessage.invalidPlan);
+        res.status(400).json(errorMessage.noHotel);
       }
     } else {
-      res.status(400).json(errorMessage.noHotel);
+      res.status(400).json(errorMessage.tooManyUsers);
     }
   } catch (error) {
     next(error);
