@@ -2,47 +2,75 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const createToken = require('../utils/createToken');
 const { models } = require('../models/index');
-const { duplicateEmail, invalidCredentials } = require('../utils/errorMessage');
 const documentExists = require('../utils/documentExists');
 const USER_TYPES = require('../utils/USER_TYPES');
+const capitalizeLetters = require('../utils/capitalizeLetters');
+const {
+  addHotel,
+  duplicateEmail,
+  invalidCredentials,
+  getUserById,
+  missingPassword,
+} = require('../utils/errorMessage');
 
 const routes = express.Router();
 
-/**
- * Register new Super Admin
- * @todo - create new hotel to get hotel_id
- */
-
 routes.post('/register', async (req, res, next) => {
   try {
-    // Check if this name already exist in DB
-    let { name, hotel_id, password, email } = req.body;
+    let { name, password, email, motto, hotel_name, hotel_motto } = req.body;
 
+    // Check if this email already exist in DB
     if (await documentExists({ email }, 'User')) {
       return res.status(422).json(duplicateEmail);
     }
 
-    password = bcrypt.hashSync(password, 10);
+    if (!password) {
+      return res.status(422).json(missingPassword);
+    }
 
-    // add new user to the DB, rewrite the password to be the hashed pw
-    const user = await models.User.create({
-      ...req.body,
-      password,
-      user_type: USER_TYPES.SUPER_ADMIN,
+    hotel_name = capitalizeLetters(hotel_name);
+    // create new hotel
+    const newHotel = await models.Hotel.create({
+      name: hotel_name,
+      motto: hotel_motto,
     });
+    const hotel_id = newHotel.id;
 
-    // remove password from the returned user object, so it's not sent to FE
-    user.password = undefined;
+    if (hotel_id) {
+      // hash users password befor saving to db
+      password = bcrypt.hashSync(password, 10);
 
-    // generate token
-    const token = createToken({
-      id: user.id,
-      name,
-      hotel_id,
-    });
+      // add new user to the DB, rewrite the password to be the hashed pw
+      const user = await models.User.create({
+        name,
+        is_left: false,
+        email,
+        password,
+        motto,
+        user_type: USER_TYPES.SUPER_ADMIN,
+        hotel_id,
+      });
 
-    // send the user info and token in response
-    res.status(201).json({ user, token });
+      if (user) {
+        // remove password from the returned user object, so it's not sent to FE
+        user.password = undefined;
+
+        // generate token
+        const token = createToken({
+          id: user.id,
+          name,
+          hotel_id,
+        });
+
+        // send the user info and token in response
+        res.status(201).json({ user, token, hotel: newHotel });
+      } else {
+        // if user or hotel id does not exist, send error msg
+        res.status(404).json(getUserById);
+      }
+    } else {
+      res.status(400).json(addHotel);
+    }
   } catch (err) {
     next(err);
   }
