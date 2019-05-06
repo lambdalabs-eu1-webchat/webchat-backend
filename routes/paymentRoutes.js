@@ -109,7 +109,8 @@ routes.put('/', async (req, res, next) => {
   try {
     if (
       newPlan === PAYMENT_PLANS.PLUS_PLAN ||
-      newPlan === PAYMENT_PLANS.PRO_PLAN
+      newPlan === PAYMENT_PLANS.PRO_PLAN ||
+      newPlan === PAYMENT_PLANS.FREE_PLAN
     ) {
       await changeSubscription(hotel_id, newPlan);
       const updatedHotel = await models.Hotel.findById({ _id: hotel_id });
@@ -152,39 +153,42 @@ const changeSubscription = async (hotel_id, newPlan) => {
 // update the human-readable plan key and ammend the plan_id on the billing object
 const updateSubOnDb = async (hotel, updatedSubscription, newPlan) => {
   try {
-  hotel.plan = updatedSubscription.plan.nickname.toLowerCase();
-  hotel.billing.plan_id = newPlan;
-  await hotel.save();
-  }
-  catch (error) {
+    hotel.plan = updatedSubscription.plan.nickname;
+    hotel.billing.plan_id = newPlan;
+    await hotel.save();
+  } catch (error) {
     console.error(error);
   }
 };
 
-/*
-[DELETE]
-path: '/subscription'
-FOR_TESTING_ONLY @params: 
-currentSubscription: hardcoded string from Stripe dashboard,
-currentSubscription will be replaced with a hotel_id or simply decoded from the token with no params passed
-What does this endpoint need to be able to do?
-Delete plans for when customers move from Pro/Plus to Free (Middleware will stop invalid changes based on user count)
-*/
-routes.delete('/:currentSubscription', async (req, res, next) => {
-  const { currentSubscription } = req.params;
-  try {
-    await stripe.subscriptions.update(currentSubscription, {
-      cancel_at_period_end: true,
-    });
-    removeSubscriptionFromDb();
-  } catch (error) {
-    next(error);
-  }
-});
+// /*
+// [DELETE]
+// path: '/subscription'
+// params: /hotel_id
 
-const removeSubscriptionFromDb = () => {
-  console.log('Removed from Db!');
-};
+// THIS REMOVES EXISTING SUBS AND MOVES CUSTOMER ONTO THE PLACEHOLDER FREE SUB
+// */
+// routes.delete('/:hotel_id', async (req, res, next) => {
+//   const { hotel_id } = req.params;
+//   try {
+//     // grab current sub from hotel billing obj
+//     const hotel = await models.Hotel.findById({ _id: hotel_id });
+//     const currentSubscription = hotel.billing.sub_id;
+//     await stripe.subscriptions.update(currentSubscription, {
+//       cancel_at_period_end: true,
+//     });
+//     await removeSubFromDb(hotel);
+//     const updatedHotel = await models.Hotel.findById({ _id: hotel_id });
+//     res.status(200).json(updatedHotel);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
+// const removeSubFromDb = async (hotel) => {
+//   hotel.plan = 'free';
+//   hotel.billing.plan_id = undefined;
+// };
 
 /*
 [PUT]
