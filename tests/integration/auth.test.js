@@ -88,13 +88,13 @@ describe('/api/auth', () => {
 
   describe('POST /login', () => {
     it('should return 200 on success', async () => {
-      const newUser = {
-        name: 'Joe',
+      const newUser1 = {
+        email: 'frank@hotmail.com',
         password: '1234',
       };
       return request(server)
         .post('/api/auth/login')
-        .send(newUser)
+        .send(newUser1)
         .expect(200);
     });
 
