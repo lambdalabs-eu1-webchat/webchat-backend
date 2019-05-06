@@ -21,19 +21,19 @@ describe('/api/auth', () => {
     await db.deleteMany({});
   });
 
-  it('is in the right environment', async () => {
+  it('is in the right environment', () => {
     expect(process.env.NODE_ENV).toBe('test');
   });
 
   describe('POST /register', () => {
     it('should return 201 on success', async () => {
       const newUser = {
-        hotel_id: '5cc74ab1f16ec37bc8cc4cdb',
-        name: 'Joe',
-        email: 'joe@hotmail.com',
+        name: 'Random dude',
         password: '1234',
-        motto: 'Cross-platform executive application',
-        user_type: USER_TYPES.RECEPTIONIST,
+        email: 'low@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       return request(server)
         .post('/api/auth/register')
@@ -43,20 +43,20 @@ describe('/api/auth', () => {
 
     it('should return 422 if email is not unique', async () => {
       const newUser1 = {
-        hotel_id: '5cc74ab1f16ec37bc8cc4cdb',
-        name: 'Joel',
-        email: 'joel@hotmail.com',
+        name: 'Random dude',
         password: '1234',
-        motto: 'Cross-platform executive application',
-        user_type: USER_TYPES.RECEPTIONIST,
+        email: 'unique@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const newUser2 = {
-        hotel_id: '5cc74ab1f16ec37bc8cc4cdb',
-        name: 'Mike',
-        email: 'joel@hotmail.com',
+        name: 'Random dude',
         password: '1234',
-        motto: 'Cross-platform executive application',
-        user_type: USER_TYPES.RECEPTIONIST,
+        email: 'unique@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       await request(server)
         .post('/api/auth/register')
@@ -69,32 +69,52 @@ describe('/api/auth', () => {
         .expect(422);
     });
 
-    it('should return return the user object without password', async () => {
+    it('should return return the user object without password', async done => {
       const newUser4 = {
-        hotel_id: '5cc74ab1f16ec37bc8cc4cdb',
         name: 'Frank',
-        email: 'frank@hotmail.com',
         password: '1234',
-        motto: 'Cross-platform executive application',
-        user_type: USER_TYPES.RECEPTIONIST,
+        email: 'frank@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
       };
       const createdUser = await request(server)
         .post('/api/auth/register')
         .send(newUser4);
 
-      expect(createdUser.text).not.toHaveProperty('password');
+      expect(createdUser.body.user).not.toHaveProperty('password');
+      done();
+    });
+
+    it('should return `user` and `hotel` object on success', async done => {
+      const newUser5 = {
+        name: 'Nancy',
+        password: '1234',
+        email: 'nancy@gmail.com',
+        motto: 'Yada yada',
+        hotel_name: 'really low letters',
+        hotel_motto: 'Dudes Dudes Dudes',
+      };
+      const createdUser = await request(server)
+        .post('/api/auth/register')
+        .send(newUser5);
+
+      expect(createdUser.body).toHaveProperty('user');
+      expect(createdUser.body).toHaveProperty('token');
+      expect(createdUser.body).toHaveProperty('hotel');
+      done();
     });
   });
 
   describe('POST /login', () => {
     it('should return 200 on success', async () => {
-      const newUser = {
-        name: 'Joe',
+      const newUser1 = {
+        email: 'nancy@gmail.com',
         password: '1234',
       };
       return request(server)
         .post('/api/auth/login')
-        .send(newUser)
+        .send(newUser1)
         .expect(200);
     });
 
@@ -109,7 +129,7 @@ describe('/api/auth', () => {
         .expect(401);
     });
 
-    it('should return return the user object without password', async () => {
+    it('should return return the user object without password', async done => {
       const newUser = {
         name: 'Joe',
         password: '1234',
@@ -119,6 +139,7 @@ describe('/api/auth', () => {
         .send(newUser);
 
       expect(createdUser.text).not.toHaveProperty('password');
+      done();
     });
   });
 });

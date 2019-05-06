@@ -6,14 +6,14 @@
  *
  *  @apiParam {json} user information
  *  @apiParamExample {json} Request-Example:
- *    {
- *        "name": "nicolas group",
- *        " password": "1234",
- *        "email": "nicolasgroup@gmail.com"
- *        "hotel_id": "5cc74ab1f16ec37bc8cc4cdb",
- *        "motto": "Cross-platform executive application",
- *        "user_type": "receptionist"
- *    }
+ *  {
+ *    "name": "Random dude",
+ *    "password": "1234",
+ *    "email": "onetwo@gmail.com",
+ *    "motto": "Yada yada",
+ *	  "hotel_name": "Dudes as Resort",
+ *	  "hotel_motto": "Dudes Dudes Dudes"
+ *  }
  *  @apiSuccess {String} name
  * @apiSuccess {String} _id  Unique id of the user.
  *  @apiSuccess {String} email  Email of the user.
@@ -21,17 +21,25 @@
  *
  *  @apiSuccessExample Success-Response: registered
  *    HTTP/1.1 200 OK
- *    {
- *      "user": {
- *      "_id": "5cc9b28740daa6367c5d0283",
- *      "hotel_id": "5cc74ab1f16ec37bc8cc4cdb",
- *      "name": "blabla",
- *      "email": "aazzaa@hotmail.com",
- *      "motto": "Cross-platform executive application",
- *      "user_type": "receptionist",
- *       "__v": 0
- *  },
- *     "token":     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYmxhYmxhIiwiaG90ZWxfaWQiOiI1Y2M3NGFiMWYxNmVjMzdiYzhjYzRjZGIiLCJpYXQiOjE1NTY3MjIzMTF9.zI9RKAe7Gr8kfctrMH_51ixu2P0v6yNQXhPZfwo6m8I"
+ * {
+ *    "user": {
+ *        "_id": "5cd005e6ea886424b4d0954e",
+ *        "name": "Random dude",
+ *        "email": "onetwo@gmail.com",
+ *        "motto": "Yada yada",
+ *        "user_type": "super admin",
+ *        "hotel_id": "5cd005e6ea886424b4d0954d",
+ *        "__v": 0
+ *    },
+ *    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiNWNkMDA1ZTZlYTg4NjQyNGI0ZDA5NTRlIiwibmFtZSI6IlJhbmRvbSBkdWRlIiwiaG90ZWxfaWQiOiI1Y2QwMDVlNmVhODg2NDI0YjRkMDk1NGQiLCJpYXQiOjE1NTcxMzY4NzB9.T__eAZjB5cnBaMYYJfeEKvDAKGlG5PIza20xSHU7wKI",
+ *    "hotel": {
+ *        "plan": "free",
+ *        "_id": "5cd005e6ea886424b4d0954d",
+ *        "name": "Dudes as Resort",
+ *        "motto": "Dudes Dudes Dudes",
+ *        "rooms": [],
+ *        "__v": 0
+ *   }
  * }
  *
   @apiErrorExample Error-Response: minimum register requirements
