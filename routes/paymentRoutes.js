@@ -32,7 +32,11 @@ routes.post('/', async (req, res, next) => {
       description: 'Create new customer',
       source: id,
     });
-    if (plan === PAYMENT_PLANS.PLUS_PLAN || plan === PAYMENT_PLANS.PRO_PLAN) {
+    if (
+      plan === PAYMENT_PLANS.FREE_PLAN ||
+      plan === PAYMENT_PLANS.PLUS_PLAN ||
+      plan === PAYMENT_PLANS.PRO_PLAN
+    ) {
       await addSubscription(plan, customer, card, hotel_id);
     } else {
       res.status(400).json(errorMessage.invalidPlan);
@@ -82,9 +86,13 @@ const sendSubToDb = async (customer, card, subscription, plan, hotel_id) => {
     sub_id: subscription.id,
   };
   try {
+    if (plan === PAYMENT_PLANS.FREE_PLAN) {
+      hotel.plan = 'free';
+    }
     if (plan === PAYMENT_PLANS.PLUS_PLAN) {
       hotel.plan = 'plus';
-    } else {
+    }
+    if (plan === PAYMENT_PLANS.PRO_PLAN) {
       hotel.plan = 'pro';
     }
     hotel.billing = billingObj;
@@ -107,9 +115,9 @@ routes.put('/', async (req, res, next) => {
   const { hotel_id, newPlan } = req.body;
   try {
     if (
+      newPlan === PAYMENT_PLANS.FREE_PLAN ||
       newPlan === PAYMENT_PLANS.PLUS_PLAN ||
-      newPlan === PAYMENT_PLANS.PRO_PLAN ||
-      newPlan === PAYMENT_PLANS.FREE_PLAN
+      newPlan === PAYMENT_PLANS.PRO_PLAN
     ) {
       await changeSubscription(hotel_id, newPlan);
       const updatedHotel = await models.Hotel.findById({ _id: hotel_id });
@@ -204,7 +212,5 @@ const updatePaymentInDb = async (hotel, card, email) => {
     console.error(error);
   }
 };
-
-// DELETE PAYMENT METHOD ENDPOINT
 
 module.exports = routes;
