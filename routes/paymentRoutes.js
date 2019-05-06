@@ -7,6 +7,7 @@ const PAYMENT_PLANS = require('../utils/PAYMENT_PLANS');
 const errorMessage = require('../utils/errorMessage');
 const { models } = require('../models/index');
 const validateObjectId = require('../middleware/validateObjectId');
+const documentExists = require('../utils/documentExists');
 
 /*
 [POST]
@@ -25,22 +26,26 @@ routes.post('/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
   const { id, card, email, plan } = req.body;
   try {
-    const customer = await stripe.customers.create({
-      email,
-      description: 'Create new customer',
-      source: id,
-    });
-    if (
-      plan === PAYMENT_PLANS.FREE_PLAN ||
-      plan === PAYMENT_PLANS.PLUS_PLAN ||
-      plan === PAYMENT_PLANS.PRO_PLAN
-    ) {
-      await addSubscription(_id, plan, customer, card);
+    if (await documentExists({ _id }, 'Hotel')) {
+      const customer = await stripe.customers.create({
+        email,
+        description: 'Create new customer',
+        source: id,
+      });
+      if (
+        plan === PAYMENT_PLANS.FREE_PLAN ||
+        plan === PAYMENT_PLANS.PLUS_PLAN ||
+        plan === PAYMENT_PLANS.PRO_PLAN
+      ) {
+        await addSubscription(_id, plan, customer, card);
+        const updatedHotel = await models.Hotel.findById(_id);
+        res.status(201).json(updatedHotel);
+      } else {
+        res.status(400).json(errorMessage.invalidPlan);
+      }
     } else {
-      res.status(400).json(errorMessage.invalidPlan);
+      res.status(400).json(errorMessage.noHotel);
     }
-    const updatedHotel = await models.Hotel.findById(_id);
-    res.status(201).json(updatedHotel);
   } catch (error) {
     next(error);
   }
@@ -115,16 +120,20 @@ routes.put('/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
   const { newPlan } = req.body;
   try {
-    if (
-      newPlan === PAYMENT_PLANS.FREE_PLAN ||
-      newPlan === PAYMENT_PLANS.PLUS_PLAN ||
-      newPlan === PAYMENT_PLANS.PRO_PLAN
-    ) {
-      await changeSubscription(_id, newPlan);
-      const updatedHotel = await models.Hotel.findById(_id);
-      res.status(200).json(updatedHotel);
+    if (await documentExists({ _id }, 'Hotel')) {
+      if (
+        newPlan === PAYMENT_PLANS.FREE_PLAN ||
+        newPlan === PAYMENT_PLANS.PLUS_PLAN ||
+        newPlan === PAYMENT_PLANS.PRO_PLAN
+      ) {
+        await changeSubscription(_id, newPlan);
+        const updatedHotel = await models.Hotel.findById(_id);
+        res.status(200).json(updatedHotel);
+      } else {
+        res.status(400).json(errorMessage.invalidPlan);
+      }
     } else {
-      res.status(400).json(errorMessage.invalidPlan);
+      res.status(400).json(errorMessage.noHotel);
     }
   } catch (error) {
     next(error);
@@ -184,15 +193,19 @@ routes.put('/:method/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.pamars;
   const { id, card, email } = req.body;
   try {
-    const hotel = await models.Hotel.findById(_id);
-    const customer = hotel.billing.customer.id;
-    await stripe.customers.update(customer, {
-      source: id,
-      email,
-    });
-    await updateMethodOnDb(hotel, card, email);
-    const updatedHotel = await models.Hotel.findById(_id);
-    res.status(200).json(updatedHotel);
+    if (await documentExists({ _id }, 'Hotel')) {
+      const hotel = await models.Hotel.findById(_id);
+      const customer = hotel.billing.customer.id;
+      await stripe.customers.update(customer, {
+        source: id,
+        email,
+      });
+      await updateMethodOnDb(hotel, card, email);
+      const updatedHotel = await models.Hotel.findById(_id);
+      res.status(200).json(updatedHotel);
+    } else {
+      res.status(400).json(errorMessage.noHotel);
+    }
   } catch (error) {
     next(error);
   }
