@@ -1,8 +1,8 @@
 const express = require('express');
 const routes = express.Router();
 require('dotenv').config();
-
 const stripe = require('stripe')(process.env.STRIPE_SK);
+
 const PAYMENT_PLANS = require('../utils/PAYMENT_PLANS');
 const errorMessage = require('../utils/errorMessage');
 const { models } = require('../models/index');
@@ -30,7 +30,6 @@ routes.post('/:_id', validateObjectId, async (req, res, next) => {
     if (await documentExists({ _id }, 'Hotel')) {
       const customer = await stripe.customers.create({
         email,
-        description: 'Create new customer',
         source: id,
       });
       if (
