@@ -44,9 +44,11 @@ const errorMessage = {
     message: 'The plan you requested does not exist.',
   },
   tooManyUsers: {
-    message: 'The number of staff accounts on this hotel is too high for the selected plan.',
+    message:
+      'The number of staff accounts on this hotel is too high for the selected plan.',
   },
   missingPassword: { message: 'Missing password' },
+  missingQueryString: { message: 'Missing query string with hotel_id' },
 };
 
 module.exports = errorMessage;
