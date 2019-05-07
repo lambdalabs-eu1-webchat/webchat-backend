@@ -44,7 +44,7 @@ const errorMessage = {
     message: 'The plan you requested does not exist.',
   },
   tooManyUsers: {
-    message: 'There are too many staff accounts on this hotel to switch plans.',
+    message: 'The number of staff accounts on this hotel is too high for the selected plan.',
   },
   missingPassword: { message: 'Missing password' },
 };

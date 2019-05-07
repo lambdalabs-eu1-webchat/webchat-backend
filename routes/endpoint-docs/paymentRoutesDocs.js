@@ -90,7 +90,7 @@
  *  @apiErrorExample Error-Response: too many users to switch plan
  *    HTTP/1.1 400 BAD REQUEST
  *    {
- *      "message": "There are too many staff accounts on this hotel to switch plans."
+ *      "message": "The number of staff accounts on this hotel is too high for the selected plan."
  *    }
  *  @apiErrorExample Error-Response: hotel does not exist
  *    HTTP/1.1 400 BAD REQUEST
