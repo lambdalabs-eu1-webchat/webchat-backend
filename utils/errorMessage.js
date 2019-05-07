@@ -43,6 +43,9 @@ const errorMessage = {
   invalidPlan: {
     message: 'The plan you requested does not exist.',
   },
+  tooManyUsers: {
+    message: 'The number of staff accounts on this hotel is too high for the selected plan.',
+  },
   missingPassword: { message: 'Missing password' },
 };
 
