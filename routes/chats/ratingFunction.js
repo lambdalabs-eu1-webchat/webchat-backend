@@ -3,7 +3,6 @@ module.exports = makeRating;
 const { models } = require('../../models/index');
 
 async function makeRating(rating, socket) {
-  console.log('++++++++++++++++++++HERE=======================');
   const { user } = socket;
   // get the chat
   const chat = await models.Chat.findOne({ 'guest.id': user._id });
