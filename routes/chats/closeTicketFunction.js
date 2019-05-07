@@ -1,4 +1,4 @@
-const { CHATLOGS, RATING } = require('./constants');
+const { ACTIVE_CHATS, RATING } = require('./constants');
 
 const getLastTicket = require('../../utils/getLastTicket');
 module.exports = handleCloseTicket;
@@ -27,7 +27,7 @@ async function handleCloseTicket(chat_id, socket, io) {
       );
       // update the chats of the employee
       socket.chats = newChats;
-      socket.emit(CHATLOGS, newChats);
+      socket.emit(ACTIVE_CHATS, newChats);
     }
   });
 }
