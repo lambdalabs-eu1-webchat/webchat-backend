@@ -4,7 +4,7 @@ const getLastTicket = require('../../utils/getLastTicket');
 module.exports = handleCloseTicket;
 
 async function handleCloseTicket(chat_id, socket, io) {
-  const chat = socket.chats.find(chat => chat._id === chat_id);
+  const chat = socket.chats.find(chat => chat._id.equals(chat_id));
   const user = socket.user;
   const ticket = getLastTicket(chat);
   // put staff member on the ticket
@@ -19,7 +19,7 @@ async function handleCloseTicket(chat_id, socket, io) {
       socket.emit('console', error);
     } else {
       // get a rating for the ticket
-      io.emit.in(chat._id)(RATING, ticket._id);
+      io.in(chat._id).emit(RATING, ticket._id);
       // leave the chat
       socket.leave(chat._id);
       const newChats = socket.chats.filter(

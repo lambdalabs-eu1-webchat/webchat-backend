@@ -2,12 +2,13 @@ const { joinChatGuest, joinChatsEmployee } = require('./joinFunction');
 const { messageGuest, messageStaff } = require('./messageFunction');
 const handleCloseTicket = require('./closeTicketFunction');
 const assignSelfTicket = require('./assignSelfTicket');
+const makeRating = require('./ratingFunction');
 
 const {
   MESSAGE,
   CLOSE_TICKET,
   ASSIGN_SELF_TICKET,
-  // RATING,
+  RATING,
   LOGIN,
   FAILED_LOGIN,
 } = require('./constants');
@@ -59,7 +60,7 @@ function chatSocket(io) {
             // send a log of all active chats
             joinChatsEmployee(socket);
             // remove login listener so that a client cannot login multiple times and have the above events fire multiple times
-            socket.off(LOGIN);
+            socket.removeListener(LOGIN, () => {});
           }
           // =================== SETUP FOR A GUEST ==================
           else if (isGuest(user.user_type)) {
@@ -77,10 +78,12 @@ function chatSocket(io) {
             // NOT SURE IF WE ARE PLANNING ON GIVING RATING IN SOCKET OR NOT
             // MIGHT NOT NEED TO IF WE ARE NOT EMITING IT ANYWHERE
             // ============================================================
-            // socket.on(RATING, rating => {});
+            socket.on(RATING, rating => {
+              makeRating(rating, socket);
+            });
             // need to send something to say ticket is done so it can update on this side
             // remove login listener so that a client cannot login multiple times and have the above events fire multiple times
-            socket.off(LOGIN);
+            socket.removeListener(LOGIN, () => {});
           }
         }
         socket.on('disconnect', () => {
