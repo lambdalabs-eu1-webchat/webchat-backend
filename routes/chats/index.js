@@ -29,7 +29,6 @@ function chatSocket(io) {
     socket.emit('connection', true);
 
     socket.on(LOGIN, token => {
-      console.log(token);
       jwt.verify(token, jwtKey, async (err, decoded) => {
         if (err) {
           console.error(err);
