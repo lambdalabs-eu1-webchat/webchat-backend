@@ -44,7 +44,25 @@ routes.put(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
+//?status=here or ?status=left
+// gets the hotels guests
+routes.get('/:_id/guests', validateObjectId, async (req, res, next) => {
+  const { _id } = req.params;
+  const { status } = req.query;
+  const query = { hotel_id: _id };
+  if (status) query.is_left = 'left' === status;
+  try {
+    const guests = await models.User.find(query);
+    if (guests) {
+      res.status(200).json(guests);
+    } else {
+      res.status(400).json(errorMessage.getUsers);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = routes;
