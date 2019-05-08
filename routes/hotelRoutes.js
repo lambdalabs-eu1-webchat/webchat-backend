@@ -7,6 +7,7 @@ const validateObjectId = require('../middleware/validateObjectId');
 const formatHotel = require('../middleware/formatHotel');
 const validateHotelChange = require('../middleware/validateHotelChange');
 const { updateHotel } = require('../utils/helperFunctions');
+const { GUEST } = require('../utils/USER_TYPES');
 
 routes.get('/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
@@ -51,7 +52,7 @@ routes.put(
 routes.get('/:_id/guests', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
   const { status } = req.query;
-  const query = { hotel_id: _id };
+  const query = { hotel_id: _id, user_type: GUEST };
   if (status) query.is_left = 'left' === status;
   try {
     const guests = await models.User.find(query);

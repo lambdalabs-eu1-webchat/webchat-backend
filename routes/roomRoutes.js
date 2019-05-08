@@ -11,7 +11,7 @@ const validateRoomChange = require('../middleware/validateRoomChange');
 const documentExists = require('../utils/documentExists');
 const subDocumentExists = require('../utils/subDocumentExists');
 const capitalizeLetters = require('../utils/capitalizeLetters');
-
+const { GUEST } = require('../utils/USER_TYPES');
 // POST HOTEL ROOMS ARRAY
 // params: hotel _id
 // body: [{"name": "hotelName"}]
@@ -78,6 +78,44 @@ routes.get('/:_id/rooms', validateObjectId, async (req, res, next) => {
     next(error);
   }
 });
+
+// GET HOTEL ROOMS AVAILABLE
+// params: hotel _id
+// const query = { hotel_id: _id };
+//   if (status) query.is_left = 'left' === status;
+//   try {
+//     const guests = await models.User.find(query);
+routes.get(
+  '/:_id/rooms/available',
+  validateObjectId,
+  async (req, res, next) => {
+    const { _id } = req.params;
+    try {
+      const hotel = await models.Hotel.findById(_id);
+      const currentGuests = await models.User.find({
+        hotel_id: _id,
+        is_left: false,
+        user_type: GUEST,
+      });
+      const rooms = hotel.rooms;
+
+      const availableRooms = rooms.filter(room => {
+        const takenBy = currentGuests.find(guest =>
+          guest.room.id.equals(room._id),
+        );
+        return !takenBy;
+      });
+
+      if (availableRooms) {
+        res.status(200).json(availableRooms);
+      } else {
+        res.status(400).json(errorMessage.getRooms);
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 // [PUT] room
 // params: hotel _id, room _id

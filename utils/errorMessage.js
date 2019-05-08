@@ -15,6 +15,7 @@ const errorMessage = {
       'The hotel could not be updated or you did not provide any new information.',
   },
   addRoom: { message: 'The room could not be added.' },
+  getRooms: { message: 'Could not get the rooms for this hotel' },
   updateRoom: { message: 'The room could not be updated.' },
   removeRoom: { message: 'The room could not be deleted.' },
   invalidObjectId: { message: 'An invalid ObjectId was passed.' },
