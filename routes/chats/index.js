@@ -87,7 +87,7 @@ function chatSocket(io) {
         }
         socket.on('disconnect', () => {
           // could emit the users rooms that this person went offline
-          console.log(`${socket.user.name} disconnected`);
+          console.log('disconnected');
         });
       });
     });
