@@ -3,6 +3,7 @@ const path = {
   auth: '/api/auth',
   hotel: '/api/hotel',
   subscribe: '/api/subscription',
+  chats: '/api/chats',
 };
 
 module.exports = path;
