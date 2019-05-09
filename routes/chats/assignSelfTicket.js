@@ -1,7 +1,7 @@
 // const USER_TYPES = require('../../models/USER_TYPES');
 const { models } = require('../../models/index');
 
-const { CHATLOG, CHATLOGS, REMOVE_QUEUED } = require('./constants');
+const { CHATLOG, ACTIVE_CHATS, REMOVE_QUEUED } = require('./constants');
 
 module.exports = assignSelfTicket;
 
@@ -27,7 +27,7 @@ async function assignSelfTicket(chat_id, socket, io) {
         io.in(chat_id).emit(CHATLOG, chat);
         // add to chats and send updated list of chats to employee
         socket.chats.push(chat);
-        socket.emit(CHATLOGS, socket.chats);
+        socket.emit(ACTIVE_CHATS, socket.chats);
         // emit that the room is no longer in the queue
         io.in(user.hotel_id).emit(REMOVE_QUEUED, chat_id);
         // join the room
