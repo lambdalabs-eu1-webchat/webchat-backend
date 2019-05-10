@@ -11,6 +11,7 @@ const FAILED_LOGIN = 'failed_login';
 
 const REMOVE_QUEUED = 'remove_queued';
 const ADD_QUEUED = 'add_queued';
+const QUEUED_MESSAGE = 'queued_message';
 module.exports = {
   QUEUED_CHATS,
   ADD_QUEUED,
@@ -24,4 +25,5 @@ module.exports = {
   ASSIGN_SELF_TICKET,
   LOGIN,
   FAILED_LOGIN,
+  QUEUED_MESSAGE,
 };

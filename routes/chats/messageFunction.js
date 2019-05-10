@@ -3,7 +3,7 @@ module.exports = { messageGuest, messageStaff };
 const mongoose = require('mongoose');
 
 const { models } = require('../../models/index');
-const { CHATLOG, MESSAGE, ADD_QUEUED } = require('./constants');
+const { CHATLOG, MESSAGE, ADD_QUEUED, QUEUED_MESSAGE } = require('./constants');
 const getLastTicket = require('../../utils/getLastTicket');
 
 async function messageGuest(text, socket, io) {
@@ -39,8 +39,18 @@ async function messageGuest(text, socket, io) {
       }
     });
   } else {
+    // send the message to queued ticket if no one dealing with it yet
+    if (socket.chat.staff_member) {
+      io.in(user.hotel_id).emit(QUEUED_MESSAGE, {
+        message,
+        chat_id: socket.chat._id,
+      });
+    }
     // doesnt need to open a new ticket so send the messge
-    io.in(socket.chat._id).emit(MESSAGE, { message, chat_id: socket.chat._id });
+    io.in(socket.chat._id).emit(MESSAGE, {
+      message,
+      chat_id: socket.chat._id,
+    });
     // get the promise to update
     const chat = await chatPromise;
     chat.tickets[chat.tickets.length - 1].messages.push(message);
