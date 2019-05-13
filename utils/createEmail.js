@@ -1,8 +1,8 @@
 const createEmail = (guest, hotel, formattedChats) => {
 const emailBody = `
 <header>
-  <h1>Dear ${guest.name},</h1>
-  <h4>Please see a copy of your conversation below:</h4>
+  <p>Dear ${guest.name},</p>
+  <p>Please see a copy of your conversation below:</p>
 </header>
 <section>
   <div>${formattedChats.map(chat => `<p>${chat}</p>`).join('')}</div>
