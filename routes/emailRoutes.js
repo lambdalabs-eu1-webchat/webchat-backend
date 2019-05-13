@@ -3,8 +3,11 @@ const routes = express.Router();
 const sgMail = require('@sendgrid/mail');
 
 routes.post('/', async (req, res, next) => {
-  // this will be equal to req.body;
-  // this is hardcoded for testing purposes
+  // FE sends guest email and guest id
+  // This EP does an axios request to a get chat by ID EP
+  // Gather all of the messages into conversation form
+  // Format the email
+  // Hit the SendGrid API
   const email = {
     subject: 'your chat conversation history',
     body: 'this is a test email',
