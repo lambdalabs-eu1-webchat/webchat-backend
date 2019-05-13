@@ -2,6 +2,7 @@
 const { models } = require('../../models/index');
 
 const { CHATLOG, ACTIVE_CHATS, REMOVE_QUEUED } = require('./constants');
+const { ACTIVE } = require('../../utils/TICKET_STATUSES');
 
 module.exports = assignSelfTicket;
 
@@ -18,6 +19,8 @@ async function assignSelfTicket(chat_id, socket, io) {
       id: user._id,
       name: user.name,
     };
+    // change the status of the ticket
+    chat.tickets[chat.tickets.length - 1].status = ACTIVE;
     chat.save((error, chat) => {
       if (error) {
         socket.emit('console', 'saving staff member error');
