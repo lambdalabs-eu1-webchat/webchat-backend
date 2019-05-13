@@ -8,6 +8,8 @@ const RATING = 'rating';
 const ASSIGN_SELF_TICKET = 'assign_self_ticket';
 const LOGIN = 'login';
 const FAILED_LOGIN = 'failed_login';
+const TYPING = 'typing';
+const STOPPED_TYPING = 'stopped_typing';
 
 const REMOVE_QUEUED = 'remove_queued';
 const ADD_QUEUED = 'add_queued';
@@ -26,4 +28,6 @@ module.exports = {
   LOGIN,
   FAILED_LOGIN,
   QUEUED_MESSAGE,
+  TYPING,
+  STOPPED_TYPING,
 };
