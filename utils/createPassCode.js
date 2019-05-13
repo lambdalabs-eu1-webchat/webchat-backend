@@ -1,6 +1,6 @@
 module.exports = payload => {
   let temp = '';
-  const characters = `${payload}.${process.env.CHARACTERS}`;
+  const characters = `${payload}${process.env.CHARACTERS}`;
 
   // We will choose a random character this many times.
   for (let x = 0; x < 10; x++) {
