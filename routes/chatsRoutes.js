@@ -79,4 +79,15 @@ routes.get('/', async (req, res, next) => {
   }
 });
 
+// Get chat for checkout by guest id
+routes.get('/checkout/:guestId', async (req, res, next) => {
+  try {
+    const { guestId } = req.params;
+    const chat = await models.Chat.find({ 'guest.id': guestId });
+    res.status(200).json(chat);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = routes;
