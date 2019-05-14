@@ -10,7 +10,7 @@ const LOGIN = 'login';
 const FAILED_LOGIN = 'failed_login';
 const TYPING = 'typing';
 const STOPPED_TYPING = 'stopped_typing';
-
+const CONFIRM_DONE_TICKET = 'confirm_done_ticket';
 const REMOVE_QUEUED = 'remove_queued';
 const ADD_QUEUED = 'add_queued';
 const QUEUED_MESSAGE = 'queued_message';
@@ -30,4 +30,5 @@ module.exports = {
   QUEUED_MESSAGE,
   TYPING,
   STOPPED_TYPING,
+  CONFIRM_DONE_TICKET,
 };
