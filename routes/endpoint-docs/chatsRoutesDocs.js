@@ -271,9 +271,9 @@
  *     },
  *    ];
  *
- *  @apiErrorExample Error-Response: hotel_id not provided
+ *  @apiErrorExample Error-Response: user_id not provided
  *    HTTP/1.1 404 BAD REQUEST
  *    {
- *       "message": "Missing params with hotel_id."
+ *       "message": "Missing params with user_id."
  *    }
  */
