@@ -6,9 +6,6 @@ const response = {
   updateUser: { message: 'The user has been removed from the database.' },
   sendChatLog: {
     message: 'Email sucessfully sent.',
-  },
-  noChats: {
-    message: 'This user has no associated chats.'
   }
 };
 
