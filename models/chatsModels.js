@@ -28,6 +28,7 @@ const ticketSchema = new mongoose.Schema({
   },
   language: {
     type: String,
+    default: 'en',
   },
 
   messages: [
