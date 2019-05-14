@@ -3,7 +3,7 @@ const { messageGuest, messageStaff } = require('./messageFunction');
 const handleCloseTicket = require('./closeTicketFunction');
 const assignSelfTicket = require('./assignSelfTicket');
 const makeRating = require('./ratingFunction');
-
+const { userStoppedTyping, userTyping } = require('./typingFunction.js');
 const {
   MESSAGE,
   CLOSE_TICKET,
@@ -11,6 +11,8 @@ const {
   RATING,
   LOGIN,
   FAILED_LOGIN,
+  TYPING,
+  STOPPED_TYPING,
 } = require('./constants');
 
 const { isGuest, isStaff } = require('../../utils/isUserType');
@@ -55,6 +57,13 @@ function chatSocket(io) {
             socket.on(MESSAGE, ({ chat_id, text }) => {
               messageStaff(chat_id, text, socket, io);
             });
+            // set up when message is being composed functions
+            socket.on(TYPING, chat_id => {
+              userTyping(chat_id, socket, io);
+            });
+            socket.on(STOPPED_TYPING, chat_id => {
+              userStoppedTyping(chat_id, socket, io);
+            });
             // setup the employee by joining all his/her active chats
             // send a log of all active chats
             joinChatsEmployee(socket);
@@ -73,12 +82,15 @@ function chatSocket(io) {
 
             // can rate
             // NEEDS rating
-            // ============================================================
-            // NOT SURE IF WE ARE PLANNING ON GIVING RATING IN SOCKET OR NOT
-            // MIGHT NOT NEED TO IF WE ARE NOT EMITING IT ANYWHERE
-            // ============================================================
             socket.on(RATING, rating => {
               makeRating(rating, socket);
+            });
+            // set up when message is being composed functions
+            socket.on(TYPING, () => {
+              userTyping(socket.chat._id, socket, io);
+            });
+            socket.on(STOPPED_TYPING, () => {
+              userStoppedTyping(socket.chat._id, socket, io);
             });
             // need to send something to say ticket is done so it can update on this side
             // remove login listener so that a client cannot login multiple times and have the above events fire multiple times
