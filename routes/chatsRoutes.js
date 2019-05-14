@@ -103,7 +103,6 @@ routes.post('/translate', async (req, res, next) => {
       // translate text and return it with detected language
       const toEnglish = await translateToEnglish(text);
       const guestLang = toEnglish[0].inputLang;
-      console.log('guestLang: ', guestLang);
 
       // update ticket language
       const [chats] = await models.Chat.find({ 'tickets._id': ticket_id });
@@ -117,7 +116,6 @@ routes.post('/translate', async (req, res, next) => {
       res.send(toEnglish);
     } else {
       // translate from english to specified language
-      console.log('fromEng to: ', language);
       const fromEnglish = await translateFromEnglish(text, language);
       res.send(JSON.stringify(fromEnglish));
     }
