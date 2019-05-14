@@ -271,7 +271,7 @@
  *     },
  *    ];
  *
- *  @apiErrorExample Error-Response: query string not provided
+ *  @apiErrorExample Error-Response: hotel_id not provided
  *    HTTP/1.1 404 BAD REQUEST
  *    {
  *       "message": "Missing params with hotel_id."
