@@ -53,6 +53,7 @@ const errorMessage = {
   missingPassword: { message: 'Missing password' },
   missingQueryString: { message: 'Missing query string with hotel_id' },
   invalidEmail: { message: 'An invalid email was provided' },
+  noGuestId: { message: 'Missing params with user_id.' },
 };
 
 module.exports = errorMessage;
