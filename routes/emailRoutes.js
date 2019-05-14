@@ -33,7 +33,7 @@ routes.post('/', async (req, res, next) => {
         await sgMail.send(msg);
         res.status(200).json(response.sendChatLog);
       } else {
-        res.status(200).json(response.noChats);
+        res.status(200).json(rawChatHistory);
       }
     } else {
       res.status(400).json(errorMessage.invalidEmail);
