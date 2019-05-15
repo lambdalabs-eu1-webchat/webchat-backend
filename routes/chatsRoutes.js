@@ -111,11 +111,12 @@ routes.post('/translate', async (req, res, next) => {
         }
       });
       await chats.save();
-
+      // send an array of translations
       res.send(toEnglish);
     } else {
       // translate from english to specified language
       const fromEnglish = await translateFromEnglish(text, language);
+      // send a translated string
       res.send(JSON.stringify(fromEnglish));
     }
   } catch (error) {

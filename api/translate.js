@@ -1,4 +1,3 @@
-const { Translate } = require('@google-cloud/translate');
 const axios = require('axios');
 
 const GOOGLE_TRANSLATE_DOMAIN =
@@ -36,20 +35,23 @@ async function translateToEnglish(textToTranslate) {
 
 async function translateFromEnglish(textToTranslate, targetLanguage) {
   try {
-    const projectId = process.env.PROJECT_ID;
-    const translate = new Translate({ projectId });
+    // encode text characters with UTF-8 encoding of the character
+    let encodedQueryString = encodeURIComponent(textToTranslate);
+    const targetLang = targetLanguage ? targetLanguage : 'en';
 
-    const translateOptions = {
-      to: targetLanguage,
-      model: 'nmt', // specify Neural Machine Translation (NMT) model
-    };
-
-    const [translation] = await translate.translate(
-      textToTranslate,
-      translateOptions
+    /**
+     * Query string takes:
+     * @target = REQUIRED = target language
+     * @key = REQUIRED = valid API key
+     * @q = REQUIRED = text to translate.
+     * @model = OPTIONAL = translation model; nmt =  Neural Machine Translation
+     */
+    const translate = await axios.post(
+      `${GOOGLE_TRANSLATE_DOMAIN}?target=${targetLang}&model=nmt&key=${
+        process.env.TRANSLATE_API
+      }&q=${encodedQueryString}`
     );
-
-    return translation;
+    return translate.data.data.translations[0].translatedText;
   } catch (error) {
     console.error(error);
   }
