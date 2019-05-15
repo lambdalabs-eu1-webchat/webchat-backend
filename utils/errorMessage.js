@@ -50,8 +50,8 @@ const errorMessage = {
     message:
       'The number of staff accounts on this hotel is too high for the selected plan.',
   },
-  missingPassword: { message: 'Missing password' },
-  missingQueryString: { message: 'Missing query string with hotel_id' },
+  missingPassword: { message: 'Missing password.' },
+  missingQueryString: { message: 'Missing query string with hotel_id.' },
   invalidEmail: { message: 'An invalid email was provided' },
   noGuestId: { message: 'Missing params with user_id.' },
 };
