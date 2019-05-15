@@ -4,6 +4,7 @@ const path = {
   hotel: '/api/hotel',
   subscribe: '/api/subscription',
   chats: '/api/chats',
+  email: '/api/email',
 };
 
 module.exports = path;

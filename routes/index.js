@@ -4,6 +4,7 @@ const roomRoutes = require('./roomRoutes');
 const chatAuth = require('./chatAuth');
 const paymentRoutes = require('./paymentRoutes');
 const chatsRoutes = require('./chatsRoutes');
+const emailRoutes = require('./emailRoutes');
 const { logger, errorLogger } = require('../middleware/winston');
 const path = require('../utils/path');
 const auth = require('./auth');
@@ -27,6 +28,7 @@ module.exports = server => {
   server.use(path.hotel, roomRoutes);
   server.use(path.subscribe, paymentRoutes);
   server.use(path.chats, chatsRoutes);
+  server.use(path.email, emailRoutes);
 
   // error logger - must be last
   if (process.env.NODE_ENV !== 'test') {
