@@ -5,12 +5,11 @@ const GOOGLE_TRANSLATE_DOMAIN =
 
 async function translateToEnglish(textToTranslate) {
   try {
-    const encodedArr = [];
-    // take a string or array of strings to translate
-    textToTranslate.forEach(text => {
+    // take an array of strings to translate
+    const encodedArr = textToTranslate.map(text => {
       // encode text characters with UTF-8 encoding of the character
       let encodedText = encodeURIComponent(text);
-      encodedArr.push(`&q=${encodedText}`);
+      return `&q=${encodedText}`;
     });
     // create single encoded query string
     const encodedQueryString = encodedArr.join('');
