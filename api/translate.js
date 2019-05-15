@@ -1,36 +1,20 @@
 const { Translate } = require('@google-cloud/translate');
+const axios = require('axios');
+
+const GOOGLE_DOMAIN =
+  'https://translation.googleapis.com/language/translate/v2';
 
 async function translateToEnglish(textToTranslate) {
   try {
-    const projectId = process.env.PROJECT_ID;
-    const translate = new Translate({ projectId });
+    const translate = await axios.post(
+      `${GOOGLE_DOMAIN}?target=en&key=${
+        process.env.TRANSLATE_API
+      }&q=${textToTranslate}`
+    );
 
-    // Detects the language. "textToTranslate" can be an array of strings for detecting the languages
-    // of multiple texts.
-    let [detections] = await translate.detect(textToTranslate);
-    detections = Array.isArray(detections) ? detections : [detections];
+    console.log(translate);
 
-    const translatedTextPromise = detections.map(async detection => {
-      const { input, confidence, language } = detection;
-
-      const translateOptions = {
-        to: 'en',
-        model: 'nmt', // specify Neural Machine Translation (NMT) model
-      };
-
-      // take every detected language from "textToTranslate" and translate it to english
-      const [translation] = await translate.translate(input, translateOptions);
-      return {
-        translation,
-        input,
-        confidence,
-        inputLang: language,
-        translationLang: translateOptions.to,
-      };
-    });
-    const translatedText = await Promise.all(translatedTextPromise);
-
-    return translatedText;
+    return translate;
   } catch (error) {
     console.error(error);
   }
