@@ -106,7 +106,8 @@ function chatSocket(io) {
           }
         }
         socket.on('disconnect', () => {
-          // could emit the users rooms that this person went offline
+          // emit the users rooms that this person is not typing
+          socket.chats.forEach(chat => userStoppedTyping(chat._id, socket, io));
           console.log('disconnected');
         });
       });
