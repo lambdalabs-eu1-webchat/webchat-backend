@@ -7,7 +7,9 @@ const errorMessage = {
   invalidUserName: { message: 'Invalid user name' },
   deleteUser: { message: 'The user could not be deleted' },
   addUser: { message: 'The user could not be added.' },
-  superAdminError: { message: 'Can\'t create Super Admin in this endpoint.' },
+  superAdminError: {
+    message: 'Super Admins cannot be created in this endpoint.',
+  },
   noHotel: { message: 'No hotel exists with this id.' },
   addHotel: { message: 'The hotel could not be added.' },
   updateHotel: {
@@ -50,6 +52,8 @@ const errorMessage = {
   },
   missingPassword: { message: 'Missing password' },
   missingQueryString: { message: 'Missing query string with hotel_id' },
+  invalidEmail: { message: 'An invalid email was provided' },
+  noGuestId: { message: 'Missing params with user_id.' },
 };
 
 module.exports = errorMessage;

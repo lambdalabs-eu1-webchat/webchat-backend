@@ -4,6 +4,10 @@ const routes = express.Router();
 const errorMessages = require('../utils/errorMessage');
 const { models } = require('../models/index');
 const { ACTIVE, CLOSED, QUEUED } = require('../utils/TICKET_STATUSES');
+const {
+  translateToEnglish,
+  translateFromEnglish,
+} = require('../api/translate');
 
 /**
  * [GET] chats will return chats for hotel based on `hotel_id` in quert string
@@ -89,11 +93,6 @@ routes.get('/', async (req, res, next) => {
  * 7. Guest will receive the message in his own language
  */
 
-const {
-  translateToEnglish,
-  translateFromEnglish,
-} = require('../api/translate');
-
 routes.post('/translate', async (req, res, next) => {
   try {
     const { text, language, ticket_id } = req.body;
@@ -118,6 +117,21 @@ routes.post('/translate', async (req, res, next) => {
       // translate from english to specified language
       const fromEnglish = await translateFromEnglish(text, language);
       res.send(JSON.stringify(fromEnglish));
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Get chat for checkout by guest id
+routes.get('/checkout/:guestId', async (req, res, next) => {
+  try {
+    const { guestId } = req.params;
+    if (guestId) {
+      const chat = await models.Chat.find({ 'guest.id': guestId });
+      res.status(200).json(chat);
+    } else {
+      res.status(404).json(errorMessages.noGuestId);
     }
   } catch (error) {
     next(error);
