@@ -4,6 +4,7 @@ const handleCloseTicket = require('./closeTicketFunction');
 const assignSelfTicket = require('./assignSelfTicket');
 const makeRating = require('./ratingFunction');
 const { userStoppedTyping, userTyping } = require('./typingFunction.js');
+const updateGuestChat = require('./updateGuestChat');
 const {
   MESSAGE,
   CLOSE_TICKET,
@@ -13,6 +14,7 @@ const {
   FAILED_LOGIN,
   TYPING,
   STOPPED_TYPING,
+  CONFIRM_DONE_TICKET,
 } = require('./constants');
 
 const { isGuest, isStaff } = require('../../utils/isUserType');
@@ -91,6 +93,11 @@ function chatSocket(io) {
             });
             socket.on(STOPPED_TYPING, () => {
               userStoppedTyping(socket.chat._id, socket, io);
+            });
+            // confirm that ticket is closed so update socket state
+            socket.on(CONFIRM_DONE_TICKET, () => {
+              //update chat
+              updateGuestChat(socket);
             });
             // need to send something to say ticket is done so it can update on this side
             // remove login listener so that a client cannot login multiple times and have the above events fire multiple times
