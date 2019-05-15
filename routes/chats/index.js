@@ -15,6 +15,7 @@ const {
   TYPING,
   STOPPED_TYPING,
   CONFIRM_DONE_TICKET,
+  LOGOUT,
 } = require('./constants');
 
 const { isGuest, isStaff } = require('../../utils/isUserType');
@@ -25,17 +26,17 @@ const jwt = require('jsonwebtoken');
 const { super_secret } = require('../../utils/secrets');
 const jwtKey = process.env.JWT_SECRET || super_secret;
 const { models } = require('../../models/index');
-
 function chatSocket(io) {
   io.on('connection', async socket => {
     // tell the server to do what it needs to for setup
     // need so send a login with token
     socket.emit('connection', true);
-
+    socket.on(LOGOUT, () => {
+      socket.disconnect();
+    });
     socket.on(LOGIN, token => {
       jwt.verify(token, jwtKey, async (err, decoded) => {
         if (err) {
-          console.error(err);
           socket.emit(FAILED_LOGIN, 'Not a valid token');
         } else {
           const user = await models.User.findById({
@@ -65,6 +66,13 @@ function chatSocket(io) {
             });
             socket.on(STOPPED_TYPING, chat_id => {
               userStoppedTyping(chat_id, socket, io);
+            });
+            socket.on('disconnect', () => {
+              // emit the users rooms that this person is not typing
+              socket.chats.forEach(chat =>
+                userStoppedTyping(chat._id, socket, io),
+              );
+              console.log('disconnected');
             });
             // setup the employee by joining all his/her active chats
             // send a log of all active chats
@@ -99,15 +107,16 @@ function chatSocket(io) {
               //update chat
               updateGuestChat(socket);
             });
+            socket.on('disconnect', () => {
+              // emit the users rooms that this person is not typing
+              userStoppedTyping(socket.chat._id, socket, io),
+              console.log('disconnected');
+            });
             // need to send something to say ticket is done so it can update on this side
             // remove login listener so that a client cannot login multiple times and have the above events fire multiple times
             socket.removeListener(LOGIN, () => {});
           }
         }
-        socket.on('disconnect', () => {
-          // could emit the users rooms that this person went offline
-          console.log('disconnected');
-        });
       });
     });
   });
