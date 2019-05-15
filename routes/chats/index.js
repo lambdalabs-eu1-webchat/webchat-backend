@@ -15,6 +15,7 @@ const {
   TYPING,
   STOPPED_TYPING,
   CONFIRM_DONE_TICKET,
+  LOGOUT,
 } = require('./constants');
 
 const { isGuest, isStaff } = require('../../utils/isUserType');
@@ -25,17 +26,17 @@ const jwt = require('jsonwebtoken');
 const { super_secret } = require('../../utils/secrets');
 const jwtKey = process.env.JWT_SECRET || super_secret;
 const { models } = require('../../models/index');
-
 function chatSocket(io) {
   io.on('connection', async socket => {
     // tell the server to do what it needs to for setup
     // need so send a login with token
     socket.emit('connection', true);
-
+    socket.on(LOGOUT, () => {
+      socket.disconnect();
+    });
     socket.on(LOGIN, token => {
       jwt.verify(token, jwtKey, async (err, decoded) => {
         if (err) {
-          console.error(err);
           socket.emit(FAILED_LOGIN, 'Not a valid token');
         } else {
           const user = await models.User.findById({

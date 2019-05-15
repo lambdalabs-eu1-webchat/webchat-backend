@@ -8,6 +8,7 @@ const RATING = 'rating';
 const ASSIGN_SELF_TICKET = 'assign_self_ticket';
 const LOGIN = 'login';
 const FAILED_LOGIN = 'failed_login';
+const LOGOUT = 'logout';
 const TYPING = 'typing';
 const STOPPED_TYPING = 'stopped_typing';
 const CONFIRM_DONE_TICKET = 'confirm_done_ticket';
@@ -31,4 +32,5 @@ module.exports = {
   TYPING,
   STOPPED_TYPING,
   CONFIRM_DONE_TICKET,
+  LOGOUT,
 };
