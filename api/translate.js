@@ -5,7 +5,9 @@ const GOOGLE_TRANSLATE_DOMAIN =
 
 async function translateToEnglish(textToTranslate) {
   try {
-    const textArray = Array.isArray(textToTranslate) ? textToTranslate : [textToTranslate];
+    const textArray = Array.isArray(textToTranslate)
+      ? textToTranslate
+      : [textToTranslate];
     // take an array of strings to translate
     const encodedArr = textArray.map(text => {
       // encode text characters with UTF-8 encoding of the character
