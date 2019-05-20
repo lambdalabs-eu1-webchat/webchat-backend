@@ -35,6 +35,7 @@ routes.post('/chat', async (req, res, next) => {
           name,
           hotel_id,
           passcode,
+          user_type: validUser.user_type
         });
 
         // remove password from the returned validUser object, so it's not sent to FE
@@ -62,9 +63,9 @@ routes.delete('/chat/:_id', validateObjectId, async (req, res, next) => {
       _id,
       {
         passcode: null,
-        is_left: true,
+        is_left: true
       },
-      options,
+      options
     );
     if (guestWithoutPasscode) {
       res.status(200).json(response.updateUser);

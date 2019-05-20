@@ -83,11 +83,17 @@ routes.post('/', async (req, res, next) => {
       password,
       motto,
       room,
-      passcode: hashedPasscode,
+      passcode: hashedPasscode
     });
 
     const { _id } = user;
-    const token = createToken({ id: _id, name, hotel_id, passcode });
+    const token = createToken({
+      id: _id,
+      name,
+      hotel_id,
+      passcode,
+      user_type: user.user_type
+    });
 
     // remove credentials fron user
     const userWithoutCredentials = { ...user._doc };
@@ -135,7 +141,7 @@ routes.delete('/:_id', validateObjectId, async (req, res, next) => {
     const deletedCount = await models.User.findByIdAndUpdate(
       _id,
       {
-        is_left: true,
+        is_left: true
       },
       options
     );

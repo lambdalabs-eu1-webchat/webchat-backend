@@ -10,7 +10,7 @@ const {
   duplicateEmail,
   invalidCredentials,
   getUserById,
-  missingPassword,
+  missingPassword
 } = require('../utils/errorMessage');
 
 const routes = express.Router();
@@ -32,7 +32,7 @@ routes.post('/register', async (req, res, next) => {
     // create new hotel
     const newHotel = await models.Hotel.create({
       name: hotel_name,
-      motto: hotel_motto,
+      motto: hotel_motto
     });
     const hotel_id = newHotel.id;
 
@@ -48,7 +48,7 @@ routes.post('/register', async (req, res, next) => {
         password,
         motto,
         user_type: USER_TYPES.SUPER_ADMIN,
-        hotel_id,
+        hotel_id
       });
 
       if (user) {
@@ -60,6 +60,7 @@ routes.post('/register', async (req, res, next) => {
           id: user.id,
           name,
           hotel_id,
+          user_type: user.user_type
         });
 
         // send the user info and token in response
@@ -87,7 +88,12 @@ routes.post('/login', async (req, res, next) => {
     if (user && bcrypt.compareSync(password, user.password)) {
       const { id, hotel_id } = user;
 
-      const token = createToken({ id, name: user.name, hotel_id });
+      const token = createToken({
+        id,
+        name: user.name,
+        hotel_id,
+        user_type: user.user_type
+      });
 
       // remove password from the returned user object, so it's not sent to FE
       user.password = undefined;
