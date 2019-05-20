@@ -10,6 +10,7 @@ const validateObjectId = require('../middleware/validateObjectId');
 const USER_TYPES = require('../utils/USER_TYPES');
 const createPasscode = require('../utils/createPassCode');
 const createToken = require('../utils/createToken');
+const documentExists = require('../utils/documentExists');
 
 routes.get('/', async (req, res, next) => {
   try {
@@ -20,11 +21,11 @@ routes.get('/', async (req, res, next) => {
       if (hotel) {
         // if hotel id exists, find all users with that hotel ID and return them
         const hotelUsers = await models.User.where({ hotel_id: hotelId }).where(
-          { is_left: false }
+          { is_left: false },
         );
         // filter only hotel staff
         const hotelStaff = hotelUsers.filter(
-          user => user.user_type !== USER_TYPES.GUEST
+          user => user.user_type !== USER_TYPES.GUEST,
         );
         res.status(200).json(hotelStaff);
       } else {
@@ -74,27 +75,31 @@ routes.post('/', async (req, res, next) => {
   }
 
   try {
-    const user = await models.User.create({
-      is_left: false,
-      hotel_id,
-      user_type,
-      name,
-      email,
-      password,
-      motto,
-      room,
-      passcode: hashedPasscode,
-    });
+    if (!(await documentExists({ email }, 'User'))) {
+      const user = await models.User.create({
+        is_left: false,
+        hotel_id,
+        user_type,
+        name,
+        email,
+        password,
+        motto,
+        room,
+        passcode: hashedPasscode,
+      });
 
-    const { _id } = user;
-    const token = createToken({ id: _id, name, hotel_id, passcode });
+      const { _id } = user;
+      const token = createToken({ id: _id, name, hotel_id, passcode });
 
-    // remove credentials fron user
-    const userWithoutCredentials = { ...user._doc };
-    delete userWithoutCredentials.password;
-    delete userWithoutCredentials.passcode;
+      // remove credentials fron user
+      const userWithoutCredentials = { ...user._doc };
+      delete userWithoutCredentials.password;
+      delete userWithoutCredentials.passcode;
 
-    res.status(201).json({ user: userWithoutCredentials, token });
+      res.status(201).json({ user: userWithoutCredentials, token });
+    } else {
+      res.status(402).json(errorMessages.duplicateEmail);
+    }
   } catch (error) {
     next(error);
   }
@@ -137,7 +142,7 @@ routes.delete('/:_id', validateObjectId, async (req, res, next) => {
       {
         is_left: true,
       },
-      options
+      options,
     );
     if (deletedCount) {
       res.status(200).json(response.deleteUser);
