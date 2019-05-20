@@ -29,9 +29,11 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    lowercase: true,
   },
   email: {
     type: String,
+    lowercase: true,
     unique: true,
     sparse: true, // allows for null with unique
     validate: [
