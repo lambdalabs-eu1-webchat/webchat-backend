@@ -1,6 +1,6 @@
 const { models } = require('../../models/index');
 const { CLOSED, ACTIVE, QUEUED } = require('../../utils/TICKET_STATUSES');
-const { CHATLOG, ACTIVE_CHATS, QUEUED_CHATS } = require('./constants');
+const { CHECK_OUT, ACTIVE_CHATS, QUEUED_CHATS } = require('./constants');
 
 module.exports = checkout;
 
@@ -31,10 +31,7 @@ async function checkout(guest_id, io) {
           status: QUEUED,
         });
         io.in(hotel_id).emit(QUEUED_CHATS, queuedChats);
-
-        // tell the guest that it is not logged in
-
-        // leave chat._id
+        io.in(chat._id).emit(CHECK_OUT);
       }
     });
   }

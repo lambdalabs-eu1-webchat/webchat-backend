@@ -119,6 +119,8 @@ function chatSocket(io) {
                 userStoppedTyping(socket.chat._id, socket, io),
                 console.log('disconnected');
               });
+            } else {
+              socket.emit(CHECK_OUT);
             }
             // need to send something to say ticket is done so it can update on this side
             // remove login listener so that a client cannot login multiple times and have the above events fire multiple times
