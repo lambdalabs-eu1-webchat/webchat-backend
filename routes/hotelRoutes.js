@@ -30,6 +30,27 @@ routes.get(
   }
 );
 
+routes.get(
+  '/:_id/chat',
+  validateObjectId,
+  restricted(config, access.users),
+  async (req, res, next) => {
+    const { _id } = req.params;
+    try {
+      const hotelInfo = await models.Hotel.findById(_id);
+      if (hotelInfo) {
+        hotelInfo.plan = undefined;
+        hotelInfo.rooms = undefined;
+        res.status(200).json(hotelInfo);
+      } else {
+        res.status(400).json(errorMessage.noHotel);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 routes.put(
   '/:_id',
   validateObjectId,
