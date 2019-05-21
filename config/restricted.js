@@ -16,6 +16,7 @@ module.exports = {
   access: {
     admins: [SUPER_ADMIN, ADMIN],
     hotelStaff: [SUPER_ADMIN, ADMIN, RECEPTIONIST],
-    users: [SUPER_ADMIN, ADMIN, RECEPTIONIST, GUEST]
+    users: [SUPER_ADMIN, ADMIN, RECEPTIONIST, GUEST],
+    super_admin: SUPER_ADMIN
   }
 };
