@@ -5,6 +5,7 @@ const assignSelfTicket = require('./assignSelfTicket');
 const makeRating = require('./ratingFunction');
 const { userStoppedTyping, userTyping } = require('./typingFunction.js');
 const updateGuestChat = require('./updateGuestChat');
+const checkout = require('./checkout');
 const {
   MESSAGE,
   CLOSE_TICKET,
@@ -16,6 +17,7 @@ const {
   STOPPED_TYPING,
   CONFIRM_DONE_TICKET,
   LOGOUT,
+  CHECK_OUT,
 } = require('./constants');
 
 const { isGuest, isStaff } = require('../../utils/isUserType');
@@ -67,6 +69,9 @@ function chatSocket(io) {
             socket.on(STOPPED_TYPING, chat_id => {
               userStoppedTyping(chat_id, socket, io);
             });
+            socket.on(CHECK_OUT, guest_id => {
+              checkout(guest_id, io);
+            });
             socket.on('disconnect', () => {
               // emit the users rooms that this person is not typing
               socket.chats.forEach(chat =>
@@ -82,36 +87,41 @@ function chatSocket(io) {
           }
           // =================== SETUP FOR A GUEST ==================
           else if (isGuest(user.user_type)) {
+            // if left only show messages else set up listeners
             // setup the guest by joining chat
             // send a log of the guests chat
             joinChatGuest(socket);
-            // setup all listeners for a guest
-            // can send message
-            // NEEDS text
-            socket.on(MESSAGE, text => messageGuest(text, socket, io));
+            if (!user.is_left) {
+              // setup all listeners for a guest
+              // can send message
+              // NEEDS text
+              socket.on(MESSAGE, text => messageGuest(text, socket, io));
 
-            // can rate
-            // NEEDS rating
-            socket.on(RATING, rating => {
-              makeRating(rating, socket);
-            });
-            // set up when message is being composed functions
-            socket.on(TYPING, () => {
-              userTyping(socket.chat._id, socket, io);
-            });
-            socket.on(STOPPED_TYPING, () => {
-              userStoppedTyping(socket.chat._id, socket, io);
-            });
-            // confirm that ticket is closed so update socket state
-            socket.on(CONFIRM_DONE_TICKET, () => {
-              //update chat
-              updateGuestChat(socket);
-            });
-            socket.on('disconnect', () => {
-              // emit the users rooms that this person is not typing
-              userStoppedTyping(socket.chat._id, socket, io),
-              console.log('disconnected');
-            });
+              // can rate
+              // NEEDS rating
+              socket.on(RATING, rating => {
+                makeRating(rating, socket);
+              });
+              // set up when message is being composed functions
+              socket.on(TYPING, () => {
+                userTyping(socket.chat._id, socket, io);
+              });
+              socket.on(STOPPED_TYPING, () => {
+                userStoppedTyping(socket.chat._id, socket, io);
+              });
+              // confirm that ticket is closed so update socket state
+              socket.on(CONFIRM_DONE_TICKET, () => {
+                //update chat
+                updateGuestChat(socket);
+              });
+              socket.on('disconnect', () => {
+                // emit the users rooms that this person is not typing
+                userStoppedTyping(socket.chat._id, socket, io),
+                console.log('disconnected');
+              });
+            } else {
+              socket.emit(CHECK_OUT);
+            }
             // need to send something to say ticket is done so it can update on this side
             // remove login listener so that a client cannot login multiple times and have the above events fire multiple times
             socket.removeListener(LOGIN, () => {});
