@@ -121,7 +121,8 @@ routes.put('/:_id', validateObjectId, async (req, res, next) => {
     if (user) {
       if (
         !(await documentExists({ email: incomingUser.email }, 'User')) ||
-        user.email === incomingUser.email || incomingUser.user_type
+        user.email === incomingUser.email ||
+        incomingUser.user_type
       ) {
         // check for `incommingUser` properties and update them in the `user` object
         updateUser(user, incomingUser);
