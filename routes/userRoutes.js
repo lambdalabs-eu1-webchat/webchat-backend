@@ -120,6 +120,9 @@ routes.put('/:_id', validateObjectId, async (req, res, next) => {
 
     if (user) {
       if (
+        // two requests are valid:
+        // 1) an update with a new email address, that is not the same as any other user in the db
+        // 2) updates that dont include an email, currently in the App, these are only user_type changes
         !(await documentExists({ email: incomingUser.email }, 'User')) ||
         user.email === incomingUser.email ||
         incomingUser.user_type
