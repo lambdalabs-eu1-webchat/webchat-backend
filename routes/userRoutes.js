@@ -11,6 +11,7 @@ const USER_TYPES = require('../utils/USER_TYPES');
 const { CLOSED } = require('../utils/TICKET_STATUSES.js');
 const createPasscode = require('../utils/createPassCode');
 const createToken = require('../utils/createToken');
+const documentExists = require('../utils/documentExists');
 
 routes.get('/', async (req, res, next) => {
   try {
@@ -75,27 +76,31 @@ routes.post('/', async (req, res, next) => {
   }
 
   try {
-    const user = await models.User.create({
-      is_left: false,
-      hotel_id,
-      user_type,
-      name,
-      email,
-      password,
-      motto,
-      room,
-      passcode: hashedPasscode,
-    });
+    if (!(await documentExists({ email }, 'User'))) {
+      const user = await models.User.create({
+        is_left: false,
+        hotel_id,
+        user_type,
+        name,
+        email,
+        password,
+        motto,
+        room,
+        passcode: hashedPasscode,
+      });
 
-    const { _id } = user;
-    const token = createToken({ id: _id, name, hotel_id, passcode });
+      const { _id } = user;
+      const token = createToken({ id: _id, name, hotel_id, passcode });
 
-    // remove credentials fron user
-    const userWithoutCredentials = { ...user._doc };
-    delete userWithoutCredentials.password;
-    delete userWithoutCredentials.passcode;
+      // remove credentials fron user
+      const userWithoutCredentials = { ...user._doc };
+      delete userWithoutCredentials.password;
+      delete userWithoutCredentials.passcode;
 
-    res.status(201).json({ user: userWithoutCredentials, token });
+      res.status(201).json({ user: userWithoutCredentials, token });
+    } else {
+      res.status(402).json(errorMessages.duplicateEmail);
+    }
   } catch (error) {
     next(error);
   }
@@ -132,6 +137,17 @@ routes.put('/:_id', validateObjectId, async (req, res, next) => {
 routes.delete('/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
   try {
+<<<<<<< HEAD
+    const options = { runValidators: true };
+    const deletedCount = await models.User.findByIdAndUpdate(
+      _id,
+      {
+        is_left: true,
+      },
+      options,
+    );
+    if (deletedCount) {
+=======
     const user = await models.User.findById(_id);
     user.is_left = true;
     user.save(error => console.log(error));
@@ -150,6 +166,7 @@ routes.delete('/:_id', validateObjectId, async (req, res, next) => {
         res.status(200).json(response.deleteUser);
       }
     } else if (user) {
+>>>>>>> master
       res.status(200).json(response.deleteUser);
     } else {
       res.status(404).json(errorMessages.deleteUser);
