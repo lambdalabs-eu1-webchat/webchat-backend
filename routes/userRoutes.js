@@ -116,10 +116,13 @@ routes.put('/:_id', validateObjectId, async (req, res, next) => {
     incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
   }
   try {
-    if (!(await documentExists({ email: incomingUser.email }, 'User'))) {
-      const user = await models.User.findById({ _id });
+    const user = await models.User.findById({ _id });
 
-      if (user) {
+    if (user) {
+      if (
+        !(await documentExists({ email: incomingUser.email }, 'User')) ||
+        user.email === incomingUser.email
+      ) {
         // check for `incommingUser` properties and update them in the `user` object
         updateUser(user, incomingUser);
 
@@ -128,10 +131,10 @@ routes.put('/:_id', validateObjectId, async (req, res, next) => {
         delete resultWithoutPassword.password;
         res.status(200).json(resultWithoutPassword);
       } else {
-        res.status(404).json(errorMessages.getUserById);
+        res.status(402).json(errorMessages.duplicateEmail);
       }
     } else {
-      res.status(402).json(errorMessages.duplicateEmail);
+      res.status(404).json(errorMessages.getUserById);
     }
   } catch (error) {
     next(error);
