@@ -17,6 +17,6 @@ module.exports = {
     admins: [SUPER_ADMIN, ADMIN],
     hotelStaff: [SUPER_ADMIN, ADMIN, RECEPTIONIST],
     users: [SUPER_ADMIN, ADMIN, RECEPTIONIST, GUEST],
-    super_admin: SUPER_ADMIN
+    superAdmin: SUPER_ADMIN
   }
 };

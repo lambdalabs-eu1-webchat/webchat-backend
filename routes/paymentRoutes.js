@@ -12,7 +12,7 @@ const validateObjectId = require('../middleware/validateObjectId');
 const documentExists = require('../utils/documentExists');
 const checkPlanLegibility = require('../utils/checkPlanLegibility');
 
-routes.use(restricted(config, access.super_admin));
+routes.use(restricted(config, access.superAdmin));
 
 /*
 [POST]

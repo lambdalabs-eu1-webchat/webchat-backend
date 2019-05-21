@@ -35,7 +35,7 @@ routes.put(
   validateObjectId,
   formatHotel,
   validateHotelChange,
-  restricted(config, access.super_admin),
+  restricted(config, access.superAdmin),
   async (req, res, next) => {
     try {
       const { _id } = req.params;

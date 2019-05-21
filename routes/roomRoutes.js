@@ -1,6 +1,8 @@
 const express = require('express');
 const routes = express.Router();
+const restricted = require('express-restricted');
 
+const { config, access } = require('../config/restricted');
 const errorMessage = require('../utils/errorMessage');
 const response = require('../utils/response');
 const { models } = require('../models/index');
@@ -12,6 +14,7 @@ const documentExists = require('../utils/documentExists');
 const subDocumentExists = require('../utils/subDocumentExists');
 const capitalizeLetters = require('../utils/capitalizeLetters');
 const { GUEST } = require('../utils/USER_TYPES');
+
 // POST HOTEL ROOMS ARRAY
 // params: hotel _id
 // body: [{"name": "hotelName"}]
@@ -19,6 +22,7 @@ routes.post(
   '/:_id/rooms',
   validateObjectId,
   validateRoomsArr,
+  restricted(config, access.superAdmin),
   async (req, res, next) => {
     const { _id } = req.params;
     const roomArr = req.body;
@@ -47,7 +51,7 @@ routes.post(
         if (duplicateRooms.length) {
           res.status(200).json({
             ...response.duplicateRoom,
-            currentRoomList: updatedHotel.rooms,
+            currentRoomList: updatedHotel.rooms
           });
 
           // if no room names were duplicates, res with the updated hotel rooms
@@ -60,7 +64,7 @@ routes.post(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 // GET HOTEL ROOMS
@@ -95,13 +99,13 @@ routes.get(
       const currentGuests = await models.User.find({
         hotel_id: _id,
         is_left: false,
-        user_type: GUEST,
+        user_type: GUEST
       });
       const rooms = hotel.rooms;
 
       const availableRooms = rooms.filter(room => {
         const takenBy = currentGuests.find(guest =>
-          guest.room.id.equals(room._id),
+          guest.room.id.equals(room._id)
         );
         return !takenBy;
       });
@@ -114,7 +118,7 @@ routes.get(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 // [PUT] room
@@ -152,7 +156,7 @@ routes.put(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 // DELETE ROOM
@@ -183,7 +187,7 @@ routes.delete(
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
 
 module.exports = routes;
