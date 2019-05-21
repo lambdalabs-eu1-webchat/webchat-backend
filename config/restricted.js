@@ -6,10 +6,6 @@ const {
   GUEST
 } = require('../utils/USER_TYPES');
 
-const hotelStaff = [SUPER_ADMIN, ADMIN, RECEPTIONIST];
-const admins = [SUPER_ADMIN, ADMIN];
-const users = [SUPER_ADMIN, ADMIN, RECEPTIONIST, GUEST];
-
 module.exports = {
   config: {
     reqProp: 'headers',
@@ -18,6 +14,8 @@ module.exports = {
     jwtKey: process.env.JWT_SECRET || super_secret
   },
   access: {
-    email: hotelStaff
+    admins: [SUPER_ADMIN, ADMIN],
+    hotelStaff: [SUPER_ADMIN, ADMIN, RECEPTIONIST],
+    users: [SUPER_ADMIN, ADMIN, RECEPTIONIST, GUEST]
   }
 };
