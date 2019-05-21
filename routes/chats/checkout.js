@@ -34,5 +34,7 @@ async function checkout(guest_id, io) {
         io.in(chat._id).emit(CHECK_OUT);
       }
     });
+  } else {
+    io.emit('console', 'Wrong checkout guest id');
   }
 }
