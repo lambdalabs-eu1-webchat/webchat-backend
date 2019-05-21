@@ -1,7 +1,9 @@
 const express = require('express');
 const routes = express.Router();
 const sgMail = require('@sendgrid/mail');
+const restricted = require('express-restricted');
 
+const { config, access } = require('../config/restricted');
 const errorMessage = require('../utils/errorMessage');
 const response = require('../utils/response');
 const { from, subject } = require('../utils/email');
@@ -12,7 +14,7 @@ const getChatOnCheckout = require('../utils/getChatOnCheckout');
 const formatChatOnCheckout = require('../utils/formatChatOnCheckout');
 const createEmail = require('../utils/createEmail');
 
-routes.post('/', async (req, res, next) => {
+routes.post('/', restricted(config, access.email), async (req, res, next) => {
   const { guestId, guestEmail, hotelId } = req.body;
 
   try {
@@ -28,7 +30,7 @@ routes.post('/', async (req, res, next) => {
           to: guestEmail,
           from,
           subject: `${subject} ${hotel.name}`,
-          html: emailBody,
+          html: emailBody
         };
         await sgMail.send(msg);
         res.status(200).json(response.sendChatLog);
