@@ -76,7 +76,10 @@ routes.post('/', async (req, res, next) => {
   }
 
   try {
-    if (!(await documentExists({ email }, 'User'))) {
+    if (
+      !(await documentExists({ email }, 'User')) ||
+      user_type === USER_TYPES.GUEST
+    ) {
       const user = await models.User.create({
         is_left: false,
         hotel_id,
