@@ -4,9 +4,6 @@ const url = require('./url');
 
 const getGuest = async hotelId => {
   try {
-    // const hotel = await axios.get(
-    //   `http://localhost:7000${path.hotel}/${hotelId}`,
-    // );
     const hotel =
       process.env.NODE_ENV === 'development'
         ? await axios.get(`http://localhost:7000${path.hotel}/${hotelId}`)
