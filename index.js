@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
+require('dotenv').config();
 const server = require('./api/server');
 const httpServer = require('http').Server(server);
 const io = require('socket.io')(httpServer);
 const seed = require('./data/index');
 const { models, connectDb } = require('./models/index');
-require('dotenv').config();
 
 const port = process.env.PORT || 7000;
 
@@ -23,8 +23,8 @@ connectDb()
         console.log(
           `=== Server running on port: ${port} in ${
             process.env.NODE_ENV
-          } mode ====`,
-        ),
+          } mode ====`
+        )
       );
       require('./routes/chats/index')(io);
     } catch (error) {

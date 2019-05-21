@@ -1,6 +1,5 @@
 const express = require('express');
 const routes = express.Router();
-require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SK);
 const restricted = require('express-restricted');
 

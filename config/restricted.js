@@ -1,4 +1,3 @@
-const { super_secret } = require('../utils/secrets');
 const {
   SUPER_ADMIN,
   ADMIN,
@@ -11,7 +10,7 @@ module.exports = {
     reqProp: 'headers',
     childProp: 'authorization',
     identifier: 'user_type',
-    jwtKey: process.env.JWT_SECRET || super_secret
+    jwtKey: process.env.JWT_SECRET
   },
   access: {
     admins: [SUPER_ADMIN, ADMIN],
