@@ -12,10 +12,13 @@ const { GUEST } = require('../utils/USER_TYPES');
 routes.post('/chat', async (req, res, next) => {
   try {
     const { name, passcode } = req.body;
-
+    const lowerCaseName = name.toLowerCase();
     // check if user with this name exist
     // because bcrypt throws a error if user does not have a passcode and employee could have the same name as a guest
-    const user = await models.User.where({ name, user_type: GUEST });
+    const user = await models.User.where({
+      name: lowerCaseName,
+      user_type: GUEST,
+    });
     if (user.length > 0) {
       // if any user with that name exist, run validation on each user
       let validUser = null;
