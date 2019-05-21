@@ -95,7 +95,7 @@ routes.post('/', async (req, res, next) => {
       user_type: user.user_type
     });
 
-    // remove credentials fron user
+    // remove credentials from user
     const userWithoutCredentials = { ...user._doc };
     delete userWithoutCredentials.password;
     delete userWithoutCredentials.passcode;
@@ -131,9 +131,6 @@ routes.put('/:_id', validateObjectId, async (req, res, next) => {
   }
 });
 
-/**
- * @todo - On DELETE request, do not delete user from DB, but change his `is_left` status to `true`
- */
 routes.delete('/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
   try {
