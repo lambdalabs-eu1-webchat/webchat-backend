@@ -129,9 +129,10 @@ path: '/subscription'
 routes.put('/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
   const { newPlan } = req.body;
+  const token = req.headers.authorization;
   try {
     // check the plan switch satisfies maximum user rules
-    if (await checkPlanLegibility(_id, newPlan)) {
+    if (await checkPlanLegibility(_id, newPlan, token)) {
       // check to see if the hotel exists
       if (await documentExists({ _id }, 'Hotel')) {
         if (

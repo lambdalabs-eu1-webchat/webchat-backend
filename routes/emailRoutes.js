@@ -19,12 +19,13 @@ routes.post(
   restricted(config, access.hotelStaff),
   async (req, res, next) => {
     const { guestId, guestEmail, hotelId } = req.body;
+    const token = req.headers.authorization;
 
     try {
       if (validateEmail(guestEmail)) {
-        const guest = await getGuest(guestId);
-        const hotel = await getHotel(hotelId);
-        const [rawChatHistory] = await getChatOnCheckout(guestId);
+        const guest = await getGuest(guestId, token);
+        const hotel = await getHotel(hotelId, token);
+        const [rawChatHistory] = await getChatOnCheckout(guestId, token);
         if (rawChatHistory) {
           const formattedChats = formatChatOnCheckout(rawChatHistory);
           const emailBody = createEmail(guest, hotel, formattedChats);
