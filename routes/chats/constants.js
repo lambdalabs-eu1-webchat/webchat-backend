@@ -15,6 +15,7 @@ const CONFIRM_DONE_TICKET = 'confirm_done_ticket';
 const REMOVE_QUEUED = 'remove_queued';
 const ADD_QUEUED = 'add_queued';
 const QUEUED_MESSAGE = 'queued_message';
+const CHECK_OUT = 'check_out';
 module.exports = {
   QUEUED_CHATS,
   ADD_QUEUED,
@@ -33,4 +34,5 @@ module.exports = {
   STOPPED_TYPING,
   CONFIRM_DONE_TICKET,
   LOGOUT,
+  CHECK_OUT,
 };

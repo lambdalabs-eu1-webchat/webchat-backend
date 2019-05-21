@@ -80,9 +80,9 @@ routes.post('/register', async (req, res, next) => {
 routes.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
+    const lowerCaseEmail = email.toLowerCase();
     // check if user with name exist
-    const [user] = await models.User.where({ email });
+    const [user] = await models.User.where({ email: lowerCaseEmail });
 
     // check user credentials
     if (user && bcrypt.compareSync(password, user.password)) {
