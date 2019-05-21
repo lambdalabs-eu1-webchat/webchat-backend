@@ -69,19 +69,24 @@ routes.post(
 
 // GET HOTEL ROOMS
 // params: hotel _id
-routes.get('/:_id/rooms', validateObjectId, async (req, res, next) => {
-  const { _id } = req.params;
-  try {
-    const hotel = await models.Hotel.findById(_id);
-    if (hotel) {
-      res.status(200).json(hotel.rooms);
-    } else {
-      res.status(400).json(errorMessage.noHotel);
+routes.get(
+  '/:_id/rooms',
+  validateObjectId,
+  restricted(config, access.hotelStaff),
+  async (req, res, next) => {
+    const { _id } = req.params;
+    try {
+      const hotel = await models.Hotel.findById(_id);
+      if (hotel) {
+        res.status(200).json(hotel.rooms);
+      } else {
+        res.status(400).json(errorMessage.noHotel);
+      }
+    } catch (error) {
+      next(error);
     }
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 // GET HOTEL ROOMS AVAILABLE
 // params: hotel _id
@@ -92,6 +97,7 @@ routes.get('/:_id/rooms', validateObjectId, async (req, res, next) => {
 routes.get(
   '/:_id/rooms/available',
   validateObjectId,
+  restricted(config, access.hotelStaff),
   async (req, res, next) => {
     const { _id } = req.params;
     try {
@@ -129,6 +135,7 @@ routes.put(
   validateObjectId,
   validateSubDocObjectId,
   validateRoomChange,
+  restricted(config, access.superAdmin),
   async (req, res, next) => {
     const { _id, _roomId } = req.params;
     const roomUpdates = req.body;
@@ -165,6 +172,7 @@ routes.delete(
   '/:_id/rooms/:_roomId',
   validateObjectId,
   validateSubDocObjectId,
+  restricted(config, access.superAdmin),
   async (req, res, next) => {
     const { _id, _roomId } = req.params;
     try {
