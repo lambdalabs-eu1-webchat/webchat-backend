@@ -7,7 +7,10 @@ const getGuest = async guestId => {
     // const guest = await axios.get(
     //   `http://localhost:7000${path.users}/${guestId}`,
     // );
-    const guest = await axios.get(`${url}${path.users}/${guestId}`);
+    const guest =
+      process.env.NODE_ENV === 'development'
+        ? await axios.get(`http://localhost:7000${path.users}/${guestId}`)
+        : await axios.get(`${url}${path.users}/${guestId}`);
     return guest.data;
   } catch (error) {
     console.error(error);
