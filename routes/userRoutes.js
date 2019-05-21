@@ -137,17 +137,6 @@ routes.put('/:_id', validateObjectId, async (req, res, next) => {
 routes.delete('/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
   try {
-<<<<<<< HEAD
-    const options = { runValidators: true };
-    const deletedCount = await models.User.findByIdAndUpdate(
-      _id,
-      {
-        is_left: true,
-      },
-      options,
-    );
-    if (deletedCount) {
-=======
     const user = await models.User.findById(_id);
     user.is_left = true;
     user.save(error => console.log(error));
@@ -166,7 +155,6 @@ routes.delete('/:_id', validateObjectId, async (req, res, next) => {
         res.status(200).json(response.deleteUser);
       }
     } else if (user) {
->>>>>>> master
       res.status(200).json(response.deleteUser);
     } else {
       res.status(404).json(errorMessages.deleteUser);
