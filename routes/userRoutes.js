@@ -123,21 +123,26 @@ routes.post(
   }
 );
 
-routes.put(
-  '/:_id',
-  validateObjectId,
-  restricted(config, access.hotelStaff),
-  async (req, res, next) => {
-    const { _id } = req.params;
-    const incomingUser = { ...req.body };
-    if (incomingUser.password) {
-      incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
-    }
-    try {
-      const user = await models.User.findById({ _id });
+routes.put('/:_id', validateObjectId, async (req, res, next) => {
+  const { _id } = req.params;
+  const incomingUser = { ...req.body };
+  if (incomingUser.password) {
+    incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
+  }
+  try {
+    const user = await models.User.findById({ _id });
 
-      if (user) {
-        // check for `incommingUser` properties and update them in the `user` object
+    if (user) {
+      if (
+        // three requests are valid:
+        // 1) an update with a new email address, that is not the same as any other user in the db
+        // 2) an update with an email address the same as the users current email
+        // 3) a non-user-settings update with no email address
+        !(await documentExists({ email: incomingUser.email }, 'User')) ||
+        user.email === incomingUser.email ||
+        !incomingUser.email
+      ) {
+        // check for `incomingUser` properties and update them in the `user` object
         updateUser(user, incomingUser);
 
         const result = await user.save();
@@ -145,13 +150,16 @@ routes.put(
         delete resultWithoutPassword.password;
         res.status(200).json(resultWithoutPassword);
       } else {
-        res.status(404).json(errorMessages.getUserById);
+        res.status(402).json(errorMessages.duplicateEmail);
       }
-    } catch (error) {
-      next(error);
+    } else {
+      res.status(404).json(errorMessages.getUserById);
     }
+  } catch (error) {
+    next(error);
   }
-);
+});
+
 
 routes.delete(
   '/:_id',
