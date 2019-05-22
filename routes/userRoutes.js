@@ -123,18 +123,14 @@ routes.post(
   }
 );
 
-routes.put(
-  '/:_id',
-  validateObjectId,
-  restricted(config, access.hotelStaff),
-  async (req, res, next) => {
-    const { _id } = req.params;
-    const incomingUser = { ...req.body };
-    if (incomingUser.password) {
-      incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
-    }
-    try {
-      const user = await models.User.findById({ _id });
+routes.put('/:_id', validateObjectId, async (req, res, next) => {
+  const { _id } = req.params;
+  const incomingUser = { ...req.body };
+  if (incomingUser.password) {
+    incomingUser.password = bcrypt.hashSync(incomingUser.password, 10);
+  }
+  try {
+    const user = await models.User.findById({ _id });
 
     if (user) {
       if (
@@ -159,8 +155,11 @@ routes.put(
     } else {
       res.status(404).json(errorMessages.getUserById);
     }
+  } catch (error) {
+    next(error);
   }
-);
+});
+
 
 routes.delete(
   '/:_id',
