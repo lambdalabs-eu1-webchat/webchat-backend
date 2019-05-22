@@ -41,6 +41,7 @@ routes.get(
       if (hotelInfo) {
         hotelInfo.plan = undefined;
         hotelInfo.rooms = undefined;
+        hotelInfo.billing = undefined;
         res.status(200).json(hotelInfo);
       } else {
         res.status(400).json(errorMessage.noHotel);
