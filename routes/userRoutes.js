@@ -78,9 +78,8 @@ routes.post(
     }
     // if its a new Guest user, create a passcode for him
     if (user_type === USER_TYPES.GUEST) {
-      const codePayload = name;
       // helper function to generate Guest passcode
-      var passcode = createPasscode(codePayload);
+      var passcode = createPasscode();
       var hashedPasscode = bcrypt.hashSync(passcode, 10);
     }
 
