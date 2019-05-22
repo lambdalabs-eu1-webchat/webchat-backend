@@ -1,14 +1,17 @@
 const express = require('express');
 const routes = express.Router();
-require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SK);
+const restricted = require('express-restricted');
 
+const { config, access } = require('../config/restricted');
 const PAYMENT_PLANS = require('../utils/PAYMENT_PLANS');
 const errorMessage = require('../utils/errorMessage');
 const { models } = require('../models/index');
 const validateObjectId = require('../middleware/validateObjectId');
 const documentExists = require('../utils/documentExists');
 const checkPlanLegibility = require('../utils/checkPlanLegibility');
+
+routes.use(restricted(config, access.superAdmin));
 
 /*
 [POST]
@@ -31,7 +34,7 @@ routes.post('/:_id', validateObjectId, async (req, res, next) => {
       // create new customer on Stripe
       const customer = await stripe.customers.create({
         email,
-        source: id,
+        source: id
       });
       if (
         plan === PAYMENT_PLANS.FREE_PLAN ||
@@ -61,9 +64,9 @@ const addSubscription = async (_id, plan, customer, card) => {
       customer: customer.id,
       items: [
         {
-          plan,
-        },
-      ],
+          plan
+        }
+      ]
     });
     // add new billing information to the Hotel
     await addSubOnDb(_id, customer, card, subscription, plan);
@@ -78,7 +81,7 @@ const addSubOnDb = async (_id, customer, card, subscription, plan) => {
   const billingObj = {
     customer: {
       id: customer.id,
-      email: customer.email,
+      email: customer.email
     },
     card: {
       id: card.id,
@@ -86,11 +89,11 @@ const addSubOnDb = async (_id, customer, card, subscription, plan) => {
       brand: card.brand,
       expiration: {
         month: card.exp_month,
-        year: card.exp_year,
-      },
+        year: card.exp_year
+      }
     },
     plan_id: plan,
-    sub_id: subscription.id,
+    sub_id: subscription.id
   };
   try {
     // update human-readable plan name on top-level of Hotel object
@@ -125,9 +128,10 @@ path: '/subscription'
 routes.put('/:_id', validateObjectId, async (req, res, next) => {
   const { _id } = req.params;
   const { newPlan } = req.body;
+  const token = req.headers.authorization;
   try {
     // check the plan switch satisfies maximum user rules
-    if (await checkPlanLegibility(_id, newPlan)) {
+    if (await checkPlanLegibility(_id, newPlan, token)) {
       // check to see if the hotel exists
       if (await documentExists({ _id }, 'Hotel')) {
         if (
@@ -159,7 +163,7 @@ const changeSubscription = async (_id, newPlan) => {
     const hotel = await models.Hotel.findById(_id);
     const currentSubscription = hotel.billing.sub_id;
     const subscription = await stripe.subscriptions.retrieve(
-      currentSubscription,
+      currentSubscription
     );
     // note subscription id is a constant in Stripe, it does not change based on plan changes
     const updatedSubscription = await stripe.subscriptions.update(
@@ -169,10 +173,10 @@ const changeSubscription = async (_id, newPlan) => {
         items: [
           {
             id: subscription.items.data[0].id,
-            plan: newPlan,
-          },
-        ],
-      },
+            plan: newPlan
+          }
+        ]
+      }
     );
     await updateSubOnDb(hotel, updatedSubscription, newPlan);
   } catch (error) {
@@ -214,7 +218,7 @@ routes.put('/method/:_id', validateObjectId, async (req, res, next) => {
       // set a new default source and/or associated email on the customer
       await stripe.customers.update(customer, {
         source: id,
-        email,
+        email
       });
       await updateMethodOnDb(hotel, card, email);
       const updatedHotel = await models.Hotel.findById(_id);
@@ -235,8 +239,8 @@ const updateMethodOnDb = async (hotel, card, email) => {
       brand: card.brand,
       expiration: {
         month: card.exp_month,
-        year: card.exp_year,
-      },
+        year: card.exp_year
+      }
     };
     // update the card and customer objects on the billing object of Hotel
     hotel.billing.card = cardObj;
