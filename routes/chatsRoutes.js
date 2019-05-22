@@ -1,19 +1,18 @@
 const express = require('express');
+const restricted = require('express-restricted');
 const routes = express.Router();
 
+const { config, access } = require('../config/restricted');
 const errorMessages = require('../utils/errorMessage');
 const { models } = require('../models/index');
 const { ACTIVE, CLOSED, QUEUED } = require('../utils/TICKET_STATUSES');
 const {
   translateToEnglish,
-  translateFromEnglish,
+  translateFromEnglish
 } = require('../api/translate');
 
-/**
- * [GET] chats will return chats for hotel based on `hotel_id` in quert string
- *   chats can be filtered by their Tickets status in separate routes
- *   `/closed`, `/active`, `/queued`
- */
+// Restrict access to this route only for `hotelStaff`
+routes.use(restricted(config, access.hotelStaff));
 
 routes.get('/closed', async (req, res, next) => {
   try {
@@ -22,7 +21,7 @@ routes.get('/closed', async (req, res, next) => {
       const hotel_id = req.query.hotel_id;
       const chats = await models.Chat.find({
         'tickets.status': CLOSED,
-        hotel_id,
+        hotel_id
       });
       res.status(200).json(chats);
     } else {
@@ -40,7 +39,7 @@ routes.get('/queued', async (req, res, next) => {
       const hotel_id = req.query.hotel_id;
       const chats = await models.Chat.find({
         'tickets.status': QUEUED,
-        hotel_id,
+        hotel_id
       });
       res.status(200).json(chats);
     } else {
@@ -58,7 +57,7 @@ routes.get('/active', async (req, res, next) => {
       const hotel_id = req.query.hotel_id;
       const chats = await models.Chat.find({
         'tickets.status': ACTIVE,
-        hotel_id,
+        hotel_id
       });
       res.status(200).json(chats);
     } else {
