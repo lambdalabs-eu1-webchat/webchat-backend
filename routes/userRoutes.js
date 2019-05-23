@@ -14,6 +14,7 @@ const { CLOSED } = require('../utils/TICKET_STATUSES.js');
 const createPasscode = require('../utils/createPassCode');
 const createToken = require('../utils/createToken');
 const documentExists = require('../utils/documentExists');
+const isUserTypeAllowedChange = require('../utils/isUserTypeAllowedChange');
 
 routes.get('/', restricted(config, access.admins), async (req, res, next) => {
   try {
@@ -84,37 +85,41 @@ routes.post(
       res.status(404).json(errorMessages.superAdminError);
     }
 
-    try {
-      if (
-        !(await documentExists({ email }, 'User')) ||
-        user_type === USER_TYPES.GUEST
-      ) {
-        const user = await models.User.create({
-          is_left: false,
-          hotel_id,
-          user_type,
-          name,
-          email,
-          password,
-          motto,
-          room,
-          passcode: hashedPasscode
-        });
+    if (isUserTypeAllowedChange(req.decodedPayload.user_type, user_type)) {
+      try {
+        if (
+          !(await documentExists({ email }, 'User')) ||
+          user_type === USER_TYPES.GUEST
+        ) {
+          const user = await models.User.create({
+            is_left: false,
+            hotel_id,
+            user_type,
+            name,
+            email,
+            password,
+            motto,
+            room,
+            passcode: hashedPasscode
+          });
 
-        const { _id } = user;
-        const token = createToken({ id: _id, name, hotel_id, passcode });
+          const { _id } = user;
+          const token = createToken({ id: _id, name, hotel_id, passcode });
 
-        // remove credentials fron user
-        const userWithoutCredentials = { ...user._doc };
-        delete userWithoutCredentials.password;
-        delete userWithoutCredentials.passcode;
+          // remove credentials fron user
+          const userWithoutCredentials = { ...user._doc };
+          delete userWithoutCredentials.password;
+          delete userWithoutCredentials.passcode;
 
-        res.status(201).json({ user: userWithoutCredentials, token });
-      } else {
-        res.status(402).json(errorMessages.duplicateEmail);
+          res.status(201).json({ user: userWithoutCredentials, token });
+        } else {
+          res.status(402).json(errorMessages.duplicateEmail);
+        }
+      } catch (error) {
+        next(error);
       }
-    } catch (error) {
-      next(error);
+    } else {
+      res.status(401).json(errorMessages.unauthorized);
     }
   }
 );
@@ -169,26 +174,33 @@ routes.delete(
     const { _id } = req.params;
     try {
       const user = await models.User.findById(_id);
-      user.is_left = true;
-      user.save(error => console.log(error));
-      if (user && user.user_type === USER_TYPES.GUEST) {
-        const chat = await models.Chat.findOne({ 'guest.id': _id });
-        if (chat) {
-          chat.tickets.forEach(ticket => (ticket.status = CLOSED));
-          chat.save(error => {
-            if (error) {
-              res.status(500).json(error);
-            } else {
-              res.status(200).json(response.deleteUser);
-            }
-          });
-        } else {
+
+      if (
+        isUserTypeAllowedChange(req.decodedPayload.user_type, user.user_type)
+      ) {
+        user.is_left = true;
+        user.save(error => console.log(error));
+        if (user && user.user_type === USER_TYPES.GUEST) {
+          const chat = await models.Chat.findOne({ 'guest.id': _id });
+          if (chat) {
+            chat.tickets.forEach(ticket => (ticket.status = CLOSED));
+            chat.save(error => {
+              if (error) {
+                res.status(500).json(error);
+              } else {
+                res.status(200).json(response.deleteUser);
+              }
+            });
+          } else {
+            res.status(200).json(response.deleteUser);
+          }
+        } else if (user) {
           res.status(200).json(response.deleteUser);
+        } else {
+          res.status(404).json(errorMessages.deleteUser);
         }
-      } else if (user) {
-        res.status(200).json(response.deleteUser);
       } else {
-        res.status(404).json(errorMessages.deleteUser);
+        res.status(401).json(errorMessages.unauthorized);
       }
     } catch (error) {
       next(error);
